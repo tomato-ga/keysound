@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+// TODO アップロードから完成させる
 const UploadPage = () => {
 	return (
 		<div className="flex flex-col items-center justify-center h-screen">
