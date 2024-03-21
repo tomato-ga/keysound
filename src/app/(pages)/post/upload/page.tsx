@@ -5,7 +5,7 @@ import { useState } from 'react'
 const UploadPage = () => {
 	return (
 		<div className="flex flex-col items-center justify-center h-screen">
-			<div className="bg-white rounded-lg shadow-md p-6 w-full max-w-md">
+			<div className="bg-white rounded-lg  w-full max-w-xl m-2 p-6 lg:w-full lg:m-6 lg:max-w-4xl">
 				<h1 className="text-2xl font-bold mb-4">Title</h1>
 				<div className="mb-4">
 					<input
