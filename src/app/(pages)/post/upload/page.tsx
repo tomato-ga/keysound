@@ -1,70 +1,72 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, ChangeEvent } from 'react'
 
-// TODO アップロードから完成させる
+// TODO タグ・カテゴリーは必要か？最初はいらないか
+
 const UploadPage = () => {
 	const [title, setTitle] = useState<string>('')
 	const [description, setDescription] = useState<string>('')
+	const [file, setFile] = useState<File | null>(null)
+	const fileInputRef = useRef<HTMLInputElement>(null)
+
+	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0]
+		if (file) {
+			setFile(file)
+			// TODO API経由でアップロード処理
+		}
+	}
+	const handleClickUpload = () => {
+		fileInputRef.current?.click()
+	}
 
 	return (
-		<div className="flex flex-col items-center justify-center h-screen">
-			<div className="bg-white rounded-lg  w-full max-w-xl m-2 p-6 lg:w-full lg:m-6 lg:max-w-4xl">
-				<h1 className="text-xl font-bold mb-4">タイトル</h1>
-				<div className="mb-4">
-					<input
-						type="text"
-						placeholder="タイトル入力"
-						className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-						value={title}
-						onChange={(e) => setTitle(e.target.value)}
-					/>
-				</div>
-
-				<h1 className="text-xl font-bold mb-4">説明文</h1>
-				<div className="mb-4">
-					<textarea
-						placeholder="説明文を入力"
-						className="w-full h-60 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-						value={description}
-						onChange={(e) => setDescription(e.target.value)}
-					/>
-				</div>
-
-				<div className="flex justify-end space-x-2">
-					<div className="tooltip-group">
+		<div className="flex items-start justify-center h-screen p-6">
+			<div className="bg-white rounded-lg w-full lg:max-w-4xl ">
+				<div className="flex">
+					{/* Main content */}
+					<div className="flex-1 p-4">
+						<div className="mb-4">
+							<h1 className="text-xl font-bold mb-2">タイトル</h1>
+							<input
+								type="text"
+								placeholder="タイトル入力"
+								className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+							/>
+						</div>
+						<div>
+							<h1 className="text-xl font-bold mb-2">説明文</h1>
+							<textarea
+								placeholder="説明文を入力"
+								className="w-full h-60 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+								value={description}
+								onChange={(e) => setDescription(e.target.value)}
+							/>
+						</div>
+					</div>
+					{/* Sidebar for buttons */}
+					<div className="flex flex-col space-y-4 p-4 mt-4">
+						<input
+							type="file"
+							ref={fileInputRef}
+							className="hidden"
+							onChange={handleFileChange}
+							accept="image/*,video/*"
+						/>
 						<button
 							className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-full"
 							title="画像か動画をアップロードする"
+							onClick={handleClickUpload}
 						>
-							<svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-								<path
-									fillRule="evenodd"
-									d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-									clipRule="evenodd"
-								/>
-							</svg>
+							<span>画像・動画をアップする</span>
+						</button>
+						<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center space-x-2">
+							<span>保存する</span>
 						</button>
 					</div>
-
-					{/* <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-full">
-						<svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-							<path
-								fillRule="evenodd"
-								d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-								clipRule="evenodd"
-							/>
-						</svg>
-					</button> */}
-					<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-						<svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-							<path
-								fillRule="evenodd"
-								d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-								clipRule="evenodd"
-							/>
-						</svg>
-					</button>
 				</div>
 			</div>
 		</div>
