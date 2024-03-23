@@ -11,17 +11,17 @@ const Header = () => {
 				<ul className="flex gap-3">
 					<li>
 						<Link href="/about" className="text-white">
-							検索ボタン
+							検索
 						</Link>
 					</li>
 					<li>
-						<Link href="/about" className="text-white">
+						<Link href="/profile" className="text-white">
 							プロフィール
 						</Link>
 					</li>
 					<li>
-						<Link href="/about" className="text-white">
-							作品を投稿する
+						<Link href="/post/upload" className="text-white">
+							音を投稿する
 						</Link>
 					</li>
 
