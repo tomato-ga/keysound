@@ -37,8 +37,8 @@ const Header = () => {
 					</li>
 
 					<li>
-						<Link href="/contact" className="text-white">
-							Contact
+						<Link href="/login" className="text-white">
+							ログイン
 						</Link>
 					</li>
 				</ul>
