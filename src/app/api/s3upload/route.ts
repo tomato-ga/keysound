@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 })
 		}
 
+		// ファイル名に日付を追加する
 		const now = new Date()
 		const formattedDate = now.toISOString().split('T')[0]
 

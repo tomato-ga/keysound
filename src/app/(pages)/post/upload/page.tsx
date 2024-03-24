@@ -1,7 +1,28 @@
 'use client'
 
-import { useState, useRef, ChangeEvent } from 'react'
+import { useState, useRef, ChangeEvent, useEffect } from 'react'
 import { SessionCheck } from '@/app/func/Sessioncheck'
+
+interface VideoResolution {
+	width: number
+	height: number
+}
+
+// videoのurlを引数に入れる関数
+function fetchVideoInfo(url: string): Promise<VideoResolution> {
+	return new Promise((resolve) => {
+		var video = document.createElement('video')
+		video.setAttribute('crossOrigin', 'anonymous')
+		video.src = url
+		video.addEventListener('loadedmetadata', () => {
+			console.log('解像度', video.videoWidth, video.videoHeight) // ここで解像度をログに出力
+			resolve({
+				width: video.videoWidth,
+				height: video.videoHeight
+			})
+		})
+	})
+}
 
 const UploadPage = () => {
 	const status = SessionCheck()
@@ -15,10 +36,31 @@ const UploadPage = () => {
 	const [uploadedVideo, setUploadedVideo] = useState<string>('')
 	const [uploadedImages, setUploadedImages] = useState<string[]>([])
 	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
+	// const [videoResolution, setVideoResolution] = useState<VideoResolution | null>(null)
+
+	// 解像度に関するuseEffect
+	// useEffect(() => {
+	// 	const getVideoResolution = async () => {
+	// 		if (uploadedVideo) {
+	// 			// 5秒の遅延を設けて動画の読み込みを待つ
+	// 			setTimeout(async () => {
+	// 				const resolution = await fetchVideoInfo(uploadedVideo)
+	// 				setVideoResolution(resolution)
+	// 			}, 5000)
+	// 		}
+	// 	}
+	// 	getVideoResolution()
+	// }, [uploadedVideo])
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
 		if (file) {
+			const fileSizeInMB = file.size / (1024 * 1024)
+			if (fileSizeInMB > 100) {
+				alert('ファイルサイズが100MBを超えています。動画のファイルサイズが100MB以下の場合にアップロードできます')
+				return
+			}
+
 			setFile(file)
 			setIsLoading(true)
 
@@ -38,7 +80,10 @@ const UploadPage = () => {
 
 					if (file.type.startsWith('video/')) {
 						setUploadedVideo(data.url)
+						// setVideoResolution({ width: data.width, height: data.height })
 						setHasUploadedVideo(true) // 動画がアップロードされた場合にフラグを立てる
+
+						console.log('Uploaded Video Reso: ', data.width, data.height)
 					} else if (file.type.startsWith('image/')) {
 						setUploadedImages((prevImages) => [...prevImages, data.url])
 					}
@@ -56,6 +101,12 @@ const UploadPage = () => {
 	const handleClickUpload = () => {
 		fileInputRef.current?.click()
 	}
+
+	// 解像度を取得するボタンのクリックイベントハンドラ
+	// const fetchAndSetVideoResolution = async (url: string) => {
+	// 	const resolution = await fetchVideoInfo(url)
+	// 	setVideoResolution(resolution)
+	// }
 
 	if (status === 'authenticated') {
 		return (
@@ -111,7 +162,12 @@ const UploadPage = () => {
 					{/* プレビュー */}
 					<div className="mb-4 p-4">
 						<h2 className="text-xl font-bold mb-2 text-center">アップロードするファイルのプレビュー</h2>
-						{uploadedVideo && <video controls src={uploadedVideo} className="max-w-xs mx-auto" />} <br />
+						{uploadedVideo && (
+							<>
+								<video controls src={uploadedVideo} className="max-w-xs mx-auto" />
+							</>
+						)}
+						<br />
 						{uploadedImages &&
 							uploadedImages.map((imageUrl, index) => (
 								<img key={index} src={imageUrl} alt={`Uploaded Image ${index + 1}`} className="max-w-xs mx-auto mb-2" />
