@@ -14,6 +14,7 @@ const UploadPage = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const [uploadedVideo, setUploadedVideo] = useState<string>('')
 	const [uploadedImages, setUploadedImages] = useState<string[]>([])
+	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -37,6 +38,7 @@ const UploadPage = () => {
 
 					if (file.type.startsWith('video/')) {
 						setUploadedVideo(data.url)
+						setHasUploadedVideo(true) // 動画がアップロードされた場合にフラグを立てる
 					} else if (file.type.startsWith('image/')) {
 						setUploadedImages((prevImages) => [...prevImages, data.url])
 					}
@@ -57,7 +59,7 @@ const UploadPage = () => {
 
 	if (status === 'authenticated') {
 		return (
-			<div className="flex flex-col justify-center min-h-screen overflow-auto p-6">
+			<div className="flex flex-col justify-start min-h-screen overflow-auto p-6">
 				<div className="bg-white rounded-lg w-full lg:max-w-4xl mx-auto">
 					{/* タイトル */}
 					<div className="mb-4 p-4">
@@ -88,16 +90,19 @@ const UploadPage = () => {
 							className="hidden"
 							onChange={handleFileChange}
 							accept="image/*,video/*"
+							disabled={hasUploadedVideo} // 動画がアップロードされた場合は無効化
 						/>
 						<button
 							className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-full"
 							title="画像か動画をアップロードする"
 							onClick={handleClickUpload}
+							disabled={hasUploadedVideo} // 動画がアップロードされた場合は無効化
 						>
 							画像・動画をアップする
 						</button>
 					</div>
 					{/* 保存ボタン */}
+					{/* TODO 保存ボタンを押したら、Supabaseに保存する */}
 					<div className="mb-4 p-4 text-center">
 						<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
 							保存する
