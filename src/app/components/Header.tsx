@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+// TODO スマホ表示の場合の調整してない
 const Header = () => {
 	return (
 		<header className="bg-black py-5">
