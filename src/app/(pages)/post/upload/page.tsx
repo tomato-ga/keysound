@@ -13,10 +13,13 @@ const UploadPage = () => {
 	const [file, setFile] = useState<File | null>(null)
 	const fileInputRef = useRef<HTMLInputElement>(null)
 
+	const [isLoading, setIsLoading] = useState(false)
+
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
 		if (file) {
 			setFile(file)
+			setIsLoading(true)
 
 			// API経由でアップロード処理
 			const formData = new FormData()
@@ -30,13 +33,15 @@ const UploadPage = () => {
 
 				if (response.ok) {
 					const data = await response.json()
-					console.log('Uploaded URLs:', data.urls)
+					console.log('Uploaded URL: ', data.url)
 					// アップロードされたファイルのURLを処理する
 				} else {
 					console.error('Error uploading file:', response.statusText)
 				}
 			} catch (error) {
 				console.error('Error uploading file:', error)
+			} finally {
+				setIsLoading(false)
 			}
 		}
 	}
@@ -87,6 +92,13 @@ const UploadPage = () => {
 							>
 								<span>画像・動画をアップする</span>
 							</button>
+
+							{isLoading && (
+								<div className="flex justify-center items-center">
+									<div className="w-8 h-8 border-4 border-blue-500 border-solid rounded-full animate-spin-slow"></div>
+								</div>
+							)}
+
 							<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center space-x-2">
 								<span>保存する</span>
 							</button>
