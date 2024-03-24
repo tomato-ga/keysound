@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.537.0",
+    "@supabase/ssr": "^0.1.0",
+    "@supabase/supabase-js": "^2.39.8",
     "@types/fs-extra": "^11.0.4",
     "dotenv": "^16.4.5",
     "fs-extra": "^11.2.0",

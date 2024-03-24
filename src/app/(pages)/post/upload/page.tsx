@@ -2,27 +2,37 @@
 
 import { useState, useRef, ChangeEvent, useEffect } from 'react'
 import { SessionCheck } from '@/app/func/Sessioncheck'
+import { UserIdCheck } from '@/app/func/Useridcheck'
+import Link from 'next/link'
 
-interface VideoResolution {
-	width: number
-	height: number
+interface postDBinsert {
+	id: string
+	title: string
+	descripting: string
+	imageurl?: string
+	videourl?: string
 }
+
+// interface VideoResolution {
+// 	width: number
+// 	height: number
+// }
 
 // videoのurlを引数に入れる関数
-function fetchVideoInfo(url: string): Promise<VideoResolution> {
-	return new Promise((resolve) => {
-		var video = document.createElement('video')
-		video.setAttribute('crossOrigin', 'anonymous')
-		video.src = url
-		video.addEventListener('loadedmetadata', () => {
-			console.log('解像度', video.videoWidth, video.videoHeight) // ここで解像度をログに出力
-			resolve({
-				width: video.videoWidth,
-				height: video.videoHeight
-			})
-		})
-	})
-}
+// function fetchVideoInfo(url: string): Promise<VideoResolution> {
+// 	return new Promise((resolve) => {
+// 		var video = document.createElement('video')
+// 		video.setAttribute('crossOrigin', 'anonymous')
+// 		video.src = url
+// 		video.addEventListener('loadedmetadata', () => {
+// 			console.log('解像度', video.videoWidth, video.videoHeight) // ここで解像度をログに出力
+// 			resolve({
+// 				width: video.videoWidth,
+// 				height: video.videoHeight
+// 			})
+// 		})
+// 	})
+// }
 
 const UploadPage = () => {
 	const status = SessionCheck()
@@ -37,6 +47,8 @@ const UploadPage = () => {
 	const [uploadedImages, setUploadedImages] = useState<string[]>([])
 	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
 	// const [videoResolution, setVideoResolution] = useState<VideoResolution | null>(null)
+
+	const userId = UserIdCheck()
 
 	// 解像度に関するuseEffect
 	// useEffect(() => {
@@ -107,6 +119,9 @@ const UploadPage = () => {
 	// 	setVideoResolution(resolution)
 	// }
 
+	// MEMO DBに保存したい内容
+	// SQL : userid(google), title, description, audiourl, imageurl
+
 	if (status === 'authenticated') {
 		return (
 			<div className="flex flex-col justify-start min-h-screen overflow-auto p-6">
@@ -176,7 +191,11 @@ const UploadPage = () => {
 			</div>
 		)
 	} else if (!status || status === 'unauthenticated') {
-		return <p>ログインしてください</p>
+		return (
+			<p>
+				<Link href={`/login`}>ログインしてください</Link>
+			</p>
+		)
 	}
 }
 
