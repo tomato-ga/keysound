@@ -76,7 +76,6 @@ const UploadPage = () => {
 
 				if (response.ok) {
 					const data = await response.json()
-					console.log('Uploaded URL: ', data.url)
 
 					if (file.type.startsWith('video/')) {
 						setUploadedVideo(data.url)
