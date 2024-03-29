@@ -7,16 +7,16 @@ const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey)
 
 // データを挿入する非同期関数
 export async function insertUserData(name: string, email: string): Promise<void> {
-	const { data, error } = await supabase
-		.from('User') // 対象のテーブル名を指定
-		.insert([
-			{ name: name, email: email } // 挿入するデータ
-		])
+	try {
+		const { data, error } = await supabase.from('User').insert([{ name: name, email: email }])
 
-	if (error) {
-		console.error('データ挿入エラー:', error)
-		return
+		if (error) {
+			throw error
+		}
+
+		// console.log('挿入されたデータ:', data)
+	} catch (error) {
+		// console.error('データ挿入エラー:', error)
+		// ここでユーザーに適切なフィードバックを提供する
 	}
-
-	console.log('挿入されたデータ:', data)
 }
