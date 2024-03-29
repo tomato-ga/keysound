@@ -30,7 +30,7 @@ const Header = ({ session }: { session: Session | null }) => {
 							</Link>
 						</li>
 					) : (
-						<div className='text-white'>音を投稿するにはログイン</div>
+						<div className="text-white">音を投稿するにはログイン</div>
 					)}
 
 					<li>

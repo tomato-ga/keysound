@@ -17,6 +17,6 @@ export async function insertUserData(name: string, email: string): Promise<void>
 		// console.log('挿入されたデータ:', data)
 	} catch (error) {
 		// console.error('データ挿入エラー:', error)
-		// ここでユーザーに適切なフィードバックを提供する
+		// ここでユーザーに適切なフィードバック
 	}
 }

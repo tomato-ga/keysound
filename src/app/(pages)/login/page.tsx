@@ -16,6 +16,9 @@ const LoginPage = () => {
 				const name = session.user?.name || ''
 				const email = session.user?.email || ''
 
+				// TODO imageの値を確認する
+				const image = session.user?.image || ''
+
 				if (email) {
 					const exists = await checkUserExists(email)
 
