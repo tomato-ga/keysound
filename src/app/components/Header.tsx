@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { useAuthSession } from '../func/useAuthSession'
 import Session from './Session'
