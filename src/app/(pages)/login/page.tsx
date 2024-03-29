@@ -4,21 +4,33 @@ import React, { useEffect } from 'react'
 import Login from '@/app/components/Login'
 import Logout from '@/app/components/Logout'
 import { useSession } from 'next-auth/react'
-import { insertUserData } from '@/app/utils/supabase/cl'
+import { insertUserData } from '@/app/utils/supabase/dbUserInsert'
+import { checkUserExists } from '@/app/utils/supabase/dbUserCheck'
 
 const LoginPage = () => {
 	const { data: session, status } = useSession()
 
 	useEffect(() => {
-		// ユーザーが認証されたら、その名前とメールアドレスをデータベースに保存
-		if (status === 'authenticated' && session) {
-			const name = session.user?.name || ''
-			const email = session.user?.email || '' // メールアドレスを取得
-			if (email) {
-				// メールアドレスがある場合のみ挿入を試みる
-				insertUserData(name, email)
+		const checkAndInsertUser = async () => {
+			if (status === 'authenticated' && session) {
+				const name = session.user?.name || ''
+				const email = session.user?.email || ''
+
+				if (email) {
+					const exists = await checkUserExists(email)
+
+					try {
+						if (!exists) {
+							await insertUserData(name, email)
+						}
+					} catch (error) {
+						// console.error('データ挿入時のエラー:', error)
+					}
+				}
 			}
 		}
+
+		checkAndInsertUser()
 	}, [status, session])
 
 	return (

@@ -1,7 +1,11 @@
 import Link from 'next/link'
+import { useAuthSession } from '../func/useAuthSession'
+import Session from './Session'
 
 // TODO スマホ表示の場合の調整してない
 const Header = () => {
+	const { session, status } = useAuthSession()
+
 	return (
 		<header className="bg-black py-5">
 			<div className="container mx-auto flex justify-between">
@@ -20,11 +24,14 @@ const Header = () => {
 							プロフィール
 						</Link>
 					</li>
-					<li>
-						<Link href="/post/upload" className="text-white">
-							音を投稿する
-						</Link>
-					</li>
+
+					{status === 'authenticated' && session ? (
+						<li>
+							<Link href="/post/upload" className="text-white">
+								音を投稿する
+							</Link>
+						</li>
+					) : null}
 
 					<li>
 						<Link href="/about" className="text-white">
