@@ -24,7 +24,9 @@ const LoginPage = () => {
 
 					try {
 						if (!exists) {
-							await insertUserData(name, email)
+							console.log('ユーザーは存在しません')
+							console.log(name, email)
+							await insertUserData(name, email) //TODO ここでAPI呼び出してもうまくいかない
 						}
 					} catch (error) {
 						// console.error('データ挿入時のエラー:', error)
