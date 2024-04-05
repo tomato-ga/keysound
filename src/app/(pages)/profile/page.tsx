@@ -1,5 +1,5 @@
-const AboutPage = () => {
-	return <div className="text-[50px]">About</div>
+const Profile = () => {
+	return <div className="text-[50px]">プロフィールページ</div>
 }
 
-export default AboutPage
+export default Profile
