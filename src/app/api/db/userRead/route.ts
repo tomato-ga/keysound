@@ -4,10 +4,11 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export async function GET(req: NextRequest) {
-	console.log('DB info: ', process.env.DATABASE_URL)
-
 	try {
+		// MEMO prismaでsupabase DBからすべてのユーザーを取得
 		const users = await prisma.user.findMany()
+
+		console.log(users)
 		// NextResponse.json()を使って、JSONレスポンスを返します。
 		return new NextResponse(JSON.stringify({ users }), {
 			status: 200,

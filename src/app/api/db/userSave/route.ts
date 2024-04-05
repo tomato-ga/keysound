@@ -1,45 +1,50 @@
-// /app/api/db/userSave.ts
+// /api/db/userSave/route.ts
 
-import { NextApiRequest, NextApiResponse } from 'next'
-import { supabase } from '@/app/utils/supabase/supabase-js'
+import { NextApiRequest } from 'next'
+import { PrismaClient } from '@prisma/client'
+import { NextRequest, NextResponse } from 'next/server' // NextResponseをインポート
 
-// エラーが持つ可能性のあるプロパティの型を定義
-interface SupabaseError {
-	message: string
-}
+const prisma = new PrismaClient()
 
-// エラーオブジェクトがSupabaseError型であるかどうかをチェックする関数
-function isSupabaseError(error: unknown): error is SupabaseError {
-	return typeof error === 'object' && error !== null && 'message' in error
-}
+export async function POST(req: NextRequest) {
+	const body = await req.json() //MEMO req.jsonで読み込めた
+	console.log('API呼び出し:', body)
 
-export default async function saveUser(req: NextApiRequest, res: NextApiResponse) {
-	if (req.method !== 'POST') {
-		return res.status(405).end('Method Not Allowed')
-	}
+	if (req.method === 'POST') {
+		const { name, email } = body // req.bodyがすでにJSONであれば、このパースは不要です
 
-	try {
-		// const supa = supabase()
-		const { user } = req.body
+		try {
+			const user = await prisma.user.create({
+				data: {
+					name,
+					email
+				}
+			})
 
-		const { data, error } = await supabase.from('User').insert([user])
-
-		if (error) {
-			// エラーオブジェクトの型がSupabaseErrorであるかチェック
-			if (isSupabaseError(error)) {
-				return res.status(500).json({ error: error.message })
-			} else {
-				return res.status(500).json({ error: 'An unknown error occurred' })
+			// 成功レスポンスをNextResponseを使用して返す
+			return new NextResponse(JSON.stringify(user), {
+				status: 200, // ステータスコードを設定
+				headers: {
+					'Content-Type': 'application/json' // ヘッダーを設定
+				}
+			})
+		} catch (error) {
+			console.error(error)
+			// エラーレスポンスをNextResponseを使用して返す
+			return new NextResponse(JSON.stringify({ error: 'Failed to insert user' }), {
+				status: 500,
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			})
+		}
+	} else {
+		// メソッド不許可のレスポンスをNextResponseを使用して返す
+		return new NextResponse('Method Not Allowed', {
+			status: 405,
+			headers: {
+				Allow: 'POST' // 許可されているメソッドを指定
 			}
-		}
-
-		return res.status(200).json(data)
-	} catch (error) {
-		// catchブロックで受け取ったエラーも同様にチェック
-		if (isSupabaseError(error)) {
-			return res.status(500).json({ error: error.message })
-		} else {
-			return res.status(500).json({ error: 'An unknown error occurred' })
-		}
+		})
 	}
 }
