@@ -50,9 +50,9 @@ const UploadPage = () => {
 	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
 	const [tagInput, setTagInput] = useState<string>('')
 
-	const userId = UserIdCheck()
+	const userEmail = UserIdCheck()
 	const [postData, setPostData] = useState<postDBinsert>({
-		id: userId || '',
+		id: userEmail || '',
 		title: '',
 		description: '',
 		imageurl: '',
@@ -156,7 +156,7 @@ const UploadPage = () => {
 			if (response.ok) {
 				// 保存成功後の処理
 				setPostData({
-					id: userId || '',
+					id: userEmail || '',
 					title: '',
 					description: '',
 					imageurl: '',
@@ -168,6 +168,34 @@ const UploadPage = () => {
 			}
 		} catch (error) {
 			console.error('Error saving post:', error)
+		}
+	}
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		// Enterキーが押された場合
+		if (e.key === 'Enter') {
+			e.preventDefault() // フォームの送信を防ぐ
+			handleAddTags() // タグの追加処理を実行
+		}
+	}
+
+	// タグ入力フィールドに変更があった場合の処理
+	const handleTagInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setTagInput(e.target.value) // 一時的なタグ入力値を更新
+	}
+
+	// タグの追加処理
+	const handleAddTags = () => {
+		if (tagInput.trim()) {
+			const newTags = tagInput
+				.split(',')
+				.map((tag) => tag.trim())
+				.filter((tag) => tag !== '') // カンマで分割し、トリムしてから空ではないタグのみを配列に
+			setPostData((prevState) => ({
+				...prevState,
+				tags: [...(prevState.tags || []), ...newTags] // 既存のタグ配列に新しいタグを追加
+			}))
+			setTagInput('') // 入力フィールドをリセット
 		}
 	}
 
@@ -203,22 +231,18 @@ const UploadPage = () => {
 						<div>
 							<input
 								type="text"
-								placeholder="タグを入力　複数入力の場合はカンマ(,)をいれてください"
+								placeholder="複数のタグを入力する場合は[タグを追加]ボタンを押すか、Enterキーを押してください"
 								className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-								value={tagInput} // 一時的なタグ入力値を保持するstateから値を取得
-								onChange={(e) => setTagInput(e.target.value)} // 一時的なタグ入力値を更新
-								onKeyDown={(e) => {
-									if (e.key === 'Enter' && e.currentTarget.value.trim()) {
-										e.preventDefault() // フォームの送信を防ぐ
-										// タグの追加: postData.tagsがundefinedでないことを確認し、新しいタグを追加
-										setPostData((prevState) => ({
-											...prevState,
-											tags: [...(prevState.tags || []), e.currentTarget.value.trim()]
-										}))
-										setTagInput('') // 入力フィールドを空にする
-									}
-								}}
+								value={tagInput}
+								onChange={handleTagInputChange}
+								onKeyDown={handleKeyDown} // onKeyDown ハンドラを追加
 							/>
+							<button
+								className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+								onClick={handleAddTags} // タグの追加ボタンにクリックイベントを設定
+							>
+								タグを追加
+							</button>
 							<div className="flex flex-wrap mt-2">
 								{/* タグの表示と削除: postData.tagsがundefinedでないことを確認し、各タグを表示 */}
 								{postData.tags?.map((tag, index) => (
@@ -262,6 +286,7 @@ const UploadPage = () => {
 						</button>
 					</div>
 					{/* 保存ボタン */}
+					{/* 保存ボタンを押したら、画面遷移させる 、今のままだと保存しても同じ画面にいるため、状態が変わらずに入力できる */}
 					<div className="mb-4 p-4 text-center">
 						<button
 							className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
