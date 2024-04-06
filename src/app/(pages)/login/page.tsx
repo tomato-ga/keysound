@@ -4,39 +4,33 @@ import React, { useEffect } from 'react'
 import Login from '@/app/components/Login'
 import Logout from '@/app/components/Logout'
 import { useSession } from 'next-auth/react'
-import { insertUserData } from '@/app/utils/supabase/dbUserInsert'
-import { checkUserExists } from '@/app/utils/supabase/dbUserCheck'
+import { insertUserData } from '@/app/func/dbUserInsert'
+import { checkUserExists } from '@/app/func/checkUserExists'
 
 const LoginPage = () => {
 	const { data: session, status } = useSession()
 
 	useEffect(() => {
-		const checkAndInsertUser = async () => {
+		const insertUser = async () => {
 			if (status === 'authenticated' && session) {
 				const name = session.user?.name || ''
 				const email = session.user?.email || ''
 
-				// TODO imageの値を確認する
-				const image = session.user?.image || ''
-
 				if (email) {
-					const exists = await checkUserExists(email)
-
 					try {
-						if (!exists) {
-							console.log('ユーザーは存在しません')
-							console.log(name, email)
-							await insertUserData(name, email) //TODO ここでAPI呼び出してもうまくいかない
-						}
+						await insertUserData(name, email)
 					} catch (error) {
-						// console.error('データ挿入時のエラー:', error)
+						console.error('データ挿入時のエラー:', error)
+						// 必要に応じてエラーメッセージを表示するなどの処理を行う
 					}
 				}
 			}
 		}
 
-		checkAndInsertUser()
-	}, [status, session])
+		if (status === 'authenticated') {
+			insertUser()
+		}
+	}, [status])
 
 	return (
 		<div>
