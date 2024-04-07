@@ -1,3 +1,5 @@
+// /Users/don/Codes/keysound/src/app/api/db/userSave/route.ts
+
 // Route Handler
 import { prisma } from '@/app/lib/prisma'
 import { NextRequest } from 'next/server'
@@ -19,7 +21,19 @@ export const POST = cache(async (req: NextRequest) => {
 			if (!existingUser) {
 				// ユーザーが存在しない場合は新規作成
 				const user = await prisma.user.create({
-					data: { name, email, image }
+					data: {
+						name,
+						email,
+						image,
+						profile: {
+							create: {
+								screenName: name // screenNameをnameと同じ値に設定
+							}
+						}
+					},
+					include: {
+						profile: true // 作成されたProfileも取得
+					}
 				})
 				return Response.json({ message: 'DB保存成功', user }, { status: 200 })
 			} else {
