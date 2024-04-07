@@ -8,7 +8,7 @@ export const POST = cache(async (req: NextRequest) => {
 	console.log('API呼び出し:', body)
 
 	if (req.method === 'POST') {
-		const { name, email } = body
+		const { name, email, image } = body
 
 		try {
 			// ユーザーの存在チェック
@@ -19,16 +19,27 @@ export const POST = cache(async (req: NextRequest) => {
 			if (!existingUser) {
 				// ユーザーが存在しない場合は新規作成
 				const user = await prisma.user.create({
-					data: { name, email }
+					data: { name, email, image }
 				})
 				return Response.json({ message: 'DB保存成功', user }, { status: 200 })
 			} else {
 				// ユーザーが既に存在する場合
 				return Response.json({ message: 'ユーザーは既に存在します' }, { status: 400 })
 			}
-		} catch (error) {
+		} catch (error: any) {
 			console.error('エラー:', error)
-			return Response.json({ message: 'サーバーエラー', error }, { status: 500 })
+
+			// 既存の接続を切断
+			await prisma.$disconnect()
+
+			return Response.json(
+				{
+					message: 'サーバーエラー',
+					error: error.message, // エラーメッセージをクライアントに送信
+					type: error.constructor.name // エラーの種類を送信
+				},
+				{ status: 500 }
+			)
 		}
 	}
 })
