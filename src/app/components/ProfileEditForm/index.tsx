@@ -1,22 +1,49 @@
 // src/app/components/ProfileEditForm.tsx
+'use client'
 
 import React from 'react'
+import { prisma } from '@/app/lib/prisma'
 
 interface ProfileEditFormProps {
 	profile: {
-		screenName: string
+		id: string
+		screenName: string | null
 		bio: string | null
+		user: {
+			id: string
+			name: string
+			email: string
+			image: string | null
+			createdat: Date
+			updatedat: Date
+		}
 	}
-	onSubmit: (updatedProfile: { screenName: string; bio: string }) => void
 }
 
-const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile, onSubmit }) => {
-	const [screenName, setScreenName] = React.useState(profile.screenName)
-	const [bio, setBio] = React.useState(profile.bio || '')
+const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
+	const [screenName, setScreenName] = React.useState(profile.screenName ?? '')
+	const [bio, setBio] = React.useState(profile.bio ?? '')
+
+	console.log('profile', profile)
+
+	const updateProfile = async () => {
+		const res = await fetch(`/api/db/userUpdate`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ userId: profile.id, screenName, bio })
+		})
+		// プロフィール更新後の処理（例: プロフィール表示画面へのリダイレクト）
+
+		if (res.ok) {
+			window.location.href = `/profile/${profile.id}`
+		}
+	}
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
-		onSubmit({ screenName, bio })
+		updateProfile()
 	}
 
 	return (
@@ -26,7 +53,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile, onSubmit }) 
 				<input
 					type="text"
 					id="screenName"
-					value={screenName}
+					value={screenName!}
 					onChange={(e) => setScreenName(e.target.value)}
 					required
 				/>

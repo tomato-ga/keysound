@@ -6,11 +6,15 @@ import Image from 'next/image'
 interface ProfilePanelProps {
 	profile: {
 		id: string
-		screenName: string
+		screenName: string | null
 		bio: string | null
 		user: {
+			id: string
 			name: string
+			email: string
 			image: string | null
+			createdat: Date
+			updatedat: Date
 		}
 	}
 }
