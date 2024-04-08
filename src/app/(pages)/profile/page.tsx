@@ -13,6 +13,7 @@ export default async function ProfilePage() {
 		return <div>ユーザーセッションが見つかりません</div>
 	}
 
+	// TODO screenNameでDB検索してもヒットしないので、useridで検索する？
 	const screenName = session.user.name
 
 	// 【1】params.screenNameから、プロフィールを取得
