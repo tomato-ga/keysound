@@ -28,19 +28,10 @@ export default async function EditProfilePage({ params }: EditProfilePageProps) 
 		notFound()
 	}
 
-	const updateProfile = async (updatedProfile: { screenName: string; bio: string }) => {
-		await prisma.profile.update({
-			where: { id: profile.id },
-			data: updatedProfile
-		})
-		// プロフィール更新後の処理（例: プロフィール表示画面へのリダイレクト）
-		window.location.href = `/profile`
-	}
-
 	return (
 		<div>
 			<h1>プロフィール編集</h1>
-			<ProfileEditForm profile={profile} onSubmit={updateProfile} />
+			<ProfileEditForm profile={profile} />
 		</div>
 	)
 }

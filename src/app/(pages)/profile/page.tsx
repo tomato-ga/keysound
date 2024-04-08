@@ -30,6 +30,8 @@ export default async function ProfilePage() {
 		return <div>Profile not found</div>
 	}
 
+	console.log('profile', profile)
+
 	// 【2】プロフィールを表示
 	return (
 		<div>
