@@ -4,12 +4,15 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/auth/[...nextauth]'
 import { prisma } from '@/app/lib/prisma'
 import ProfilePanel from '@/app/components/ProfilePanel'
+import Link from 'next/link'
 
 export default async function ProfilePage() {
 	const session = await getServerSession(authOptions)
+
 	if (!session || !session.user || !session.user.name) {
 		return <div>ユーザーセッションが見つかりません</div>
 	}
+
 	const screenName = session.user.name
 
 	// 【1】params.screenNameから、プロフィールを取得
@@ -30,10 +33,10 @@ export default async function ProfilePage() {
 	// 【2】プロフィールを表示
 	return (
 		<div>
-			<h1>{profile.screenName}</h1>
-			<p>{profile.bio}</p>
-			{/* 他のプロフィール情報を表示 */}
-			{/* TODO プロフィールコンポーネント作成する */}
+			<ProfilePanel profile={profile} />
+			<Link href={`/profile/${profile.id}/edit`}>
+				<button>プロフィールを編集</button>
+			</Link>
 		</div>
 	)
 }
