@@ -1,24 +1,37 @@
+// src/app/components/ProfilePanel.tsx
+
 import React from 'react'
 import Image from 'next/image'
 
 interface ProfilePanelProps {
-	imageUrl: string
-	name: string
-	screenName: string
-	bio: string
+	profile: {
+		id: string
+		screenName: string
+		bio: string | null
+		user: {
+			name: string
+			image: string | null
+		}
+	}
 }
 
-const ProfilePanel: React.FC<ProfilePanelProps> = ({ imageUrl, name, screenName, bio }) => {
+const ProfilePanel: React.FC<ProfilePanelProps> = ({ profile }) => {
 	return (
-		<div className="flex items-center space-x-4">
-			<div className="w-20 h-20 rounded-full overflow-hidden">
-				<Image src={imageUrl} alt={name} width={80} height={80} />
+		<div className="profile-panel">
+			<div className="profile-header">
+				{profile.user.image && (
+					<Image
+						src={profile.user.image}
+						alt={`${profile.user.name}'s profile picture`}
+						width={100}
+						height={100}
+						className="profile-image"
+					/>
+				)}
+				<h1 className="profile-name">{profile.user.name}</h1>
+				<p className="profile-screen-name">@{profile.screenName}</p>
 			</div>
-
-			<div>
-				<h2 className="text-xl font-bold">{name}</h2>
-				<p className="text-gray-500">@{screenName}</p>
-			</div>
+			{profile.bio && <p className="profile-bio">{profile.bio}</p>}
 		</div>
 	)
 }
