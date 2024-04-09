@@ -1,5 +1,4 @@
 // src/app/components/ProfilePanel.tsx
-
 import React from 'react'
 import Image from 'next/image'
 
@@ -21,21 +20,23 @@ interface ProfilePanelProps {
 
 const ProfilePanel: React.FC<ProfilePanelProps> = ({ profile }) => {
 	return (
-		<div className="profile-panel">
-			<div className="profile-header">
+		<div className="profile-panel bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+			<div className="profile-header flex items-center mb-4">
 				{profile.user.image && (
 					<Image
 						src={profile.user.image}
 						alt={`${profile.user.name}'s profile picture`}
 						width={100}
 						height={100}
-						className="profile-image"
+						className="profile-image rounded-full mr-4"
 					/>
 				)}
-				<h1 className="profile-name">{profile.user.name}</h1>
-				<p className="profile-screen-name">@{profile.screenName}</p>
+				<div>
+					<h1 className="profile-name text-2xl font-bold text-cyan-400">{profile.user.name}</h1>
+					<p className="profile-screen-name text-gray-400">@{profile.screenName}</p>
+				</div>
 			</div>
-			{profile.bio && <p className="profile-bio">{profile.bio}</p>}
+			{profile.bio && <p className="profile-bio text-gray-300">{profile.bio}</p>}
 		</div>
 	)
 }
