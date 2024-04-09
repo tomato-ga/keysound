@@ -15,27 +15,6 @@ interface postDBinsert {
 	tags?: string[]
 }
 
-// interface VideoResolution {
-// 	width: number
-// 	height: number
-// }
-
-// videoのurlを引数に入れる関数
-// function fetchVideoInfo(url: string): Promise<VideoResolution> {
-// 	return new Promise((resolve) => {
-// 		var video = document.createElement('video')
-// 		video.setAttribute('crossOrigin', 'anonymous')
-// 		video.src = url
-// 		video.addEventListener('loadedmetadata', () => {
-// 			console.log('解像度', video.videoWidth, video.videoHeight) // ここで解像度をログに出力
-// 			resolve({
-// 				width: video.videoWidth,
-// 				height: video.videoHeight
-// 			})
-// 		})
-// 	})
-// }
-
 const UploadPage = () => {
 	const status = SessionCheck()
 
@@ -100,6 +79,7 @@ const UploadPage = () => {
 			const formData = new FormData()
 			formData.append('file', file)
 
+			
 			try {
 				const response = await fetch('/api/s3upload', {
 					method: 'POST',
