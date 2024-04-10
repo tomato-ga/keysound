@@ -1,7 +1,9 @@
+// /Users/don/Codes/keysound/src/app/api/db/savePost/route.ts
+
 import { NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/prisma'
 
-interface postDBinsert {
+interface dbInsertPost {
 	id: string
 	title: string
 	description: string
@@ -12,7 +14,7 @@ interface postDBinsert {
 
 export async function POST(request: Request) {
 	try {
-		const postData: postDBinsert = await request.json()
+		const postData: dbInsertPost = await request.json()
 		console.log('postData', postData)
 
 		// メールアドレスからユーザーを検索
