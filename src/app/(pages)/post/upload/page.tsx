@@ -4,9 +4,8 @@ import { useState, useRef, ChangeEvent, useEffect } from 'react'
 import { SessionCheck } from '@/app/func/Sessioncheck'
 import { UserIdCheck } from '@/app/func/Useridcheck'
 import Link from 'next/link'
-import { prisma } from '@/app/lib/prisma'
 
-interface postDBinsert {
+interface PostDBinsert {
 	id: string
 	title: string
 	description: string
@@ -17,20 +16,9 @@ interface postDBinsert {
 
 const UploadPage = () => {
 	const status = SessionCheck()
-
-	const [title, setTitle] = useState<string>('')
-	const [description, setDescription] = useState<string>('')
-	const [file, setFile] = useState<File | null>(null)
-	const fileInputRef = useRef<HTMLInputElement>(null)
-
-	const [isLoading, setIsLoading] = useState(false)
-	const [uploadedVideo, setUploadedVideo] = useState<string>('')
-	const [uploadedImages, setUploadedImages] = useState<string[]>([])
-	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
-	const [tagInput, setTagInput] = useState<string>('')
-
 	const userEmail = UserIdCheck()
-	const [postData, setPostData] = useState<postDBinsert>({
+
+	const [postData, setPostData] = useState<PostDBinsert>({
 		id: userEmail || '',
 		title: '',
 		description: '',
@@ -39,29 +27,19 @@ const UploadPage = () => {
 		tags: []
 	})
 
+	const [file, setFile] = useState<File | null>(null)
+	const fileInputRef = useRef<HTMLInputElement>(null)
+
+	const [isLoading, setIsLoading] = useState(false)
+	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
+	const [tagInput, setTagInput] = useState<string>('')
+
 	useEffect(() => {
 		setPostData((prevPostData) => ({
 			...prevPostData,
-			videourl: uploadedVideo,
-			imageurl: uploadedImages.join(',') // 複数の画像URLをカンマ区切りの文字列に変換
+			imageurl: postData.imageurl?.split(',').join(',') || ''
 		}))
-	}, [uploadedVideo, uploadedImages])
-
-	// const [videoResolution, setVideoResolution] = useState<VideoResolution | null>(null)
-
-	// 解像度に関するuseEffect
-	// useEffect(() => {
-	// 	const getVideoResolution = async () => {
-	// 		if (uploadedVideo) {
-	// 			// 5秒の遅延を設けて動画の読み込みを待つ
-	// 			setTimeout(async () => {
-	// 				const resolution = await fetchVideoInfo(uploadedVideo)
-	// 				setVideoResolution(resolution)
-	// 			}, 5000)
-	// 		}
-	// 	}
-	// 	getVideoResolution()
-	// }, [uploadedVideo])
+	}, [postData.imageurl])
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -75,12 +53,10 @@ const UploadPage = () => {
 			setFile(file)
 			setIsLoading(true)
 
-			// API経由でアップロード処理
-			const formData = new FormData()
-			formData.append('file', file)
-
-			
 			try {
+				const formData = new FormData()
+				formData.append('file', file)
+
 				const response = await fetch('/api/s3upload', {
 					method: 'POST',
 					body: formData
@@ -90,13 +66,16 @@ const UploadPage = () => {
 					const data = await response.json()
 
 					if (file.type.startsWith('video/')) {
-						setUploadedVideo(data.url)
-						// setVideoResolution({ width: data.width, height: data.height })
-						setHasUploadedVideo(true) // 動画がアップロードされた場合にフラグを立てる
-
-						console.log('Uploaded Video Reso: ', data.width, data.height)
+						setPostData((prevPostData) => ({
+							...prevPostData,
+							videourl: data.url
+						}))
+						setHasUploadedVideo(true)
 					} else if (file.type.startsWith('image/')) {
-						setUploadedImages((prevImages) => [...prevImages, data.url])
+						setPostData((prevPostData) => ({
+							...prevPostData,
+							imageurl: prevPostData.imageurl ? `${prevPostData.imageurl},${data.url}` : data.url
+						}))
 					}
 				} else {
 					console.error('Error uploading file:', response.statusText)
@@ -113,16 +92,6 @@ const UploadPage = () => {
 		fileInputRef.current?.click()
 	}
 
-	// 解像度を取得するボタンのクリックイベントハンドラ
-	// const fetchAndSetVideoResolution = async (url: string) => {
-	// 	const resolution = await fetchVideoInfo(url)
-	// 	setVideoResolution(resolution)
-	// }
-
-	// MEMO DBに保存したい内容
-	// SQL : userid(google), title, description, audiourl, imageurl
-
-	// DB Post 保存 prisma
 	const handleSavePostRequest = async () => {
 		try {
 			const response = await fetch('/api/db/savePost', {
@@ -134,7 +103,6 @@ const UploadPage = () => {
 			})
 
 			if (response.ok) {
-				// 保存成功後の処理
 				setPostData({
 					id: userEmail || '',
 					title: '',
@@ -152,154 +120,168 @@ const UploadPage = () => {
 	}
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		// Enterキーが押された場合
 		if (e.key === 'Enter') {
-			e.preventDefault() // フォームの送信を防ぐ
-			handleAddTags() // タグの追加処理を実行
+			e.preventDefault()
+			handleAddTags()
 		}
 	}
 
-	// タグ入力フィールドに変更があった場合の処理
 	const handleTagInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setTagInput(e.target.value) // 一時的なタグ入力値を更新
+		setTagInput(e.target.value)
 	}
 
-	// タグの追加処理
 	const handleAddTags = () => {
 		if (tagInput.trim()) {
 			const newTags = tagInput
 				.split(',')
 				.map((tag) => tag.trim())
-				.filter((tag) => tag !== '') // カンマで分割し、トリムしてから空ではないタグのみを配列に
+				.filter((tag) => tag !== '')
 			setPostData((prevState) => ({
 				...prevState,
-				tags: [...(prevState.tags || []), ...newTags] // 既存のタグ配列に新しいタグを追加
+				tags: [...(prevState.tags || []), ...newTags]
 			}))
-			setTagInput('') // 入力フィールドをリセット
+			setTagInput('')
 		}
 	}
 
 	if (status === 'authenticated') {
 		return (
-			<div className="flex flex-col justify-start min-h-screen overflow-auto p-6">
-				<div className="bg-white rounded-lg w-full lg:max-w-4xl mx-auto">
-					{/* タイトル */}
-					<div className="mb-4 p-4">
-						<h1 className="text-xl font-bold mb-2">タイトル</h1>
-						<input
-							type="text"
-							placeholder="タイトル入力"
-							className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-							value={postData.title}
-							onChange={(e) => setPostData({ ...postData, title: e.target.value })}
-						/>
-					</div>
-					{/* 説明文 */}
-					<div className="mb-4 p-4">
-						<h1 className="text-xl font-bold mb-2">説明文</h1>
-						<textarea
-							placeholder="説明文を入力"
-							className="w-full h-60 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-							value={postData.description}
-							onChange={(e) => setPostData({ ...postData, description: e.target.value })}
-						/>
-					</div>
+			<div className="bg-gray-900 text-cyan-400 min-h-screen">
+				<div className="container mx-auto px-4 py-8">
+					<div className="bg-gray-800 rounded-lg p-8">
+						<h1 className="text-4xl font-bold mb-8">投稿を作成</h1>
 
-					{/* タグ */}
-					<div className="mb-4 p-4">
-						<h1 className="text-xl font-bold mb-2">タグ</h1>
-						<div>
+						{/* タイトル */}
+						<div className="mb-8">
+							<h2 className="text-2xl font-semibold mb-2">タイトル</h2>
 							<input
 								type="text"
-								placeholder="複数のタグを入力する場合は[タグを追加]ボタンを押すか、Enterキーを押してください"
-								className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-								value={tagInput}
-								onChange={handleTagInputChange}
-								onKeyDown={handleKeyDown} // onKeyDown ハンドラを追加
+								placeholder="タイトル入力"
+								className="w-full bg-gray-700 border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+								value={postData.title}
+								onChange={(e) => setPostData({ ...postData, title: e.target.value })}
 							/>
-							<button
-								className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-								onClick={handleAddTags} // タグの追加ボタンにクリックイベントを設定
-							>
-								タグを追加
-							</button>
-							<div className="flex flex-wrap mt-2">
-								{/* タグの表示と削除: postData.tagsがundefinedでないことを確認し、各タグを表示 */}
-								{postData.tags?.map((tag, index) => (
-									<div key={index} className="bg-gray-200 rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
-										<span>{tag}</span>
-										<button
-											className="ml-2 text-gray-500 hover:text-gray-700"
-											onClick={() =>
-												setPostData((prevState) => ({
-													...prevState,
-													// タグの削除: 特定のインデックスのタグを除外
-													tags: prevState.tags?.filter((_, i) => i !== index) || []
-												}))
-											}
-										>
-											×
-										</button>
-									</div>
-								))}
+						</div>
+
+						{/* 説明文 */}
+						<div className="mb-8">
+							<h2 className="text-2xl font-semibold mb-2">説明文</h2>
+							<textarea
+								placeholder="説明文を入力"
+								className="w-full h-60 bg-gray-700 border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+								value={postData.description}
+								onChange={(e) => setPostData({ ...postData, description: e.target.value })}
+							/>
+						</div>
+
+						{/* タグ */}
+						<div className="mb-8">
+							<h2 className="text-2xl font-semibold mb-2">タグ</h2>
+							<div>
+								<input
+									type="text"
+									placeholder="複数のタグを入力する場合は[タグを追加]ボタンを押すか、Enterキーを押してください"
+									className="w-full bg-gray-700 border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+									value={tagInput}
+									onChange={handleTagInputChange}
+									onKeyDown={handleKeyDown}
+								/>
+								<button
+									className="mt-4 bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-2 px-4 rounded"
+									onClick={handleAddTags}
+								>
+									タグを追加
+								</button>
+								<div className="flex flex-wrap mt-4">
+									{postData.tags?.map((tag, index) => (
+										<div key={index} className="bg-gray-700 rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
+											<span>{tag}</span>
+											<button
+												className="ml-2 text-gray-400 hover:text-gray-100"
+												onClick={() =>
+													setPostData((prevState) => ({
+														...prevState,
+														tags: prevState.tags?.filter((_, i) => i !== index) || []
+													}))
+												}
+											>
+												×
+											</button>
+										</div>
+									))}
+								</div>
 							</div>
 						</div>
-					</div>
 
-					{/* アップロードボタン */}
-					<div className="mb-4 p-4 text-center">
-						<input
-							type="file"
-							ref={fileInputRef}
-							className="hidden"
-							onChange={handleFileChange}
-							accept="image/*,video/*"
-							disabled={hasUploadedVideo} // 動画がアップロードされた場合は無効化
-						/>
-						<button
-							className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-full"
-							title="画像か動画をアップロードする"
-							onClick={handleClickUpload}
-							disabled={hasUploadedVideo} // 動画がアップロードされた場合は無効化
-						>
-							画像・動画をアップする
-						</button>
-					</div>
-					{/* 保存ボタン */}
-					{/* 保存ボタンを押したら、画面遷移させる 、今のままだと保存しても同じ画面にいるため、状態が変わらずに入力できる */}
-					<div className="mb-4 p-4 text-center">
-						<button
-							className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-							onClick={handleSavePostRequest}
-						>
-							保存する
-						</button>
-					</div>
+						{/* アップロードボタン */}
+						<div className="mb-8 text-center">
+							<input
+								type="file"
+								ref={fileInputRef}
+								className="hidden"
+								onChange={handleFileChange}
+								accept="image/*,video/*"
+								disabled={hasUploadedVideo}
+							/>
+							<button
+								className="bg-gray-700 hover:bg-gray-600 text-cyan-400 font-bold py-2 px-4 rounded"
+								title="画像か動画をアップロードする"
+								onClick={handleClickUpload}
+								disabled={hasUploadedVideo}
+							>
+								画像・動画をアップする
+							</button>
+						</div>
 
-					{/* プレビュー */}
-					<div className="mb-4 p-4">
-						<h2 className="text-xl font-bold mb-2 text-center">アップロードしたファイルのプレビュー</h2>
-						{uploadedVideo && (
-							<>
-								<video controls src={uploadedVideo} className="max-w-xs mx-auto" />
-							</>
-						)}
-						<br />
-						{uploadedImages &&
-							uploadedImages.map((imageUrl, index) => (
-								<img key={index} src={imageUrl} alt={`Uploaded Image ${index + 1}`} className="max-w-xs mx-auto mb-2" />
-							))}
+						{/* 保存ボタン */}
+						<div className="text-center">
+							<button
+								className="bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-2 px-4 rounded"
+								onClick={handleSavePostRequest}
+							>
+								保存する
+							</button>
+						</div>
+
+						{/* プレビュー */}
+						<div className="mt-8">
+							<h2 className="text-2xl font-semibold mb-4 text-center">アップロードしたファイルのプレビュー</h2>
+							{postData.videourl && (
+								<>
+									<video controls src={postData.videourl} className="max-w-full mx-auto mb-4" />
+								</>
+							)}
+							{postData.imageurl &&
+								postData.imageurl
+									.split(',')
+									.map((imageUrl, index) => (
+										<img
+											key={index}
+											src={imageUrl}
+											alt={`Uploaded Image ${index + 1}`}
+											className="max-w-full mx-auto mb-4"
+										/>
+									))}
+						</div>
 					</div>
 				</div>
 			</div>
 		)
 	} else if (!status || status === 'unauthenticated') {
 		return (
-			<p>
-				<Link href={`/login`}>ログインしてください</Link>
-			</p>
+			<div className="bg-gray-900 text-cyan-400 min-h-screen">
+				<div className="container mx-auto px-4 py-8">
+					<p>
+						<Link href={`/login`} className="text-cyan-400 hover:text-cyan-300">
+							ログインしてください
+						</Link>
+					</p>
+				</div>
+			</div>
 		)
 	}
+
+	return null
 }
 
 export default UploadPage
