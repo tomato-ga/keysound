@@ -1,9 +1,7 @@
 'use client'
-
 import Link from 'next/link'
 import { truncateDescription, formatDate } from '@/app/func/postFunc'
 import { PostsProps } from '../../../../types'
-import ReactPlayer from 'react-player'
 import VideoPlayer from '../VideoPlayer'
 
 export default function PostsCard({ posts, componentType }: PostsProps) {
