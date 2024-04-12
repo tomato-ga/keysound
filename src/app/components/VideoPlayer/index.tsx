@@ -1,11 +1,14 @@
+// DynamicVideoPlayer.tsx
 'use client'
-
+import { FC } from 'react'
 import ReactPlayer from 'react-player'
 
-interface VideoPlayerProps {
+interface DynamicVideoPlayerProps {
 	videoUrl: string
 }
 
-export default function VideoPlayer({ videoUrl }: VideoPlayerProps) {
+const DynamicVideoPlayer: FC<DynamicVideoPlayerProps> = ({ videoUrl }) => {
 	return <ReactPlayer url={videoUrl} controls width="100%" height="auto" className="w-full h-48 md:h-64 object-cover" />
 }
+
+export default DynamicVideoPlayer
