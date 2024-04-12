@@ -25,3 +25,19 @@ export interface PostsProps {
 	posts: Post[]
 	componentType: 'top' | 'profile'
 }
+
+export interface PostDummy {
+	id: string
+	title: string
+	description: string
+	imageUrl?: string | null
+	videoUrl?: string | null
+	createdat: Date
+	updatedat: Date
+	user: {
+		id?: string
+		email?: string
+		name: string
+		image?: string
+	}
+}
