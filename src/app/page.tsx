@@ -5,7 +5,7 @@ import PostsCard from './components/PostsCard'
 import { Post } from '../../types'
 
 export default async function Home() {
-	const posts = await prisma.post.findMany({
+	const postsPromise = prisma.post.findMany({
 		orderBy: {
 			createdat: 'desc'
 		},
@@ -65,6 +65,8 @@ export default async function Home() {
 		}
 	]
 
+	const [posts] = await Promise.all([postsPromise])
+
 	const allPosts = [...posts, ...dummyPosts]
 
 	return (
@@ -76,3 +78,5 @@ export default async function Home() {
 		</div>
 	)
 }
+
+

@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { truncateDescription, formatDate } from '@/app/func/postFunc'
 import { PostsProps } from '../../../../types'

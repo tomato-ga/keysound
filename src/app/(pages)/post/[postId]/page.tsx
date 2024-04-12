@@ -1,3 +1,5 @@
+// /Users/donbe/Codes/keysound/src/app/(pages)/post/[postId]/page.tsx
+
 import React from 'react'
 import { prisma } from '@/app/lib/prisma'
 import { formatDate } from '@/app/func/postFunc'
