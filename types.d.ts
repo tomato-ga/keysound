@@ -7,13 +7,14 @@ export interface DefaultSession {
 	expires: ISODateString
 }
 
-export interface PostView {
+export interface Post {
 	id: string
 	title: string
 	description: string
-	imageUrl?: string
-	videoUrl?: string
-	createdat: string
+	imageUrl?: string | null
+	videoUrl?: string | null
+	createdat: Date
+	updatedat: Date
 	user: {
 		name: string
 		image?: string

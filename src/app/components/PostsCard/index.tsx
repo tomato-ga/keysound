@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { truncateDescription, formatDate } from '@/app/func/postFunc'
 import { PostsProps } from '../../../../types'
+import ReactPlayer from 'react-player'
+import VideoPlayer from '../VideoPlayer'
 
 export default function PostsCard({ posts, componentType }: PostsProps) {
 	return (
@@ -14,7 +16,7 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 									<div className="bg-gray-800 rounded-lg overflow-hidden">
 										<div className="relative">
 											{post.videoUrl ? (
-												<video src={post.videoUrl} controls className="w-full h-48 md:h-64 object-cover" />
+												<VideoPlayer videoUrl={post.videoUrl} />
 											) : (
 												<img
 													src={post.imageUrl || '/default-image.jpg'}
@@ -52,7 +54,7 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 									<Link href={`/post/${post.id}`}>
 										<div className="relative">
 											{post.videoUrl ? (
-												<video src={post.videoUrl} controls className="w-full h-48 md:h-64 object-cover" />
+												<VideoPlayer videoUrl={post.videoUrl} />
 											) : (
 												<img
 													src={post.imageUrl || '/default-image.jpg'}
