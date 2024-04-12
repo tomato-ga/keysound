@@ -9,7 +9,7 @@ export const config = {
 	}
 }
 
-// TODO cloudflare R2にして、転送量削減する , 遅いけどまぁしゃあない
+// TODO 2024/04/12 cloudflare R2にして、転送量削減する , 遅いけどまぁしゃあない
 
 if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
 	throw new Error('AWS KEY is not found')
