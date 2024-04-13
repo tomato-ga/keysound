@@ -27,7 +27,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 				<div className="flex">
 					<Sidebar />
 					<div className="flex-1">
-						<NextAuthProvider>{children}</NextAuthProvider>
+						<NextAuthProvider>
+							<main className="container mx-auto">{children}</main>
+						</NextAuthProvider>
 						<Footer />
 					</div>
 				</div>
