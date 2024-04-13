@@ -1,30 +1,21 @@
-// src/app/components/Sidebar.tsx
-import Link from 'next/link'
+// src/components/Sidebar.tsx
+'use client'
+
+import React from 'react'
+import SideCategoryLinks from './SideCategoryLinks'
+import useSidebarStore from '../(pages)/stores/useSiderbar'
 
 const Sidebar: React.FC = () => {
+	const sidebarOpen = useSidebarStore((state) => state.sidebarOpen)
+
 	return (
-		<div className="w-64 bg-gray-800 text-cyan-400 p-4">
-			<div className="mb-8">
-				<h2 className="text-xl font-bold mb-2">ホーム</h2>
-				<ul>
-					<li className="mb-1">
-						<Link href="/">検索</Link>
-					</li>
-				</ul>
-			</div>
-			<div>
-				<h2 className="text-xl font-bold mb-2">タグ</h2>
-				<ul>
-					<li className="mb-1">
-						<Link href="/tags/electronic">エレクトロニック</Link>
-					</li>
-					<li className="mb-1">
-						<Link href="/tags/techno">テクノ</Link>
-					</li>
-					<li className="mb-1">
-						<Link href="/tags/hardstyle">ハードスタイル</Link>
-					</li>
-				</ul>
+		<div
+			className={`bg-white p-4 order-2 md:order-1 transform ${
+				sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+			} transition-transform duration-300 ease-in-out fixed inset-y-0 left-0 xl:relative xl:translate-x-0 z-20`}
+		>
+			<div className="text-black">
+				<SideCategoryLinks />
 			</div>
 		</div>
 	)
