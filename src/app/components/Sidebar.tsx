@@ -12,20 +12,6 @@ const Sidebar: React.FC = () => {
 					</li>
 				</ul>
 			</div>
-			<div className="mb-8">
-				<h2 className="text-xl font-bold mb-2">ランキング</h2>
-				<ul>
-					<li className="mb-1">
-						<Link href="/ranking/daily">デイリー</Link>
-					</li>
-					<li className="mb-1">
-						<Link href="/ranking/weekly">ウィークリー</Link>
-					</li>
-					<li className="mb-1">
-						<Link href="/ranking/monthly">マンスリー</Link>
-					</li>
-				</ul>
-			</div>
 			<div>
 				<h2 className="text-xl font-bold mb-2">タグ</h2>
 				<ul>
