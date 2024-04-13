@@ -1,3 +1,4 @@
+// Header.tsx
 'use client'
 import React from 'react'
 import Link from 'next/link'
@@ -23,40 +24,28 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 					</button>
 				</div>
 				<div className="overflow-x-auto">
-					<ul className="flex flex-row gap-3 whitespace-nowrap">
+					<ul className="flex flex-row gap-3 whitespace-nowrap text-gray-300 hover:text-cyan-400">
 						<li>
-							<Link href="/about" className="text-gray-300 hover:text-cyan-400">
-								検索
-							</Link>
+							<Link href="/about">検索</Link>
 						</li>
 						<li>
-							<Link href="/profile" className="text-gray-300 hover:text-cyan-400">
-								プロフィール
-							</Link>
+							<Link href="/profile">プロフィール</Link>
 						</li>
 						{session ? (
 							<li>
-								<Link href="/post/upload" className="text-gray-300 hover:text-cyan-400">
-									音を投稿する
-								</Link>
+								<Link href="/post/upload">音を投稿する</Link>
 							</li>
 						) : (
 							<div className="text-gray-300">音を投稿するにはログイン</div>
 						)}
 						<li>
-							<Link href="/about" className="text-gray-300 hover:text-cyan-400">
-								About
-							</Link>
+							<Link href="/about">About</Link>
 						</li>
 						<li>
-							<Link href="/blog" className="text-gray-300 hover:text-cyan-400">
-								Blog
-							</Link>
+							<Link href="/blog">Blog</Link>
 						</li>
 						<li>
-							<Link href="/login" className="text-gray-300 hover:text-cyan-400">
-								ログイン
-							</Link>
+							<Link href="/login">ログイン</Link>
 						</li>
 					</ul>
 				</div>
