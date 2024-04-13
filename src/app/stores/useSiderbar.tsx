@@ -1,3 +1,5 @@
+/* このコード スニペットは、React 用の小型で高速な状態管理ライブラリである Zustand を使用して、`useSidebarStore` というカスタム フックを定義する TypeScript
+ファイルです。 */
 // src/stores/useSidebarStore.ts
 
 import { create } from 'zustand'
