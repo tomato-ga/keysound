@@ -1,3 +1,8 @@
+/**
+ * TypeScript React の `DynamicVideoPlayer` コンポーネントは、動的な URL とレスポンシブなスタイルを備えたビデオ プレーヤーをレンダリングします。
+ * @param  - `DynamicVideoPlayer.tsx` ファイルは、`react-player` ライブラリの `ReactPlayer` コンポーネントを使用してビデオ
+ * プレーヤーをレンダリングする TypeScript React コンポーネントです。
+ */
 // DynamicVideoPlayer.tsx
 'use client'
 import { FC } from 'react'

@@ -1,3 +1,5 @@
+
+/* 提供されたコード スニペットは、サイドバー用の TypeScript React コンポーネントです。コードが実行する内容の内訳は次のとおりです。 */
 'use client'
 import React, { useEffect, useState } from 'react'
 import SideCategoryLinks from './SideCategoryLinks'

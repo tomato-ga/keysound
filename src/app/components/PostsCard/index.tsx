@@ -1,3 +1,5 @@
+/* This code snippet is a TypeScript React component named `PostsCard` that renders a list of posts
+based on the `componentType` prop. */
 // PostsCard.tsx
 import Link from 'next/link'
 import { truncateDescription, formatDate } from '@/app/func/postFunc'
