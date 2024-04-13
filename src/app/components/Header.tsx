@@ -1,8 +1,19 @@
-import Link from 'next/link'
-import { useAuthSession } from '../func/useAuthSession'
-import { Session, getServerSession } from 'next-auth'
+// src/components/Header.tsx
 
-const Header = ({ session }: { session: Session | null }) => {
+'use client'
+
+import React from 'react'
+import Link from 'next/link'
+import useSidebarStore from '../(pages)/stores/useSiderbar'
+import { Session } from 'next-auth'
+
+interface HeaderProps {
+	session: Session | null
+}
+
+const Header: React.FC<HeaderProps> = ({ session }) => {
+	const toggleSidebar = useSidebarStore((state) => state.toggleSidebar)
+
 	return (
 		<header className="bg-gray-800 py-5 border-b border-gray-700">
 			<div className="container mx-auto flex flex-col items-center sm:flex-row sm:justify-between">
