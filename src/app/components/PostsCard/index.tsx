@@ -13,11 +13,11 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 				<>
 					{posts.map((post) => (
 						<Link href={`/post/${post.id}`} key={post.id}>
-							<div className="bg-white rounded-lg overflow-hidden shadow m-2 md:m-3 lg:m-4">
+							<div className="bg-white rounded-lg overflow-hidden shadow m-2 md:m-2 lg:m-2 h-96">
 								<div className="relative">{post.videoUrl && <DynamicVideoPlayer videoUrl={post.videoUrl} />}</div>
 								<div className="px-4 py-6">
 									<h3 className="text-black text-lg md:text-xl font-semibold mb-2">{post.title}</h3>
-									<p className="text-gray-700 mb-2 md:mb-4">{truncateDescription(post.description)}</p>
+									<p className="text-gray-700 mb-2 md:mb-4 h-20 overflow-hidden text-ellipsis">{post.description}</p>
 									<div className="flex justify-between items-center">
 										<div className="flex items-center">
 											<img
@@ -47,7 +47,7 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 										<img
 											src={post.imageUrl || '/default-image.jpg'}
 											alt={post.title}
-											className="w-full h-48 object-cover"
+											className="w-full h-80 object-cover"
 										/>
 									)}
 								</div>

@@ -11,15 +11,15 @@ interface Category {
 
 // サンプルカテゴリデータ
 const categories: Category[] = [
-	{ id: 1, name: 'カテゴリ1カテゴリ1カテゴリ1カテゴリ1カテゴリ1', url: '/category1' },
-	{ id: 2, name: 'カテゴリ2', url: '/category2' },
-	{ id: 3, name: 'カテゴリ3', url: '/category3' }
+	{ id: 1, name: 'サイドバー', url: '/category1' },
+	{ id: 2, name: 'サイドバー2', url: '/category2' },
+	{ id: 3, name: 'サイドバー3', url: '/category3' }
 ]
 
 const SideCategoryLinks: React.FC = () => {
 	return (
 		<nav className='w-[200px]'>
-			<ul className="space-y-2">
+			<ul className="space-y-0">
 				{categories.map((category) => (
 					<li key={category.id}>
 						<Link

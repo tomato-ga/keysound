@@ -3,7 +3,8 @@
  * @param  - `DynamicVideoPlayer.tsx` ファイルは、`react-player` ライブラリの `ReactPlayer` コンポーネントを使用してビデオ
  * プレーヤーをレンダリングする TypeScript React コンポーネントです。
  */
-// DynamicVideoPlayer.tsx
+
+// /Users/ore/Documents/GitHub/keysound/src/app/components/VideoPlayer/index.tsx
 'use client'
 import { FC } from 'react'
 import ReactPlayer from 'react-player'
@@ -13,7 +14,7 @@ interface DynamicVideoPlayerProps {
 }
 
 const DynamicVideoPlayer: FC<DynamicVideoPlayerProps> = ({ videoUrl }) => {
-	return <ReactPlayer url={videoUrl} controls width="100%" height="auto" className="w-full h-48 md:h-64 object-cover" />
+	return <ReactPlayer url={videoUrl} width="100%" height="180px" className="w-full object-cover" />
 }
 
 export default DynamicVideoPlayer
