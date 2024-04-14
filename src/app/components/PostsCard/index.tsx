@@ -1,5 +1,3 @@
-/* This code snippet is a TypeScript React component named `PostsCard` that renders a list of posts
-based on the `componentType` prop. */
 // PostsCard.tsx
 import Link from 'next/link'
 import { truncateDescription, formatDate } from '@/app/func/postFunc'
@@ -15,15 +13,11 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 				<>
 					{posts.map((post) => (
 						<Link href={`/post/${post.id}`} key={post.id}>
-							<div className="bg-[#141921] rounded-lg overflow-hidden m-2 md:m-3 lg:m-4">
-								<div className="relative">
-									{post.videoUrl && <DynamicVideoPlayer videoUrl={post.videoUrl} />}
-									<div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-gradient-to-t from-black to-transparent">
-										<h3 className="text-cyan-400 text-lg md:text-xl font-semibold">{post.title}</h3>
-									</div>
-								</div>
+							<div className="bg-white rounded-lg overflow-hidden shadow m-2 md:m-3 lg:m-4">
+								<div className="relative">{post.videoUrl && <DynamicVideoPlayer videoUrl={post.videoUrl} />}</div>
 								<div className="px-4 py-6">
-									<p className="text-gray-300 mb-2 md:mb-4">{truncateDescription(post.description)}</p>
+									<h3 className="text-black text-lg md:text-xl font-semibold mb-2">{post.title}</h3>
+									<p className="text-gray-700 mb-2 md:mb-4">{truncateDescription(post.description)}</p>
 									<div className="flex justify-between items-center">
 										<div className="flex items-center">
 											<img
@@ -31,9 +25,9 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 												alt={post.user.name}
 												className="w-6 h-6 md:w-8 md:h-8 rounded-full mr-2"
 											/>
-											<p className="text-cyan-400 font-semibold">{post.user.name}</p>
+											<p className="text-gray-900 font-semibold">{post.user.name}</p>
 										</div>
-										<p className="text-gray-500 text-xs md:text-sm">{formatDate(post.createdat)}</p>
+										<p className="text-gray-600 text-xs md:text-sm">{formatDate(post.createdat)}</p>
 									</div>
 								</div>
 							</div>
@@ -41,11 +35,10 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 					))}
 				</>
 			)}
-
 			{componentType === 'profile' && (
 				<>
 					{posts.map((post) => (
-						<div key={post.id} className="bg-[#141921] rounded-lg overflow-hidden">
+						<div key={post.id} className="bg-white rounded-lg overflow-hidden shadow">
 							<Link href={`/post/${post.id}`}>
 								<div className="relative">
 									{post.videoUrl ? (
@@ -57,13 +50,11 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 											className="w-full h-48 object-cover"
 										/>
 									)}
-									<div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-gradient-to-t from-black to-transparent">
-										<h3 className="text-cyan-400 text-lg md:text-xl font-semibold">{post.title}</h3>
-									</div>
 								</div>
 								<div className="px-4 py-6">
-									<p className="text-gray-400 mb-2 md:mb-4">{truncateDescription(post.description)}</p>
-									<p className="text-gray-500 text-xs md:text-sm">{formatDate(post.updatedat)}</p>
+									<h3 className="text-black text-lg md:text-xl font-semibold mb-2">{post.title}</h3>
+									<p className="text-gray-700 mb-2 md:mb-4">{truncateDescription(post.description)}</p>
+									<p className="text-gray-600 text-xs md:text-sm">{formatDate(post.updatedat)}</p>
 								</div>
 							</Link>
 						</div>

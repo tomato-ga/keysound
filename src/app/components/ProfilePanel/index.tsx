@@ -20,7 +20,7 @@ interface ProfilePanelProps {
 
 const ProfilePanel: React.FC<ProfilePanelProps> = ({ profile }) => {
 	return (
-		<div className="profile-panel bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+		<div className="profile-panel bg-white p-6 rounded-lg shadow-lg mb-8">
 			<div className="profile-header flex items-center mb-4">
 				{profile.user.image && (
 					<Image
@@ -32,11 +32,11 @@ const ProfilePanel: React.FC<ProfilePanelProps> = ({ profile }) => {
 					/>
 				)}
 				<div>
-					<h1 className="profile-name text-2xl font-bold text-cyan-400">{profile.user.name}</h1>
-					<p className="profile-screen-name text-gray-400">@{profile.screenName}</p>
+					<h1 className="profile-name text-2xl font-bold text-gray-600">{profile.user.name}</h1>
+					<p className="profile-screen-name text-gray-600">@{profile.screenName}</p>
 				</div>
 			</div>
-			{profile.bio && <p className="profile-bio text-gray-300">{profile.bio}</p>}
+			{profile.bio && <p className="profile-bio text-gray-600">{profile.bio}</p>}
 		</div>
 	)
 }

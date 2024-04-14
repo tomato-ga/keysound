@@ -57,7 +57,7 @@ const UploadPage = () => {
 				const formData = new FormData()
 				formData.append('file', file)
 
-				const response = await fetch('/api/s3upload', {
+				const response = await fetch('/api/r2upload', {
 					method: 'POST',
 					body: formData
 				})
@@ -146,9 +146,9 @@ const UploadPage = () => {
 
 	if (status === 'authenticated') {
 		return (
-			<div className="bg-gray-900 text-cyan-400 min-h-screen">
+			<div className="bg-white text-black min-h-screen">
 				<div className="container mx-auto px-4 py-8">
-					<div className="bg-gray-800 rounded-lg p-8">
+					<div className="bg-white rounded-lg p-8 shadow-lg">
 						<h1 className="text-4xl font-bold mb-8">投稿を作成</h1>
 
 						{/* タイトル */}
@@ -157,7 +157,7 @@ const UploadPage = () => {
 							<input
 								type="text"
 								placeholder="タイトル入力"
-								className="w-full bg-gray-700 border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+								className="w-full bg-gray-200 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
 								value={postData.title}
 								onChange={(e) => setPostData({ ...postData, title: e.target.value })}
 							/>
@@ -168,7 +168,7 @@ const UploadPage = () => {
 							<h2 className="text-2xl font-semibold mb-2">説明文</h2>
 							<textarea
 								placeholder="説明文を入力"
-								className="w-full h-60 bg-gray-700 border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+								className="w-full h-60 bg-gray-200 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
 								value={postData.description}
 								onChange={(e) => setPostData({ ...postData, description: e.target.value })}
 							/>
@@ -181,23 +181,23 @@ const UploadPage = () => {
 								<input
 									type="text"
 									placeholder="複数のタグを入力する場合は[タグを追加]ボタンを押すか、Enterキーを押してください"
-									className="w-full bg-gray-700 border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+									className="w-full bg-gray-200 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
 									value={tagInput}
 									onChange={handleTagInputChange}
 									onKeyDown={handleKeyDown}
 								/>
 								<button
-									className="mt-4 bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-2 px-4 rounded"
+									className="mt-4 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
 									onClick={handleAddTags}
 								>
 									タグを追加
 								</button>
 								<div className="flex flex-wrap mt-4">
 									{postData.tags?.map((tag, index) => (
-										<div key={index} className="bg-gray-700 rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
+										<div key={index} className="bg-gray-200 rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
 											<span>{tag}</span>
 											<button
-												className="ml-2 text-gray-400 hover:text-gray-100"
+												className="ml-2 text-gray-600 hover:text-gray-800"
 												onClick={() =>
 													setPostData((prevState) => ({
 														...prevState,
@@ -224,7 +224,7 @@ const UploadPage = () => {
 								disabled={hasUploadedVideo}
 							/>
 							<button
-								className="bg-gray-700 hover:bg-gray-600 text-cyan-400 font-bold py-2 px-4 rounded"
+								className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
 								title="画像か動画をアップロードする"
 								onClick={handleClickUpload}
 								disabled={hasUploadedVideo}
@@ -236,7 +236,7 @@ const UploadPage = () => {
 						{/* 保存ボタン */}
 						<div className="text-center">
 							<button
-								className="bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-2 px-4 rounded"
+								className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
 								onClick={handleSavePostRequest}
 							>
 								保存する
@@ -269,10 +269,10 @@ const UploadPage = () => {
 		)
 	} else if (!status || status === 'unauthenticated') {
 		return (
-			<div className="bg-gray-900 text-cyan-400 min-h-screen">
+			<div className="bg-white text-black min-h-screen">
 				<div className="container mx-auto px-4 py-8">
 					<p>
-						<Link href={`/login`} className="text-cyan-400 hover:text-cyan-300">
+						<Link href={`/login`} className="text-black hover:text-gray-800">
 							ログインしてください
 						</Link>
 					</p>

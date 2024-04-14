@@ -16,7 +16,17 @@ export default async function ProfilePage() {
 
 	const profile = await prisma.profile.findFirst({
 		where: { user: { name: session.user.name } },
-		include: { user: { include: { posts: true } } }
+		include: {
+			user: {
+				include: {
+					posts: {
+						include: {
+							user: true
+						}
+					}
+				}
+			}
+		}
 	})
 
 	if (!profile) {
@@ -26,7 +36,7 @@ export default async function ProfilePage() {
 	console.log('profile', profile.user.posts)
 
 	return (
-		<div className="bg-gray-900 min-h-screen text-gray-300">
+		<div className="bg-white">
 			<div className="container mx-auto px-4 py-8">
 				<ProfilePanel profile={profile} />
 				<Link href={`/profile/${profile.user.id}/edit`}>
