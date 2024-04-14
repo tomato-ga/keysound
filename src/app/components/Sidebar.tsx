@@ -21,21 +21,15 @@ const Sidebar: React.FC = () => {
 	console.log('Sidebar open:', sidebarOpen)
 
 	return (
-		<>
-			{(sidebarOpen || isLargeScreen) && (
-				<div
-					className={`bg-gray-800 p-4 transform ${
-						sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-					} transition-transform duration-300 ease-in-out fixed inset-y-0 left-0 z-20 ${
-						isLargeScreen ? 'xl:translate-x-0' : ''
-					}`}
-				>
-					<div className="text-gray-300">
-						<SideCategoryLinks />
-					</div>
-				</div>
-			)}
-		</>
+		<div
+			className={`bg-white p-4 order-2 md:order-1 transform ${
+				sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+			} transition-transform duration-300 ease-in-out fixed inset-y-0 left-0 lg:relative lg:translate-x-0 z-20`}
+		>
+			<div className="text-black">
+				<SideCategoryLinks />
+			</div>
+		</div>
 	)
 }
 

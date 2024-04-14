@@ -13,42 +13,53 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 	const { toggleSidebar } = useSidebarStore()
 
 	return (
-		<header className="bg-gray-800 py-5 border-b border-gray-700">
-			<div className="container mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between">
-				<div className="flex justify-between items-center w-full sm:w-auto">
-					<h1 className="text-cyan-400 text-2xl font-bold mb-4 sm:mb-0">
-						<Link href="/">キーボードサウンド</Link>
-					</h1>
-					<button onClick={toggleSidebar} className="sm:hidden">
-						🍔
-					</button>
+		<header className="relative">
+			<div className="flex items-center h-12 pl-3 justify-between bg-[#141921] border-t-2 border-orange-300">
+				<div className="flex items-center">
+					{/* <img src="/logo.png" alt="キーボードサウンド" className="h-8" /> */}
+					<Link href="/">
+						<span className="text-white px-3 rounded-sm cursor-pointer font-bold">キーボードサウンド</span>
+					</Link>
 				</div>
-				<div className="overflow-x-auto">
-					<ul className="flex flex-row gap-3 whitespace-nowrap text-gray-300 hover:text-cyan-400">
-						<li>
-							<Link href="/about">検索</Link>
-						</li>
-						<li>
-							<Link href="/profile">プロフィール</Link>
-						</li>
-						{session ? (
-							<li>
-								<Link href="/post/upload">音を投稿する</Link>
-							</li>
-						) : (
-							<div className="text-gray-300">音を投稿するにはログイン</div>
-						)}
-						<li>
-							<Link href="/about">About</Link>
-						</li>
-						<li>
-							<Link href="/blog">Blog</Link>
-						</li>
-						<li>
-							<Link href="/login">ログイン</Link>
-						</li>
-					</ul>
+				<div className="flex space-x-2 lg:space-x-4">
+					<Link href="/about">
+						<span className="text-white hover:text-yellow-400 px-2 py-1 rounded-md cursor-pointer font-semibold">
+							検索
+						</span>
+					</Link>
+					<Link href="/profile">
+						<span className="text-white hover:text-yellow-400 px-2 py-1 rounded-md cursor-pointer font-semibold">
+							プロフィール
+						</span>
+					</Link>
+					{session ? (
+						<Link href="/post/upload">
+							<span className="text-white hover:text-yellow-400 px-2 py-1 rounded-md cursor-pointer font-semibold">
+								音を投稿する
+							</span>
+						</Link>
+					) : (
+						<div className="text-white">音を投稿するにはログイン</div>
+					)}
+					<Link href="/about">
+						<span className="text-white hover:text-yellow-400 px-2 py-1 rounded-md cursor-pointer font-semibold">
+							About
+						</span>
+					</Link>
+					<Link href="/blog">
+						<span className="text-white hover:text-yellow-400 px-2 py-1 rounded-md cursor-pointer font-semibold">
+							Blog
+						</span>
+					</Link>
+					<Link href="/login">
+						<span className="text-white hover:text-yellow-400 px-2 py-1 rounded-md cursor-pointer font-semibold">
+							ログイン
+						</span>
+					</Link>
 				</div>
+				<button onClick={toggleSidebar} className="lg:hidden text-white">
+					🍔
+				</button>
 			</div>
 		</header>
 	)

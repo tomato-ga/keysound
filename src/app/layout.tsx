@@ -24,15 +24,13 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 		<html lang="ja">
 			<body className={noto.className}>
 				<Header session={session} />
-				<div className="flex">
+				<div className="mx-auto flex flex-col md:flex-row justify-between md:justify-start min-h-screen bg-white">
+					<main className="w-full md:w-full p-4 bg-white order-1 md:order-2">
+						<NextAuthProvider>{children}</NextAuthProvider>
+					</main>
 					<Sidebar />
-					<div className="flex-1">
-						<NextAuthProvider>
-							<main className="container mx-auto">{children}</main>
-						</NextAuthProvider>
-						<Footer />
-					</div>
 				</div>
+				<Footer />
 			</body>
 		</html>
 	)
