@@ -42,7 +42,22 @@ model Post {
   tags        PostTag[]
   likes       Like[]
   comments    Comment[]
+  part        Part?
+  partId      String?
 }
+
+model Part {
+  id        String   @id @default(cuid())
+  case      String
+  weight    Float
+  plate     String
+  switches  String
+  keyCaps   String
+  mount     String
+  postId    String @unique
+  post      Post @relation(fields: [postId], references: [id])
+}
+
 
 model Tag {
   id    String    @id @default(cuid())
