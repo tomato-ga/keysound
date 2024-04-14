@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 		})
 
 		console.log('Post created:', JSON.stringify(createdPost, null, 2))
-		return NextResponse.json({ message: 'Post created successfully' })
+		return NextResponse.json({ message: 'Post created successfully', res: createdPost })
 	} catch (error) {
 		console.error('Error creating post:', error)
 		return NextResponse.json({ error: 'Failed to create post' }, { status: 500 })

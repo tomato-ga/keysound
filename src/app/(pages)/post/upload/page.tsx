@@ -4,8 +4,10 @@ import { useState, useRef, ChangeEvent, useEffect } from 'react'
 import { SessionCheck } from '@/app/func/Sessioncheck'
 import { UserIdCheck } from '@/app/func/Useridcheck'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { CircularProgress } from '@mui/material'
 
-interface PostDBinsert {
+interface postDbInsert {
 	id: string
 	title: string
 	description: string
@@ -15,10 +17,11 @@ interface PostDBinsert {
 }
 
 const UploadPage = () => {
+	const router = useRouter()
 	const status = SessionCheck()
 	const userEmail = UserIdCheck()
 
-	const [postData, setPostData] = useState<PostDBinsert>({
+	const [postData, setPostData] = useState<postDbInsert>({
 		id: userEmail || '',
 		title: '',
 		description: '',
@@ -27,7 +30,6 @@ const UploadPage = () => {
 		tags: []
 	})
 
-	const [file, setFile] = useState<File | null>(null)
 	const fileInputRef = useRef<HTMLInputElement>(null)
 
 	const [isLoading, setIsLoading] = useState(false)
@@ -50,7 +52,6 @@ const UploadPage = () => {
 				return
 			}
 
-			setFile(file)
 			setIsLoading(true)
 
 			try {
@@ -65,24 +66,24 @@ const UploadPage = () => {
 				if (response.ok) {
 					const data = await response.json()
 
-					if (file.type.startsWith('video/')) {
+					if (file.type.startsWith('image/')) {
+						setPostData((prevPostData) => ({
+							...prevPostData,
+							imageurl: prevPostData.imageurl ? `${prevPostData.imageurl},${data.url}` : data.url
+						}))
+					} else if (file.type.startsWith('video/')) {
 						setPostData((prevPostData) => ({
 							...prevPostData,
 							videourl: data.url
 						}))
 						setHasUploadedVideo(true)
-					} else if (file.type.startsWith('image/')) {
-						setPostData((prevPostData) => ({
-							...prevPostData,
-							imageurl: prevPostData.imageurl ? `${prevPostData.imageurl},${data.url}` : data.url
-						}))
 					}
 				} else {
 					console.error('Error uploading file:', response.statusText)
 				}
+				setIsLoading(false)
 			} catch (error) {
 				console.error('Error uploading file:', error)
-			} finally {
 				setIsLoading(false)
 			}
 		}
@@ -103,14 +104,11 @@ const UploadPage = () => {
 			})
 
 			if (response.ok) {
-				setPostData({
-					id: userEmail || '',
-					title: '',
-					description: '',
-					imageurl: '',
-					videourl: '',
-					tags: []
-				})
+				const data = await response.json()
+				const createdPost = data.res
+
+				// アップロード完了後、/post/postIdにリダイレクト
+				router.push(`/post/${createdPost.id}`)
 			} else {
 				console.error('Error saving post:', response.statusText)
 			}
@@ -148,7 +146,7 @@ const UploadPage = () => {
 		return (
 			<div className="bg-white text-black min-h-screen">
 				<div className="container mx-auto px-4 py-8">
-					<div className="bg-white rounded-lg p-8 shadow-lg">
+					<div className="bg-white pl-8 m-4 border-l-2">
 						<h1 className="text-4xl font-bold mb-8">投稿を作成</h1>
 
 						{/* タイトル */}
@@ -157,7 +155,7 @@ const UploadPage = () => {
 							<input
 								type="text"
 								placeholder="タイトル入力"
-								className="w-full bg-gray-200 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+								className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
 								value={postData.title}
 								onChange={(e) => setPostData({ ...postData, title: e.target.value })}
 							/>
@@ -168,7 +166,7 @@ const UploadPage = () => {
 							<h2 className="text-2xl font-semibold mb-2">説明文</h2>
 							<textarea
 								placeholder="説明文を入力"
-								className="w-full h-60 bg-gray-200 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+								className="w-full h-60 bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
 								value={postData.description}
 								onChange={(e) => setPostData({ ...postData, description: e.target.value })}
 							/>
@@ -181,13 +179,13 @@ const UploadPage = () => {
 								<input
 									type="text"
 									placeholder="複数のタグを入力する場合は[タグを追加]ボタンを押すか、Enterキーを押してください"
-									className="w-full bg-gray-200 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+									className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
 									value={tagInput}
 									onChange={handleTagInputChange}
 									onKeyDown={handleKeyDown}
 								/>
 								<button
-									className="mt-4 bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+									className="mt-4 bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
 									onClick={handleAddTags}
 								>
 									タグを追加
@@ -224,7 +222,7 @@ const UploadPage = () => {
 								disabled={hasUploadedVideo}
 							/>
 							<button
-								className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+								className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
 								title="画像か動画をアップロードする"
 								onClick={handleClickUpload}
 								disabled={hasUploadedVideo}
@@ -236,14 +234,14 @@ const UploadPage = () => {
 						{/* 保存ボタン */}
 						<div className="text-center">
 							<button
-								className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded"
+								className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
 								onClick={handleSavePostRequest}
 							>
 								保存する
 							</button>
 						</div>
 
-						{/* プレビュー */}
+						{/* プレビュー　アップロード中のスピナーと完了メッセージ */}
 						<div className="mt-8">
 							<h2 className="text-2xl font-semibold mb-4 text-center">アップロードしたファイルのプレビュー</h2>
 							{postData.videourl && (
@@ -262,6 +260,13 @@ const UploadPage = () => {
 											className="max-w-full mx-auto mb-4"
 										/>
 									))}
+
+							{/* アップロード中のスピナー */}
+							{isLoading && (
+								<div className="flex justify-center items-center mt-4">
+									<CircularProgress />
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
