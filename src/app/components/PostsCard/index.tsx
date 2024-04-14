@@ -15,7 +15,7 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 				<>
 					{posts.map((post) => (
 						<Link href={`/post/${post.id}`} key={post.id}>
-							<div className="bg-gray-800 rounded-lg overflow-hidden m-2 md:m-3 lg:m-4">
+							<div className="bg-[#141921] rounded-lg overflow-hidden m-2 md:m-3 lg:m-4">
 								<div className="relative">
 									{post.videoUrl && <DynamicVideoPlayer videoUrl={post.videoUrl} />}
 									<div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-gradient-to-t from-black to-transparent">
@@ -45,7 +45,7 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 			{componentType === 'profile' && (
 				<>
 					{posts.map((post) => (
-						<div key={post.id} className="bg-gray-800 rounded-lg overflow-hidden">
+						<div key={post.id} className="bg-[#141921] rounded-lg overflow-hidden">
 							<Link href={`/post/${post.id}`}>
 								<div className="relative">
 									{post.videoUrl ? (
