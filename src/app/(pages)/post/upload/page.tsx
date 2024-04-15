@@ -5,7 +5,7 @@ import { SessionCheck } from '@/app/func/Sessioncheck'
 import { UserIdCheck } from '@/app/func/Useridcheck'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { CircularProgress } from '@mui/material'
+
 import TitleInput from '@/app/components/Upload/TitleInput'
 import DescriptionInput from '@/app/components/Upload/DescriptionInput'
 import TagInput from '@/app/components/Upload/Taginput'
@@ -17,7 +17,6 @@ interface postDbInsert {
 	id: string
 	title: string
 	description: string
-	imageurl?: string
 	videourl?: string
 	tags?: string[]
 }
@@ -31,7 +30,6 @@ const UploadPage = () => {
 		id: userEmail || '',
 		title: '',
 		description: '',
-		imageurl: '',
 		videourl: '',
 		tags: []
 	})
@@ -42,16 +40,14 @@ const UploadPage = () => {
 	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
 	const [tagInput, setTagInput] = useState<string>('')
 
-	useEffect(() => {
-		setPostData((prevPostData) => ({
-			...prevPostData,
-			imageurl: postData.imageurl?.split(',').join(',') || ''
-		}))
-	}, [postData.imageurl])
-
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
 		if (file) {
+			if (!file.type.startsWith('video/')) {
+				alert('動画ファイルのみアップロードできます')
+				return
+			}
+
 			const fileSizeInMB = file.size / (1024 * 1024)
 			if (fileSizeInMB > 100) {
 				alert('ファイルサイズが100MBを超えています。動画のファイルサイズが100MB以下の場合にアップロードできます')
@@ -71,19 +67,11 @@ const UploadPage = () => {
 
 				if (response.ok) {
 					const data = await response.json()
-
-					if (file.type.startsWith('image/')) {
-						setPostData((prevPostData) => ({
-							...prevPostData,
-							imageurl: prevPostData.imageurl ? `${prevPostData.imageurl},${data.url}` : data.url
-						}))
-					} else if (file.type.startsWith('video/')) {
-						setPostData((prevPostData) => ({
-							...prevPostData,
-							videourl: data.url
-						}))
-						setHasUploadedVideo(true)
-					}
+					setPostData((prevPostData) => ({
+						...prevPostData,
+						videourl: data.url
+					}))
+					setHasUploadedVideo(true)
 				} else {
 					console.error('Error uploading file:', response.statusText)
 				}
@@ -184,11 +172,7 @@ const UploadPage = () => {
 
 						<SaveButton onSave={handleSavePostRequest} />
 
-						<PreviewSection
-							videoUrl={postData.videourl}
-							imageUrls={postData.imageurl?.split(',') || []}
-							isLoading={isLoading}
-						/>
+						<PreviewSection videoUrl={postData.videourl} isLoading={isLoading} />
 					</div>
 				</div>
 			</div>
