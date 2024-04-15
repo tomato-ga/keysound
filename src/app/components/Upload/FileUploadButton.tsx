@@ -19,16 +19,17 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onFileChange, hasUp
 				ref={fileInputRef}
 				className="hidden"
 				onChange={onFileChange}
-				accept="image/*,video/*"
+				accept="video/*"
 				disabled={hasUploadedVideo}
 			/>
 			<button
 				className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
-				title="画像か動画をアップロードする"
+				title="動画をアップロードする"
 				onClick={handleClickUpload}
 				disabled={hasUploadedVideo}
 			>
-				画像・動画をアップする
+				動画を選択 <br />
+				<small>※アップロードできるファイルは100MBまでとなっています</small>
 			</button>
 		</div>
 	)

@@ -8,6 +8,8 @@ interface TagInputProps {
 	onRemoveTag: (index: number) => void
 }
 
+// TODO タグ一覧をDBから取得する
+
 const TagInput: React.FC<TagInputProps> = ({ tags, tagInput, onTagInputChange, onAddTags, onRemoveTag }) => {
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
