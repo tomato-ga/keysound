@@ -6,6 +6,12 @@ import { UserIdCheck } from '@/app/func/Useridcheck'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { CircularProgress } from '@mui/material'
+import TitleInput from '@/app/components/Upload/TitleInput'
+import DescriptionInput from '@/app/components/Upload/DescriptionInput'
+import TagInput from '@/app/components/Upload/Taginput'
+import FileUploadButton from '@/app/components/Upload/FileUploadButton'
+import SaveButton from '@/app/components/Upload/SaveButton'
+import PreviewSection from '@/app/components/Upload/PreviewSection'
 
 interface postDbInsert {
 	id: string
@@ -142,6 +148,13 @@ const UploadPage = () => {
 		}
 	}
 
+	const handleRemoveTag = (index: number) => {
+		setPostData((prevState) => ({
+			...prevState,
+			tags: prevState.tags?.filter((_, i) => i !== index) || []
+		}))
+	}
+
 	if (status === 'authenticated') {
 		return (
 			<div className="bg-white text-black min-h-screen">
@@ -149,125 +162,33 @@ const UploadPage = () => {
 					<div className="bg-white pl-8 m-4 border-l-2">
 						<h1 className="text-4xl font-bold mb-8">投稿を作成</h1>
 
-						{/* タイトル */}
-						<div className="mb-8">
-							<h2 className="text-2xl font-semibold mb-2">タイトル</h2>
-							<input
-								type="text"
-								placeholder="タイトル入力"
-								className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
-								value={postData.title}
-								onChange={(e) => setPostData({ ...postData, title: e.target.value })}
-							/>
-						</div>
+						<TitleInput
+							title={postData.title}
+							onTitleChange={(e) => setPostData({ ...postData, title: e.target.value })}
+						/>
 
-						{/* 説明文 */}
-						<div className="mb-8">
-							<h2 className="text-2xl font-semibold mb-2">説明文</h2>
-							<textarea
-								placeholder="説明文を入力"
-								className="w-full h-60 bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
-								value={postData.description}
-								onChange={(e) => setPostData({ ...postData, description: e.target.value })}
-							/>
-						</div>
+						<DescriptionInput
+							description={postData.description}
+							onDescriptionChange={(e) => setPostData({ ...postData, description: e.target.value })}
+						/>
 
-						{/* タグ */}
-						<div className="mb-8">
-							<h2 className="text-2xl font-semibold mb-2">タグ</h2>
-							<div>
-								<input
-									type="text"
-									placeholder="複数のタグを入力する場合は[タグを追加]ボタンを押すか、Enterキーを押してください"
-									className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
-									value={tagInput}
-									onChange={handleTagInputChange}
-									onKeyDown={handleKeyDown}
-								/>
-								<button
-									className="mt-4 bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
-									onClick={handleAddTags}
-								>
-									タグを追加
-								</button>
-								<div className="flex flex-wrap mt-4">
-									{postData.tags?.map((tag, index) => (
-										<div key={index} className="bg-gray-200 rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
-											<span>{tag}</span>
-											<button
-												className="ml-2 text-gray-600 hover:text-gray-800"
-												onClick={() =>
-													setPostData((prevState) => ({
-														...prevState,
-														tags: prevState.tags?.filter((_, i) => i !== index) || []
-													}))
-												}
-											>
-												×
-											</button>
-										</div>
-									))}
-								</div>
-							</div>
-						</div>
+						<TagInput
+							tags={postData.tags || []}
+							tagInput={tagInput}
+							onTagInputChange={handleTagInputChange}
+							onAddTags={handleAddTags}
+							onRemoveTag={handleRemoveTag}
+						/>
 
-						{/* アップロードボタン */}
-						<div className="mb-8 text-center">
-							<input
-								type="file"
-								ref={fileInputRef}
-								className="hidden"
-								onChange={handleFileChange}
-								accept="image/*,video/*"
-								disabled={hasUploadedVideo}
-							/>
-							<button
-								className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
-								title="画像か動画をアップロードする"
-								onClick={handleClickUpload}
-								disabled={hasUploadedVideo}
-							>
-								画像・動画をアップする
-							</button>
-						</div>
+						<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />
 
-						{/* 保存ボタン */}
-						<div className="text-center">
-							<button
-								className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
-								onClick={handleSavePostRequest}
-							>
-								保存する
-							</button>
-						</div>
+						<SaveButton onSave={handleSavePostRequest} />
 
-						{/* プレビュー　アップロード中のスピナーと完了メッセージ */}
-						<div className="mt-8">
-							<h2 className="text-2xl font-semibold mb-4 text-center">アップロードしたファイルのプレビュー</h2>
-							{postData.videourl && (
-								<>
-									<video controls src={postData.videourl} className="max-w-full mx-auto mb-4" />
-								</>
-							)}
-							{postData.imageurl &&
-								postData.imageurl
-									.split(',')
-									.map((imageUrl, index) => (
-										<img
-											key={index}
-											src={imageUrl}
-											alt={`Uploaded Image ${index + 1}`}
-											className="max-w-full mx-auto mb-4"
-										/>
-									))}
-
-							{/* アップロード中のスピナー */}
-							{isLoading && (
-								<div className="flex justify-center items-center mt-4">
-									<CircularProgress />
-								</div>
-							)}
-						</div>
+						<PreviewSection
+							videoUrl={postData.videourl}
+							imageUrls={postData.imageurl?.split(',') || []}
+							isLoading={isLoading}
+						/>
 					</div>
 				</div>
 			</div>
