@@ -159,7 +159,7 @@ const UploadPage = () => {
 		return (
 			<div className="bg-white text-black min-h-screen">
 				<div className="container mx-auto px-4 py-8">
-					<div className="bg-white pl-8 m-4 border-l-2">
+					<div className="bg-white">
 						<h1 className="text-4xl font-bold mb-8">投稿を作成</h1>
 
 						<TitleInput

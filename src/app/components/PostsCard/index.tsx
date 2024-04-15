@@ -13,7 +13,7 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 				<>
 					{posts.map((post) => (
 						<Link href={`/post/${post.id}`} key={post.id}>
-							<div className="bg-white rounded-lg overflow-hidden shadow m-2 md:m-2 lg:m-2 h-96">
+							<div className="bg-white rounded-lg overflow-hidden shadow m-2 md:m-2 lg:m-2 h-auto mx-auto">
 								<div className="relative">{post.videoUrl && <DynamicVideoPlayer videoUrl={post.videoUrl} />}</div>
 								<div className="px-4 py-6">
 									<h3 className="text-black text-lg md:text-xl font-semibold mb-2">{post.title}</h3>

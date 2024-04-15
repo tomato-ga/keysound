@@ -9,12 +9,13 @@
 import { FC } from 'react'
 import ReactPlayer from 'react-player'
 
-interface DynamicVideoPlayerProps {
+interface DynamicVideoPlayerProps<T extends boolean> {
 	videoUrl: string
+	controls?: T
 }
 
-const DynamicVideoPlayer: FC<DynamicVideoPlayerProps> = ({ videoUrl }) => {
-	return <ReactPlayer url={videoUrl} width="100%" height="180px" className="w-full object-cover" />
+const DynamicVideoPlayer = <T extends boolean = false>({ videoUrl, controls }: DynamicVideoPlayerProps<T>) => {
+	return <ReactPlayer url={videoUrl} width="100%" height="auto" className="w-full object-cover" controls={controls} />
 }
 
 export default DynamicVideoPlayer
