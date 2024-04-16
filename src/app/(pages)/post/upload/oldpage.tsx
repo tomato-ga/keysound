@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, ChangeEvent } from 'react'
+import { useState, useRef, ChangeEvent, useEffect } from 'react'
 import { SessionCheck } from '@/app/func/Sessioncheck'
 import { UserIdCheck } from '@/app/func/Useridcheck'
 import Link from 'next/link'
@@ -12,14 +12,22 @@ import TagInput from '@/app/components/Upload/Taginput'
 import FileUploadButton from '@/app/components/Upload/FileUploadButton'
 import SaveButton from '@/app/components/Upload/SaveButton'
 import PreviewSection from '@/app/components/Upload/PreviewSection'
-import { PostFormData } from '../../../../../types'
-import { handleSavePost } from '@/app/actions/handleSavePost/handleSavePost'
 
-export default function UploadPage() {
+interface postDbInsert {
+	id: string
+	title: string
+	description: string
+	videourl?: string
+	tags?: string[]
+}
+
+const UploadPage = () => {
 	const router = useRouter()
 	const status = SessionCheck()
 	const userEmail = UserIdCheck()
-	const [postData, setPostData] = useState<PostFormData>({
+
+	const [postData, setPostData] = useState<postDbInsert>({
+		id: userEmail || '',
 		title: '',
 		description: '',
 		videourl: '',
@@ -75,18 +83,38 @@ export default function UploadPage() {
 		}
 	}
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
+	const handleClickUpload = () => {
+		fileInputRef.current?.click()
+	}
 
+	const handleSavePostRequest = async () => {
 		try {
-			if (!userEmail) {
-				throw Error('User not found')
-			}
+			const response = await fetch('/api/db/savePost', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(postData)
+			})
 
-			const postId = await handleSavePost(postData, userEmail)
-			router.push(`/post/${postId}`)
+			if (response.ok) {
+				const data = await response.json()
+				const createdPost = data.res
+
+				// アップロード完了後、/post/postIdにリダイレクト
+				router.push(`/post/${createdPost.id}`)
+			} else {
+				console.error('Error saving post:', response.statusText)
+			}
 		} catch (error) {
-			console.error('Error saving post: ', error)
+			console.error('Error saving post:', error)
+		}
+	}
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter') {
+			e.preventDefault()
+			handleAddTags()
 		}
 	}
 
@@ -122,46 +150,27 @@ export default function UploadPage() {
 					<div className="bg-white">
 						<h1 className="text-4xl font-bold mb-8">投稿を作成</h1>
 
-						<form onSubmit={handleSubmit}>
-							<TitleInput
-								title={postData.title}
-								onTitleChange={(e) => setPostData({ ...postData, title: e.target.value })}
-							/>
+						<TitleInput
+							title={postData.title}
+							onTitleChange={(e) => setPostData({ ...postData, title: e.target.value })}
+						/>
 
-							<DescriptionInput
-								description={postData.description}
-								onDescriptionChange={(e) => setPostData({ ...postData, description: e.target.value })}
-							/>
+						<DescriptionInput
+							description={postData.description}
+							onDescriptionChange={(e) => setPostData({ ...postData, description: e.target.value })}
+						/>
 
-							<TagInput
-								tags={postData.tags || []}
-								tagInput={tagInput}
-								onTagInputChange={(e) => setTagInput(e.target.value)}
-								onAddTags={() => {
-									if (tagInput.trim()) {
-										const newTags = tagInput
-											.split(',')
-											.map((tag) => tag.trim())
-											.filter((tag) => tag !== '')
-										setPostData((prevState) => ({
-											...prevState,
-											tags: [...(prevState.tags || []), ...newTags]
-										}))
-										setTagInput('')
-									}
-								}}
-								onRemoveTag={(index) => {
-									setPostData((prevState) => ({
-										...prevState,
-										tags: prevState.tags?.filter((_, i) => i !== index) || []
-									}))
-								}}
-							/>
+						<TagInput
+							tags={postData.tags || []}
+							tagInput={tagInput}
+							onTagInputChange={handleTagInputChange}
+							onAddTags={handleAddTags}
+							onRemoveTag={handleRemoveTag}
+						/>
 
-							<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />
+						<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />
 
-							<SaveButton type="submit" />
-						</form>
+						{/* <SaveButton onSave={handleSavePostRequest} /> */}
 
 						<PreviewSection videoUrl={postData.videourl} isLoading={isLoading} />
 					</div>
@@ -184,3 +193,5 @@ export default function UploadPage() {
 
 	return null
 }
+
+export default UploadPage

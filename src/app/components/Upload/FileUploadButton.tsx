@@ -1,4 +1,7 @@
+'use client'
+
 import React from 'react'
+import { ChangeEvent } from 'react'
 
 interface FileUploadButtonProps {
 	onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -8,8 +11,9 @@ interface FileUploadButtonProps {
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onFileChange, hasUploadedVideo }) => {
 	const fileInputRef = React.useRef<HTMLInputElement>(null)
 
-	const handleClickUpload = () => {
-		fileInputRef.current?.click()
+	const handleClickUpload = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault() // デフォルト動作を防止
+		fileInputRef.current?.click() // 関連付けられたinput要素をプログラム的にクリック
 	}
 
 	return (

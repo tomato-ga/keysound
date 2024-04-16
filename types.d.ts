@@ -41,3 +41,10 @@ export interface PostDummy {
 		image?: string
 	}
 }
+
+export interface PostFormData {
+	title: string
+	description: string
+	videourl?: string
+	tags?: string[]
+}
