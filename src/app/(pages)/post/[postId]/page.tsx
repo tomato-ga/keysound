@@ -44,12 +44,12 @@ const PostPage = async ({ params }: PostPageProps) => {
 								className="w-12 h-12 rounded-full mr-4"
 							/>
 							<div>
-								<p className="text-cyan-400 font-semibold text-lg">{post.user.name}</p>
-								<p className="text-gray-500 text-sm">{formatDate(post.createdat)}</p>
+								<p className="text-gray-900 font-semibold text-lg">{post.user.name}</p>
+								<p className="text-gray-600 text-sm">{formatDate(post.createdat)}</p>
 							</div>
 						</div>
-						<h1 className="text-gray-600 text-3xl font-bold">{post.title}</h1>
-						<p className="text-gray-600  leading-relaxed mb-8">{post.description}</p>
+						<h1 className="text-gray-600 text-3xl font-bold py-4">{post.title}</h1>
+						<p className="text-gray-600  leading-relaxed mb-8 py-4">{post.description}</p>
 						{/* Add any additional post details or components here */}
 					</div>
 				</div>
