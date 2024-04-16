@@ -48,8 +48,8 @@ const PostPage = async ({ params }: PostPageProps) => {
 								<p className="text-gray-600 text-sm">{formatDate(post.createdat)}</p>
 							</div>
 						</div>
-						<h1 className="text-gray-600 text-3xl font-bold py-4">{post.title}</h1>
-						<p className="text-gray-600  leading-relaxed mb-8 py-4">{post.description}</p>
+						<h1 className="text-gray-600 text-2xl font-bold py-4">{post.title}</h1>
+						<p className="text-gray-600  leading-relaxed mb-8 py-4 whitespace-pre-wrap">{post.description}</p>
 						{/* Add any additional post details or components here */}
 					</div>
 				</div>
