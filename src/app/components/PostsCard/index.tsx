@@ -22,7 +22,7 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 										<div className="px-4 py-8">
 											<h3 className="text-black text-lg md:text-xl font-semibold mb-2">{post.title}</h3>
 											<p className="text-gray-700 mb-2 md:mb-4 overflow-hidden">
-												{truncateDescription(post.description, 80)}
+												{truncateDescription(post.description, 140)}
 											</p>
 										</div>
 									</div>
