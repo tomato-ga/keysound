@@ -7,7 +7,7 @@
 // /Users/ore/Documents/GitHub/keysound/src/app/components/VideoPlayer/index.tsx
 'use client'
 import { FC } from 'react'
-import ReactPlayer from 'react-player'
+import ReactPlayer from 'react-player/lazy'
 
 interface DynamicVideoPlayerProps<T extends boolean> {
 	videoUrl: string

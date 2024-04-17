@@ -27,7 +27,7 @@ const PostPage = async ({ params }: PostPageProps) => {
 	return (
 		<div className="bg-white min-h-screen">
 			<div className="container mx-auto px-4 py-8">
-				<div className="bg-white pl-8 m-4 ">
+				<div className="bg-white m-4 ">
 					<div className="relative">
 						{post.videoUrl ? (
 							<DynamicVideoPlayer videoUrl={post.videoUrl} controls={true} />
