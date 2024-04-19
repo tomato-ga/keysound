@@ -26,25 +26,33 @@ export interface PostsProps {
 	componentType: 'top' | 'profile'
 }
 
-export interface PostDummy {
-	id: string
-	title: string
-	description: string
-	imageUrl?: string | null
-	videoUrl?: string | null
-	createdat: Date
-	updatedat: Date
-	user: {
-		id?: string
-		email?: string
-		name: string
-		image?: string
-	}
-}
+// export interface PostDummy {
+// 	id: string
+// 	title: string
+// 	description: string
+// 	imageUrl?: string | null
+// 	videoUrl?: string | null
+// 	createdat: Date
+// 	updatedat: Date
+// 	user: {
+// 		id?: string
+// 		email?: string
+// 		name: string
+// 		image?: string
+// 	}
+// }
 
 export interface PostFormData {
 	title: string
 	description: string
+	parts: PostPart[]
 	videourl?: string
 	tags?: string[]
+}
+
+export interface PostPart {
+	case?: string
+	plate?: string
+	switches?: string
+	keyCaps?: string
 }

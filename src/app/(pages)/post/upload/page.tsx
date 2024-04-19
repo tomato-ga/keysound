@@ -12,8 +12,9 @@ import TagInput from '@/app/components/Upload/Taginput'
 import FileUploadButton from '@/app/components/Upload/FileUploadButton'
 import SaveButton from '@/app/components/Upload/SaveButton'
 import PreviewSection from '@/app/components/Upload/PreviewSection'
-import { PostFormData } from '../../../../../types'
+import { PostFormData, PostPart } from '../../../../../types'
 import { handleSavePost } from '@/app/actions/handleSavePost/handleSavePost'
+import PartsInput from '@/app/components/Upload/PartsInput'
 
 export default function UploadPage() {
 	const router = useRouter()
@@ -22,6 +23,7 @@ export default function UploadPage() {
 	const [postData, setPostData] = useState<PostFormData>({
 		title: '',
 		description: '',
+		parts: [{}],
 		videourl: '',
 		tags: []
 	})
@@ -31,6 +33,7 @@ export default function UploadPage() {
 	const [isLoading, setIsLoading] = useState(false)
 	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
 	const [tagInput, setTagInput] = useState<string>('')
+	const [partsInput, setPartsInput] = useState<PostPart[]>([])
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -131,6 +134,13 @@ export default function UploadPage() {
 							<DescriptionInput
 								description={postData.description}
 								onDescriptionChange={(e) => setPostData({ ...postData, description: e.target.value })}
+							/>
+
+							<PartsInput
+								parts={postData.parts}
+								onPartsChange={(parts) => {
+									setPostData({ ...postData, parts })
+								}}
 							/>
 
 							<TagInput
