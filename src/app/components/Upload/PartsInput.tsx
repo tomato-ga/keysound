@@ -3,7 +3,7 @@ import { PostPart } from '../../../../types'
 
 interface PartsInputProps {
 	parts: PostPart[]
-	onPartsChange: (parts: PostPart[]) => void
+	onPartsChange: (parts: PostPart) => void
 }
 
 const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
@@ -17,32 +17,18 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 	const handleChange = (field: keyof PostPart, value: string) => {
 		setPartInput((prevPartInput) => ({
 			...prevPartInput,
-			[field]: value
+			[field]: value.trim() !== '' ? value : undefined
 		}))
+		onPartsChange(partInput)
 	}
 
-	const handleAddPart = () => {
-		if (Object.values(partInput).some((value) => value.trim() !== '')) {
-			onPartsChange([...parts, partInput])
-			setPartInput({
-				case: '',
-				plate: '',
-				switches: '',
-				keyCaps: ''
-			})
-		}
-	}
-
-	const handleRemovePart = (index: number) => {
-		const newParts = parts.filter((_, i) => i !== index)
-		onPartsChange(newParts)
-	}
-
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter') {
-			e.preventDefault()
-			handleAddPart()
-		}
+	// 修正箇所: handleRemovePart関数を追加
+	const handleRemovePart = (field: keyof PostPart) => {
+		setPartInput((prevPartInput) => ({
+			...prevPartInput,
+			[field]: undefined
+		}))
+		onPartsChange(partInput)
 	}
 
 	return (
@@ -53,62 +39,80 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 					type="text"
 					placeholder="ケース"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
-					value={partInput.case}
+					value={partInput.case ?? ''}
 					onChange={(e) => handleChange('case', e.target.value)}
-					onKeyDown={handleKeyDown}
 				/>
 				<input
 					type="text"
 					placeholder="プレート"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
-					value={partInput.plate}
+					value={partInput.plate ?? ''}
 					onChange={(e) => handleChange('plate', e.target.value)}
-					onKeyDown={handleKeyDown}
 				/>
 				<input
 					type="text"
 					placeholder="スイッチ"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
-					value={partInput.switches}
+					value={partInput.switches ?? ''}
 					onChange={(e) => handleChange('switches', e.target.value)}
-					onKeyDown={handleKeyDown}
 				/>
 				<input
 					type="text"
 					placeholder="キーキャップ"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
-					value={partInput.keyCaps}
+					value={partInput.keyCaps ?? ''}
 					onChange={(e) => handleChange('keyCaps', e.target.value)}
-					onKeyDown={handleKeyDown}
 				/>
-				<button
-					type="button"
-					className="mt-4 bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
-					onClick={handleAddPart}
-				>
-					パーツを追加
-				</button>
 			</div>
-			<div className="flex flex-wrap mt-4">
-				{parts
-					.filter((part) => part.case || part.plate || part.switches || part.keyCaps)
-					.map((part, index) => (
-						<div key={index} className="bg-gray-200 rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
-							<span>
-								{part.case && `ケース: ${part.case}`}
-								{part.plate && `プレート: ${part.plate}`}
-								{part.switches && `スイッチ: ${part.switches}`}
-								{part.keyCaps && `キーキャップ: ${part.keyCaps}`}
-							</span>
-							<button
-								type="button"
-								className="ml-2 text-gray-600 hover:text-gray-800"
-								onClick={() => handleRemovePart(index)}
-							>
-								×
-							</button>
-						</div>
-					))}
+			<div className="flex flex-col mt-4">
+				{partInput.case && (
+					<div className="bg-gray-200 rounded-md px-3 py-1 mr-2 mb-4 flex items-center font-bold text-lg">
+						ケース: {partInput.case}
+						<button
+							type="button"
+							className="ml-2 text-gray-600 hover:text-gray-800"
+							onClick={() => handleRemovePart('case')}
+						>
+							×
+						</button>
+					</div>
+				)}
+				{partInput.plate && (
+					<div className="bg-gray-200 rounded-md px-3 py-1 mr-2 mb-4 flex items-center font-bold text-lg">
+						プレート: {partInput.plate}
+						<button
+							type="button"
+							className="ml-2 text-gray-600 hover:text-gray-800"
+							onClick={() => handleRemovePart('plate')}
+						>
+							×
+						</button>
+					</div>
+				)}
+				{partInput.switches && (
+					<div className="bg-gray-200 rounded-md px-3 py-1 mr-2 mb-4 flex items-center font-bold text-lg">
+						スイッチ: {partInput.switches}
+						<button
+							type="button"
+							className="ml-2 text-gray-600 hover:text-gray-800"
+							onClick={() => handleRemovePart('switches')}
+						>
+							×
+						</button>
+					</div>
+				)}
+				{partInput.keyCaps && (
+					<div className="bg-gray-200 rounded-md px-3 py-1 mr-2 mb-4 flex items-center font-bold text-lg">
+						キーキャップ: {partInput.keyCaps}
+						<button
+							type="button"
+							className="ml-2 text-gray-600 hover:text-gray-800"
+							onClick={() => handleRemovePart('keyCaps')}
+						>
+							×
+						</button>
+					</div>
+				)}
 			</div>
 		</div>
 	)
