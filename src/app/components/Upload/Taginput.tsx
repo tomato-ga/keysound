@@ -1,25 +1,79 @@
-import React from 'react'
+import React, { useEffect, useState, useTransition } from 'react'
+import { getSuggestedTags } from '@/app/actions/getSuggestedTags/getSuggestedTags'
 
 interface TagInputProps {
 	tags: string[]
 	tagInput: string
 	onTagInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-	onAddTags: () => void
+	onAddTags: (tag?: string) => void
 	onRemoveTag: (index: number) => void
 }
 
-// TODO タグ一覧をDBから取得してレコメンド表示したい
-
 const TagInput: React.FC<TagInputProps> = ({ tags, tagInput, onTagInputChange, onAddTags, onRemoveTag }) => {
+	const [suggestedTags, setSuggestedTags] = useState<string[]>([])
+	const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(-1)
+	const [isPending, startTransition] = useTransition()
+
+	useEffect(() => {
+		if (tagInput.trim()) {
+			startTransition(async () => {
+				const suggested = await getSuggestedTags(tagInput)
+				setSuggestedTags(suggested)
+			})
+		} else {
+			setSuggestedTags([])
+		}
+	}, [tagInput])
+
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === 'Enter') {
 			e.preventDefault()
-			onAddTags()
+			if (selectedSuggestionIndex >= 0) {
+				onAddTags(suggestedTags[selectedSuggestionIndex])
+				onTagInputChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>)
+				setSelectedSuggestionIndex(-1)
+			} else {
+				onAddTags()
+			}
+		} else if (e.key === 'ArrowDown') {
+			e.preventDefault()
+			setSelectedSuggestionIndex((prevIndex) => Math.min(prevIndex + 1, suggestedTags.length - 1))
+		} else if (e.key === 'ArrowUp') {
+			e.preventDefault()
+			setSelectedSuggestionIndex((prevIndex) => Math.max(prevIndex - 1, -1))
+		} else if (e.key === 'Tab') {
+			e.preventDefault()
+			setSelectedSuggestionIndex((prevIndex) => (prevIndex + 1) % suggestedTags.length)
 		}
+	}
+
+	const handleSuggestedTagClick = (tag: string) => {
+		onAddTags(tag)
+		onTagInputChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>)
+		setSelectedSuggestionIndex(-1)
 	}
 
 	return (
 		<div className="mb-8">
+			{isPending ? (
+				<div>Loading...</div>
+			) : (
+				suggestedTags.length > 0 && (
+					<ul className="mt-2 bg-white border border-gray-400 rounded-md">
+						{suggestedTags.map((tag, index) => (
+							<li
+								key={tag}
+								className={`px-4 py-2 hover:bg-gray-100 cursor-pointer ${
+									index === selectedSuggestionIndex ? 'bg-gray-200' : ''
+								}`}
+								onClick={() => handleSuggestedTagClick(tag)}
+							>
+								{tag}
+							</li>
+						))}
+					</ul>
+				)
+			)}
 			<h2 className="text-2xl font-semibold mb-2">タグ</h2>
 			<div>
 				<input
