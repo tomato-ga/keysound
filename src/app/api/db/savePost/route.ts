@@ -1,32 +1,32 @@
 // /Users/don/Codes/keysound/src/app/api/db/savePost/route.ts
 
-import { NextResponse } from 'next/server'
-import { prisma } from '@/app/lib/prisma'
+import { NextResponse } from "next/server";
+import { prisma } from "@/app/lib/prisma";
 
 interface dbInsertPost {
-	id: string
-	title: string
-	description: string
-	imageurl?: string
-	videourl?: string
-	tags?: string[]
+	id: string;
+	title: string;
+	description: string;
+	imageurl?: string;
+	videourl?: string;
+	tags?: string[];
 }
 
 export async function POST(request: Request) {
 	try {
-		const postData: dbInsertPost = await request.json()
-		console.log('postData', postData)
+		const postData: dbInsertPost = await request.json();
+		console.log("postData", postData);
 
 		// メールアドレスからユーザーを検索
 		const user = await prisma.user.findUnique({
-			where: { email: postData.id }
-		})
+			where: { email: postData.id },
+		});
 
 		if (!user) {
-			throw new Error('User not found')
+			throw new Error("User not found");
 		}
 
-		console.log('userID:', user.id)
+		console.log("userID:", user.id);
 
 		const createdPost = await prisma.post.create({
 			data: {
@@ -41,25 +41,31 @@ export async function POST(request: Request) {
 							tag: {
 								connectOrCreate: {
 									where: { name: tagName },
-									create: { name: tagName }
-								}
-							}
-						})) || []
-				}
+									create: { name: tagName },
+								},
+							},
+						})) || [],
+				},
 			},
 			include: {
 				tags: {
 					include: {
-						tag: true
-					}
-				}
-			}
-		})
+						tag: true,
+					},
+				},
+			},
+		});
 
-		console.log('Post created:', JSON.stringify(createdPost, null, 2))
-		return NextResponse.json({ message: 'Post created successfully', res: createdPost })
+		console.log("Post created:", JSON.stringify(createdPost, null, 2));
+		return NextResponse.json({
+			message: "Post created successfully",
+			res: createdPost,
+		});
 	} catch (error) {
-		console.error('Error creating post:', error)
-		return NextResponse.json({ error: 'Failed to create post' }, { status: 500 })
+		console.error("Error creating post:", error);
+		return NextResponse.json(
+			{ error: "Failed to create post" },
+			{ status: 500 },
+		);
 	}
 }

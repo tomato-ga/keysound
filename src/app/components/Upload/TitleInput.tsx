@@ -1,8 +1,8 @@
-import React from 'react'
+import React from "react";
 
 interface TitleInputProps {
-	title: string
-	onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+	title: string;
+	onTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const TitleInput: React.FC<TitleInputProps> = ({ title, onTitleChange }) => {
@@ -17,7 +17,7 @@ const TitleInput: React.FC<TitleInputProps> = ({ title, onTitleChange }) => {
 				onChange={onTitleChange}
 			/>
 		</div>
-	)
-}
+	);
+};
 
-export default TitleInput
+export default TitleInput;

@@ -1,14 +1,14 @@
 // src/app/page.tsx
-import Link from 'next/link'
-import { prisma } from './lib/prisma'
-import PostsCard from './components/PostsCard'
-import { Post } from '../../types'
+import Link from "next/link";
+import { prisma } from "./lib/prisma";
+import PostsCard from "./components/PostsCard";
+import { Post } from "../../types";
 
 export default async function Home() {
 	const posts = await prisma.post.findMany({
-		orderBy: { createdat: 'desc' },
-		include: { user: true }
-	})
+		orderBy: { createdat: "desc" },
+		include: { user: true },
+	});
 
 	return (
 		<div className="home">
@@ -16,5 +16,5 @@ export default async function Home() {
 				<PostsCard posts={posts} componentType="top" />
 			</div>
 		</div>
-	)
+	);
 }

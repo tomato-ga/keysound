@@ -14,15 +14,17 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 		keyCaps: ''
 	})
 
-	const handleChange = (field: keyof PostPart, value: string) => {
+	const handlePartChange = (field: keyof PostPart, value: string) => {
 		setPartInput((prevPartInput) => ({
 			...prevPartInput,
 			[field]: value.trim() !== '' ? value : undefined
 		}))
+	}
+
+	const handlePartBlur = () => {
 		onPartsChange(partInput)
 	}
 
-	// 修正箇所: handleRemovePart関数を追加
 	const handleRemovePart = (field: keyof PostPart) => {
 		setPartInput((prevPartInput) => ({
 			...prevPartInput,
@@ -40,28 +42,52 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 					placeholder="ケース"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
 					value={partInput.case ?? ''}
-					onChange={(e) => handleChange('case', e.target.value)}
+					onChange={(e) => handlePartChange('case', e.target.value)}
+					onBlur={handlePartBlur}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							e.preventDefault()
+						}
+					}}
 				/>
 				<input
 					type="text"
 					placeholder="プレート"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
 					value={partInput.plate ?? ''}
-					onChange={(e) => handleChange('plate', e.target.value)}
+					onChange={(e) => handlePartChange('plate', e.target.value)}
+					onBlur={handlePartBlur}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							e.preventDefault()
+						}
+					}}
 				/>
 				<input
 					type="text"
 					placeholder="スイッチ"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
 					value={partInput.switches ?? ''}
-					onChange={(e) => handleChange('switches', e.target.value)}
+					onChange={(e) => handlePartChange('switches', e.target.value)}
+					onBlur={handlePartBlur}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							e.preventDefault()
+						}
+					}}
 				/>
 				<input
 					type="text"
 					placeholder="キーキャップ"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
 					value={partInput.keyCaps ?? ''}
-					onChange={(e) => handleChange('keyCaps', e.target.value)}
+					onChange={(e) => handlePartChange('keyCaps', e.target.value)}
+					onBlur={handlePartBlur}
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							e.preventDefault()
+						}
+					}}
 				/>
 			</div>
 			<div className="flex flex-col mt-4">

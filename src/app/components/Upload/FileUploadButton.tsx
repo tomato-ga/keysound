@@ -1,20 +1,23 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { ChangeEvent } from 'react'
+import React from "react";
+import { ChangeEvent } from "react";
 
 interface FileUploadButtonProps {
-	onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-	hasUploadedVideo: boolean
+	onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	hasUploadedVideo: boolean;
 }
 
-const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onFileChange, hasUploadedVideo }) => {
-	const fileInputRef = React.useRef<HTMLInputElement>(null)
+const FileUploadButton: React.FC<FileUploadButtonProps> = ({
+	onFileChange,
+	hasUploadedVideo,
+}) => {
+	const fileInputRef = React.useRef<HTMLInputElement>(null);
 
 	const handleClickUpload = (e: React.MouseEvent<HTMLButtonElement>) => {
-		e.preventDefault() // デフォルト動作を防止
-		fileInputRef.current?.click() // 関連付けられたinput要素をプログラム的にクリック
-	}
+		e.preventDefault(); // デフォルト動作を防止
+		fileInputRef.current?.click(); // 関連付けられたinput要素をプログラム的にクリック
+	};
 
 	return (
 		<div className="mb-8 text-center">
@@ -36,7 +39,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({ onFileChange, hasUp
 				<small>※アップロードできるファイルは100MBまでとなっています</small>
 			</button>
 		</div>
-	)
-}
+	);
+};
 
-export default FileUploadButton
+export default FileUploadButton;

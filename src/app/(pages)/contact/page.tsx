@@ -1,29 +1,29 @@
-'use client'
+"use client";
 
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState } from "react";
 
 const ContactPage = () => {
-	const [content, setContent] = useState<string>('')
-	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const [content, setContent] = useState<string>("");
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const postContent = async (e: FormEvent) => {
-		e.preventDefault()
+		e.preventDefault();
 		if (!content) {
-			return null
+			return null;
 		}
 
-		setIsLoading(true)
+		setIsLoading(true);
 
-		const res = await fetch('/api/contact', {
-			method: 'POST',
+		const res = await fetch("/api/contact", {
+			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
+				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ content: content })
-		})
+			body: JSON.stringify({ content: content }),
+		});
 
-		setContent('')
-		setIsLoading(false)
-	}
+		setContent("");
+		setIsLoading(false);
+	};
 
 	return (
 		<div className="container mx-auto py-5">
@@ -43,7 +43,7 @@ const ContactPage = () => {
 				</button>
 			</form>
 		</div>
-	)
-}
+	);
+};
 
-export default ContactPage
+export default ContactPage;

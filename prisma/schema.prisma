@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -22,11 +22,11 @@ model User {
 }
 
 model Profile {
-  id          String  @id @default(uuid())
-  bio         String?
-  screenName  String? @unique
-  userId      String  @unique
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String  @id @default(uuid())
+  bio        String?
+  screenName String? @unique
+  userId     String  @unique
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Post {
@@ -43,21 +43,17 @@ model Post {
   likes       Like[]
   comments    Comment[]
   part        Part?
-  partId      String?
 }
 
 model Part {
-  id        String   @id @default(cuid())
-  case      String
-  weight    Float
-  plate     String
-  switches  String
-  keyCaps   String
-  mount     String
-  postId    String @unique
-  post      Post @relation(fields: [postId], references: [id])
+  id       String @id @default(cuid())
+  case     String
+  plate    String
+  switches String
+  keyCaps  String
+  post     Post   @relation(fields: [postId], references: [id])
+  postId   String @unique
 }
-
 
 model Tag {
   id    String    @id @default(cuid())
@@ -70,6 +66,7 @@ model PostTag {
   tagId  String
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
   @@id([postId, tagId])
 }
 

@@ -1,16 +1,16 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface PhotoCardProps {
-	id: string
-	title: string
-	description: string
-	imageUrl: string | null
-	videoUrl: string | null
-	createdAt: Date
-	updatedAt: Date
-	tags: { id: string; name: string }[]
+	id: string;
+	title: string;
+	description: string;
+	imageUrl: string | null;
+	videoUrl: string | null;
+	createdAt: Date;
+	updatedAt: Date;
+	tags: { id: string; name: string }[];
 }
 
 const PhotoCard: React.FC<PhotoCardProps> = ({
@@ -21,13 +21,27 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
 	videoUrl,
 	createdAt,
 	updatedAt,
-	tags
+	tags,
 }) => {
 	return (
 		<div className="bg-white rounded-lg shadow-md overflow-hidden">
 			<div className="relative h-48">
-				{imageUrl && <Image src={imageUrl} alt={title} layout="fill" objectFit="cover" className="rounded-t-lg" />}
-				{videoUrl && <video src={videoUrl} controls className="w-full h-full object-cover rounded-t-lg" />}
+				{imageUrl && (
+					<Image
+						src={imageUrl}
+						alt={title}
+						layout="fill"
+						objectFit="cover"
+						className="rounded-t-lg"
+					/>
+				)}
+				{videoUrl && (
+					<video
+						src={videoUrl}
+						controls
+						className="w-full h-full object-cover rounded-t-lg"
+					/>
+				)}
 			</div>
 			<div className="p-4">
 				<Link href={`/photos/${id}`}>
@@ -50,7 +64,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default PhotoCard
+export default PhotoCard;

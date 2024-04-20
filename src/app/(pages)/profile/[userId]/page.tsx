@@ -1,17 +1,19 @@
 // src/app/(pages)/profile/page.tsx
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '@/auth/[...nextauth]'
-import { prisma } from '@/app/lib/prisma'
-import Link from 'next/link'
-import ProfilePanel from '@/app/components/ProfilePanel'
-import PostsCard from '@/app/components/PostsCard'
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/auth/[...nextauth]";
+import { prisma } from "@/app/lib/prisma";
+import Link from "next/link";
+import ProfilePanel from "@/app/components/ProfilePanel";
+import PostsCard from "@/app/components/PostsCard";
 
-import { truncateDescription, formatDate } from '@/app/func/postFunc'
+import { truncateDescription, formatDate } from "@/app/func/postFunc";
 
 export default async function ProfilePage() {
-	const session = await getServerSession(authOptions)
+	const session = await getServerSession(authOptions);
 	if (!session || !session.user || !session.user.name) {
-		return <div className="text-red-500">ユーザーセッションが見つかりません</div>
+		return (
+			<div className="text-red-500">ユーザーセッションが見つかりません</div>
+		);
 	}
 
 	const profile = await prisma.profile.findFirst({
@@ -21,19 +23,19 @@ export default async function ProfilePage() {
 				include: {
 					posts: {
 						include: {
-							user: true
-						}
-					}
-				}
-			}
-		}
-	})
+							user: true,
+						},
+					},
+				},
+			},
+		},
+	});
 
 	if (!profile) {
-		return <div className="text-red-500">Profile not found</div>
+		return <div className="text-red-500">Profile not found</div>;
 	}
 
-	console.log('profile', profile.user.posts)
+	console.log("profile", profile.user.posts);
 
 	return (
 		<div className="bg-white">
@@ -48,5 +50,5 @@ export default async function ProfilePage() {
 				<PostsCard posts={profile.user.posts} componentType="profile" />
 			</div>
 		</div>
-	)
+	);
 }

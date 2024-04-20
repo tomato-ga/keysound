@@ -1,11 +1,14 @@
-import React from 'react'
+import React from "react";
 
 interface DescriptionInputProps {
-	description: string
-	onDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+	description: string;
+	onDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const DescriptionInput: React.FC<DescriptionInputProps> = ({ description, onDescriptionChange }) => {
+const DescriptionInput: React.FC<DescriptionInputProps> = ({
+	description,
+	onDescriptionChange,
+}) => {
 	return (
 		<div className="mb-8">
 			<h2 className="text-2xl font-semibold mb-2">説明文</h2>
@@ -16,7 +19,7 @@ const DescriptionInput: React.FC<DescriptionInputProps> = ({ description, onDesc
 				onChange={onDescriptionChange}
 			/>
 		</div>
-	)
-}
+	);
+};
 
-export default DescriptionInput
+export default DescriptionInput;

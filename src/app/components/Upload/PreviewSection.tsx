@@ -1,16 +1,21 @@
-import React from 'react'
-import { CircularProgress } from '@mui/material'
+import React from "react";
+import { CircularProgress } from "@mui/material";
 
 interface PreviewSectionProps {
-	videoUrl?: string
+	videoUrl?: string;
 	// imageUrls: string[]
-	isLoading: boolean
+	isLoading: boolean;
 }
 
-const PreviewSection: React.FC<PreviewSectionProps> = ({ videoUrl, isLoading }) => {
+const PreviewSection: React.FC<PreviewSectionProps> = ({
+	videoUrl,
+	isLoading,
+}) => {
 	return (
 		<div className="mt-8">
-			<h2 className="text-2xl font-semibold mb-4 text-center">アップロードしたファイルのプレビュー</h2>
+			<h2 className="text-2xl font-semibold mb-4 text-center">
+				アップロードしたファイルのプレビュー
+			</h2>
 			{videoUrl && (
 				<>
 					<video controls src={videoUrl} className="max-w-full mx-auto mb-4" />
@@ -26,7 +31,7 @@ const PreviewSection: React.FC<PreviewSectionProps> = ({ videoUrl, isLoading }) 
 				</div>
 			)}
 		</div>
-	)
-}
+	);
+};
 
-export default PreviewSection
+export default PreviewSection;

@@ -1,24 +1,24 @@
 // src/components/SideCategoryLinks.tsx
-import React from 'react'
-import Link from 'next/link'
+import React from "react";
+import Link from "next/link";
 
 // カテゴリの型定義
 interface Category {
-	id: number
-	name: string
-	url: string
+	id: number;
+	name: string;
+	url: string;
 }
 
 // サンプルカテゴリデータ
 const categories: Category[] = [
-	{ id: 1, name: 'サイドバー', url: '/category1' },
-	{ id: 2, name: 'サイドバー2', url: '/category2' },
-	{ id: 3, name: 'サイドバー3', url: '/category3' }
-]
+	{ id: 1, name: "サイドバー", url: "/category1" },
+	{ id: 2, name: "サイドバー2", url: "/category2" },
+	{ id: 3, name: "サイドバー3", url: "/category3" },
+];
 
 const SideCategoryLinks: React.FC = () => {
 	return (
-		<nav className='w-[200px]'>
+		<nav className="w-[200px]">
 			<ul className="space-y-0">
 				{categories.map((category) => (
 					<li key={category.id}>
@@ -32,7 +32,7 @@ const SideCategoryLinks: React.FC = () => {
 				))}
 			</ul>
 		</nav>
-	)
-}
+	);
+};
 
-export default SideCategoryLinks
+export default SideCategoryLinks;

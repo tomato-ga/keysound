@@ -1,7 +1,7 @@
-import { useSession } from 'next-auth/react'
+import { useSession } from "next-auth/react";
 
 export const SessionCheck = () => {
-	const { status } = useSession()
+	const { status } = useSession();
 
-	return status
-}
+	return status;
+};
