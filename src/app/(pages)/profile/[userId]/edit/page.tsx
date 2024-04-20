@@ -1,28 +1,32 @@
 // /src/app/(pages)/profile/[userId]/edit/page.tsx
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '@/auth/[...nextauth]'
-import { prisma } from '@/app/lib/prisma'
-import ProfileEditForm from '@/app/components/ProfileEditForm'
-import { notFound } from 'next/navigation'
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/auth/[...nextauth]";
+import { prisma } from "@/app/lib/prisma";
+import ProfileEditForm from "@/app/components/ProfileEditForm";
+import { notFound } from "next/navigation";
 
 interface EditProfilePageProps {
-	params: { userId: string }
+	params: { userId: string };
 }
 
-export default async function EditProfilePage({ params }: EditProfilePageProps) {
-	const userId = params.userId
+export default async function EditProfilePage({
+	params,
+}: EditProfilePageProps) {
+	const userId = params.userId;
 
 	if (!userId) {
-		return <div className="text-red-500">ユーザーセッションが見つかりません</div>
+		return (
+			<div className="text-red-500">ユーザーセッションが見つかりません</div>
+		);
 	}
 
 	const profile = await prisma.profile.findUnique({
 		where: { userId: userId },
-		include: { user: true }
-	})
+		include: { user: true },
+	});
 
 	if (!profile || !profile.user.name) {
-		notFound()
+		notFound();
 	}
 
 	return (
@@ -32,5 +36,5 @@ export default async function EditProfilePage({ params }: EditProfilePageProps) 
 				<ProfileEditForm profile={profile} />
 			</div>
 		</div>
-	)
+	);
 }

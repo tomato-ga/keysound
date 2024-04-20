@@ -33,7 +33,6 @@ export default function UploadPage() {
 	const [isLoading, setIsLoading] = useState(false)
 	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
 	const [tagInput, setTagInput] = useState<string>('')
-	const [partsInput, setPartsInput] = useState<PostPart[]>([])
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -140,7 +139,7 @@ export default function UploadPage() {
 							<PartsInput
 								parts={postData.parts}
 								onPartsChange={(part) => {
-									setPostData({ ...postData, parts: [...postData.parts, part] })
+									setPostData({ ...postData, parts: [part] })
 								}}
 							/>
 
@@ -148,19 +147,7 @@ export default function UploadPage() {
 								tags={postData.tags || []}
 								tagInput={tagInput}
 								onTagInputChange={(e) => setTagInput(e.target.value)}
-								onAddTags={() => {
-									if (tagInput.trim()) {
-										const newTags = tagInput
-											.split(',')
-											.map((tag) => tag.trim())
-											.filter((tag) => tag !== '')
-										setPostData((prevState) => ({
-											...prevState,
-											tags: [...(prevState.tags || []), ...newTags]
-										}))
-										setTagInput('')
-									}
-								}}
+								onAddTags={handleAddTags}
 								onRemoveTag={(index) => {
 									setPostData((prevState) => ({
 										...prevState,

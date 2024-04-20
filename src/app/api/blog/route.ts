@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
 
 const GET = () => {
-	return NextResponse.json({})
-}
+	return NextResponse.json({});
+};
 
-export { GET }
+export { GET };

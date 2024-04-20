@@ -32,7 +32,10 @@ const TagInput: React.FC<TagInputProps> = ({ tags, tagInput, onTagInputChange, o
 				/>
 				<button
 					className="mt-4 bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
-					onClick={onAddTags}
+					onClick={(e) => {
+						e.preventDefault()
+						onAddTags()
+					}}
 				>
 					タグを追加
 				</button>

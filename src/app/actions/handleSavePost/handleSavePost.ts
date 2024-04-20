@@ -1,9 +1,10 @@
 'use server'
-
 import { prisma } from '@/app/lib/prisma'
 import { PostFormData } from '../../../../types'
 
 export const handleSavePost = async (formData: PostFormData, userEmail: string) => {
+	console.log('formData', formData)
+
 	try {
 		if (!userEmail) {
 			throw new Error('User email not found')
@@ -23,6 +24,14 @@ export const handleSavePost = async (formData: PostFormData, userEmail: string) 
 				title: formData.title,
 				description: formData.description,
 				videoUrl: formData.videourl || null,
+				part: {
+					create: {
+						case: formData.parts[0]?.case || '',
+						plate: formData.parts[0]?.plate || '',
+						switches: formData.parts[0]?.switches || '',
+						keyCaps: formData.parts[0]?.keyCaps || ''
+					}
+				},
 				tags: {
 					create:
 						formData.tags?.map((tagName) => ({
@@ -36,17 +45,16 @@ export const handleSavePost = async (formData: PostFormData, userEmail: string) 
 				}
 			},
 			include: {
-				tags: {
-					include: {
-						tag: true
-					}
-				}
+				tags: { include: { tag: true } },
+				part: true
 			}
 		})
 
+		console.log('createdPost', createdPost)
+		console.log('createdPost.part', createdPost.part)
+
 		return createdPost.id
 	} catch (error) {
-		// エラー処理を追加
 		console.error('Error creating post:', error)
 		throw error
 	}

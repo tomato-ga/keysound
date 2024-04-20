@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from "next/server";
 
 const POST = async (req: NextRequest) => {
-	const { content } = await req.json()
+	const { content } = await req.json();
 
 	//dbに送信する処理をここに書く
-	console.log(content)
+	console.log(content);
 
-	return NextResponse.json({}, { status: 200 })
-}
+	return NextResponse.json({}, { status: 200 });
+};
 
-export { POST }
+export { POST };

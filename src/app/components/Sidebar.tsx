@@ -1,8 +1,7 @@
 // Sidebar.tsx
-'use client'
-import React, { useEffect, useState } from 'react'
-import SideCategoryLinks from './SideCategoryLinks'
-
+"use client";
+import React, { useEffect, useState } from "react";
+import SideCategoryLinks from "./SideCategoryLinks";
 
 const Sidebar: React.FC = () => {
 	return (
@@ -11,7 +10,7 @@ const Sidebar: React.FC = () => {
 				<SideCategoryLinks />
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default Sidebar
+export default Sidebar;
