@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useTransition } from 'react'
+import { useDebounce } from './useDebounce'
 import { getSuggestedTags } from '@/app/actions/getSuggestedTags/getSuggestedTags'
 
 interface TagInputProps {
@@ -13,27 +14,33 @@ const TagInput: React.FC<TagInputProps> = ({ tags, tagInput, onTagInputChange, o
 	const [suggestedTags, setSuggestedTags] = useState<string[]>([])
 	const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(-1)
 	const [isPending, startTransition] = useTransition()
+	const debouncedTagInput = useDebounce(tagInput, 500)
 
 	useEffect(() => {
-		if (tagInput.trim()) {
+		if (debouncedTagInput.trim()) {
 			startTransition(async () => {
-				const suggested = await getSuggestedTags(tagInput)
+				const suggested = await getSuggestedTags(debouncedTagInput)
 				setSuggestedTags(suggested)
 			})
 		} else {
 			setSuggestedTags([])
 		}
-	}, [tagInput])
+	}, [debouncedTagInput])
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		console.log(`Key Pressed: ${e.key}, Selected Index: ${selectedSuggestionIndex}`) // デバッグ用ログを出力
 		if (e.key === 'Enter') {
 			e.preventDefault()
 			if (selectedSuggestionIndex >= 0) {
+				console.log(`Adding suggested tag: ${suggestedTags[selectedSuggestionIndex]}`) // 選択されたサジェストタグをログに出力
 				onAddTags(suggestedTags[selectedSuggestionIndex])
 				onTagInputChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>)
 				setSelectedSuggestionIndex(-1)
+				setSuggestedTags([]) // サジェストリストをクリア
 			} else {
-				onAddTags()
+				console.log(`Adding input tag: ${tagInput}`) // 入力されたタグをログに出力
+				onAddTags(tagInput)
+				onTagInputChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>)
 			}
 		} else if (e.key === 'ArrowDown') {
 			e.preventDefault()
@@ -43,7 +50,11 @@ const TagInput: React.FC<TagInputProps> = ({ tags, tagInput, onTagInputChange, o
 			setSelectedSuggestionIndex((prevIndex) => Math.max(prevIndex - 1, -1))
 		} else if (e.key === 'Tab') {
 			e.preventDefault()
-			setSelectedSuggestionIndex((prevIndex) => (prevIndex + 1) % suggestedTags.length)
+			if (e.shiftKey) {
+				setSelectedSuggestionIndex((prevIndex) => (prevIndex <= 0 ? suggestedTags.length - 1 : prevIndex - 1))
+			} else {
+				setSelectedSuggestionIndex((prevIndex) => (prevIndex === suggestedTags.length - 1 ? 0 : prevIndex + 1))
+			}
 		}
 	}
 
@@ -51,6 +62,7 @@ const TagInput: React.FC<TagInputProps> = ({ tags, tagInput, onTagInputChange, o
 		onAddTags(tag)
 		onTagInputChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>)
 		setSelectedSuggestionIndex(-1)
+		setSuggestedTags([]) // サジェストを選択した後、サジェストリストをクリアする
 	}
 
 	return (
