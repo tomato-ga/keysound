@@ -143,18 +143,7 @@ export default function UploadPage() {
 								}}
 							/>
 
-							<TagInput
-								tags={postData.tags || []}
-								tagInput={tagInput}
-								onTagInputChange={(e) => setTagInput(e.target.value)}
-								onAddTags={handleAddTags}
-								onRemoveTag={(index) => {
-									setPostData((prevState) => ({
-										...prevState,
-										tags: prevState.tags?.filter((_, i) => i !== index) || []
-									}))
-								}}
-							/>
+							<TagInput postData={postData} setPostData={setPostData} />
 
 							<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />
 
