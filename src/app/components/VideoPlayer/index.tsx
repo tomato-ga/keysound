@@ -9,12 +9,13 @@
 'use client'
 import ReactPlayer from 'react-player/lazy'
 
-interface DynamicVideoPlayerProps<T extends boolean> {
+interface DynamicVideoPlayerProps {
 	videoUrl: string
-	controls?: T
+	controls?: boolean
+	loop?: boolean
 }
 
-const DynamicVideoPlayer = <T extends boolean = false>({ videoUrl, controls }: DynamicVideoPlayerProps<T>) => {
+const DynamicVideoPlayer = ({ videoUrl, controls, loop }: DynamicVideoPlayerProps) => {
 	return (
 		<ReactPlayer
 			url={videoUrl}
@@ -25,6 +26,7 @@ const DynamicVideoPlayer = <T extends boolean = false>({ videoUrl, controls }: D
 			volume={0}
 			muted={true}
 			playing={true}
+			loop={loop}
 		/>
 	)
 }

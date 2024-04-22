@@ -117,6 +117,7 @@ const TagInput: React.FC<TagInputProps> = ({ postData, setPostData }) => {
 					onKeyDown={handleKeyDown}
 				/>
 				<button
+					type="button"
 					className="mt-4 bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
 					onClick={(e) => {
 						e.preventDefault()
