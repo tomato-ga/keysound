@@ -26,6 +26,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
 
 	console.log("profile", profile);
 
+	// server actionsに変更する
 	const updateProfile = async () => {
 		const res = await fetch(`/api/db/userUpdate`, {
 			method: "POST",
