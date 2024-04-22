@@ -27,6 +27,7 @@ const DynamicVideoPlayer = ({ videoUrl, controls, loop }: DynamicVideoPlayerProp
 			muted={true}
 			playing={true}
 			loop={loop}
+			playsinline={true}
 		/>
 	)
 }
