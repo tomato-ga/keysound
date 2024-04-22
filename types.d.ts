@@ -23,7 +23,7 @@ export interface Post {
 
 export interface PostsProps {
 	posts: Post[]
-	componentType: 'top' | 'profile'
+	componentType: 'top' | 'profile' | null
 }
 
 export interface PostFormData {
