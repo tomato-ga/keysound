@@ -46,6 +46,11 @@ export default async function ProfilePage() {
 						プロフィールを編集
 					</button>
 				</Link>
+				<Link href={`/profile/${profile.user.id}/postedit`}>
+					<button className="mt-4 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">
+						投稿を編集
+					</button>
+				</Link>
 				<h2 className="mt-8 mb-4 text-2xl font-bold">投稿一覧</h2>
 				<PostsCard posts={profile.user.posts} componentType="profile" />
 			</div>
