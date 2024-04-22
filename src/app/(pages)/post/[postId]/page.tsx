@@ -45,8 +45,9 @@ const PostPage = async ({ params }: PostPageProps) => {
 						{post.videoUrl ? (
 							<DynamicVideoPlayer videoUrl={post.videoUrl} controls={true} />
 						) : (
+							''
 							// <video src={post.videoUrl} controls className="w-full h-96 object-cover" />
-							<img src={post.imageUrl || '/default-image.jpg'} alt={post.title} className="w-full h-96 object-cover" />
+							// <img src={post.imageUrl || '/default-image.jpg'} alt={post.title} className="w-full h-96 object-cover" />
 						)}
 					</div>
 					<div className="p-8">

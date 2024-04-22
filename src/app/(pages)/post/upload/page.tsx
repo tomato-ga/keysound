@@ -135,7 +135,6 @@ export default function UploadPage() {
 								onDescriptionChange={(e) => setPostData({ ...postData, description: e.target.value })}
 							/>
 
-							{/* TODO prismaでパーツをDBに保存できるように修正する */}
 							<PartsInput
 								parts={postData.parts}
 								onPartsChange={(part) => {
