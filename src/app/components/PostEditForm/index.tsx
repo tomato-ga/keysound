@@ -11,15 +11,12 @@ interface PostEditFormProps {
 // 編集したい項目を修正してprisma Post.idで更新する
 
 const PostEditForm: React.FC<PostEditFormProps> = ({ posts }) => {
-	const updatePost = async () => {
-		// 更新処理を実装する
-	}
+	console.log(posts)
 
+	// TODO ポストを表示するのではなく、編集できるようにする
 	return (
 		<>
-			{posts.map((post: Post) => (
-				<PostsCard key={post.id} post={post} componentType="profile" />
-			))}
+			<PostsCard posts={posts} componentType="profile" />
 		</>
 	)
 }
