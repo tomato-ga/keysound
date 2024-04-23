@@ -19,7 +19,15 @@ export default async function EditPostPage({ params }: EditPostProps) {
 	}
 
 	const postData = await prisma.post.findFirst({
-		where: { id: postId, userId }
+		where: { id: postId, userId },
+		include: {
+			part: true,
+			tags: {
+				include: {
+					tag: true
+				}
+			}
+		}
 	})
 
 	console.log('postData', postData)

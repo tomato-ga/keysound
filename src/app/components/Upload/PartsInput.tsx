@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
-import { PostPart } from '../../../../types'
+import { PostPart, UpdateParts } from '../../../../types'
 
 interface PartsInputProps {
-	parts: PostPart[]
-	onPartsChange: (parts: PostPart) => void
+	parts: UpdateParts | null
+	onPartsChange: (parts: UpdateParts | null) => void
 }
 
 const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 	const [partInput, setPartInput] = useState<PostPart>({
-		case: '',
-		plate: '',
-		switches: '',
-		keyCaps: ''
+		case: parts?.case ?? '',
+		plate: parts?.plate ?? '',
+		switches: parts?.switches ?? '',
+		keyCaps: parts?.keyCaps ?? ''
 	})
 
 	const handlePartChange = (field: keyof PostPart, value: string) => {
@@ -22,7 +22,7 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 	}
 
 	const handlePartBlur = () => {
-		onPartsChange(partInput)
+		onPartsChange(partInput as UpdateParts)
 	}
 
 	const handleRemovePart = (field: keyof PostPart) => {
@@ -30,7 +30,7 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 			...prevPartInput,
 			[field]: undefined
 		}))
-		onPartsChange(partInput)
+		onPartsChange({ ...partInput, [field]: undefined } as UpdateParts)
 	}
 
 	return (
