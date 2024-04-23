@@ -144,6 +144,7 @@ export default function UploadPage() {
 
 							<TagInput postData={postData} setPostData={setPostData} />
 
+							{/* TODO ファイルを削除できるようにする memo: 上げ直したりする可能性 */}
 							<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />
 
 							<SaveButton type="submit" />
