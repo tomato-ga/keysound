@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/auth/[...nextauth]'
 import { prisma } from '@/app/lib/prisma'
 import ProfileEditForm from '@/app/components/ProfileEditForm'
-import { notFound } from 'next/navigation'
+import { notFound, useParams } from 'next/navigation'
 import PostEditForm from '@/app/components/PostEditForm'
 
 interface EditPostProps {
@@ -17,20 +17,25 @@ export default async function EditPostPage({ params }: EditPostProps) {
 		return <div className="text-red-500">ユーザーセッションが見つかりません</div>
 	}
 
-	const profilePosts = await prisma.profile.findUnique({
-		where: { userId: userId },
+	const userData = await prisma.user.findUnique({
+		where: { id: userId },
 		include: {
-			user: {
+			posts: {
 				include: {
-					posts: true
+					user: {
+						select: {
+							name: true,
+							image: true
+						}
+					}
 				}
 			}
 		}
 	})
 
-	console.log(profilePosts?.user.posts)
+	// console.log('userData', userData)
 
-	if (!profilePosts) {
+	if (!userData) {
 		notFound()
 	}
 
@@ -38,7 +43,7 @@ export default async function EditPostPage({ params }: EditPostProps) {
 		<div className="bg-gray-900 min-h-screen text-gray-300">
 			<div className="container mx-auto px-4 py-8">
 				<h1 className="text-3xl font-bold mb-8">投稿編集</h1>
-				<PostEditForm posts={profilePosts?.user.posts || []} />
+				<PostEditForm posts={userData.posts} />
 			</div>
 		</div>
 	)
