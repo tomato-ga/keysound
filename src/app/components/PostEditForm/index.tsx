@@ -13,10 +13,10 @@ interface PostEditFormProps {
 const PostEditForm: React.FC<PostEditFormProps> = ({ posts }) => {
 	console.log(posts)
 
-	// TODO ポストを表示するのではなく、編集できるようにする
 	return (
 		<>
-			<PostsCard posts={posts} componentType="profile" />
+			{/* TODO: UploadPageを再利用するのではなく、その下にあるコンポーネントを再利用する */}
+			{/* <PostsCard posts={posts} componentType="profile" /> */}
 		</>
 	)
 }

@@ -15,6 +15,7 @@ interface DynamicVideoPlayerProps {
 	loop?: boolean
 }
 
+// TODO playingを修正する -> モバイル表示の時に勝手に再生されたらデータ消費してしまうため、モバイルはデフォルトfalseにする。WiFi接続状態を確認できた場合はtrueにできる？
 const DynamicVideoPlayer = ({ videoUrl, controls, loop }: DynamicVideoPlayerProps) => {
 	return (
 		<ReactPlayer
