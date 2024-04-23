@@ -42,3 +42,23 @@ export interface PostPart {
 	switches?: string
 	keyCaps?: string
 }
+
+export interface UpdateParts {
+	id: string
+	case: string
+	plate: string
+	switches: string
+	keyCaps: string
+	postId: string
+}
+
+export interface UpdateTags {
+	postId: string
+	tagId: string
+	tag: string
+}
+
+export type PostEditFormData = Omit<Post, 'user'> & {
+	part: UpdateParts | null
+	tags: UpdateTags[]
+}
