@@ -7,43 +7,32 @@ import { notFound, useParams } from 'next/navigation'
 import PostEditForm from '@/app/components/PostEditForm'
 
 interface EditPostProps {
-	params: { userId: string }
+	params: { userId: string; postId: string }
 }
 
 export default async function EditPostPage({ params }: EditPostProps) {
 	const userId = params.userId
+	const postId = params.postId
 
-	if (!userId) {
+	if (!userId || !postId) {
 		return <div className="text-red-500">ユーザーセッションが見つかりません</div>
 	}
 
-	const userData = await prisma.user.findUnique({
-		where: { id: userId },
-		include: {
-			posts: {
-				include: {
-					user: {
-						select: {
-							name: true,
-							image: true
-						}
-					}
-				}
-			}
-		}
+	const postData = await prisma.post.findFirst({
+		where: { id: postId, userId }
 	})
 
-	// console.log('userData', userData)
+	console.log('postData', postData)
 
-	if (!userData) {
+	if (!postData) {
 		notFound()
 	}
 
 	return (
-		<div className="bg-gray-900 min-h-screen text-gray-300">
+		<div className="bg-gray-500 min-h-screen text-gray-300">
 			<div className="container mx-auto px-4 py-8">
 				<h1 className="text-3xl font-bold mb-8">投稿編集</h1>
-				<PostEditForm posts={userData.posts} />
+				<PostEditForm post={postData} />
 			</div>
 		</div>
 	)

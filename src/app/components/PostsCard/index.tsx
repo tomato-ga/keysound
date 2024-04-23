@@ -8,7 +8,7 @@ const DynamicVideoPlayer = dynamic(() => import('../VideoPlayer'), {
 	ssr: false
 })
 
-export default function PostsCard({ posts, componentType }: PostsProps) {
+export default function PostsCard({ posts, componentType, isCurrentUser }: PostsProps) {
 	return (
 		<>
 			{componentType === 'top' && (
@@ -71,6 +71,8 @@ export default function PostsCard({ posts, componentType }: PostsProps) {
 									</p>
 									<p className="text-gray-600 text-xs md:text-sm">{formatDate(post.updatedat)}</p>
 								</div>
+
+								{isCurrentUser && <Link href={`/profile/${post.user.id}/postedit/${post.id}`}>投稿を編集</Link>}
 							</Link>
 						</div>
 					))}

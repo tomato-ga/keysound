@@ -1,24 +1,19 @@
 'use client'
+
 import { prisma } from '@/app/lib/prisma'
 import { Post } from '../../../../types'
-import PostsCard from '@/app/components/PostsCard'
 
+type PostWithoutUser = Omit<Post, 'user'>
 interface PostEditFormProps {
-	posts: Post[]
+	post: PostWithoutUser
 }
 
-// Post.idからデータを取得してpropsでここのコンポーネントPostEditFormに渡す
-// 編集したい項目を修正してprisma Post.idで更新する
+const PostEditForm: React.FC<PostEditFormProps> = ({ post }) => {
+	console.log('post', post)
 
-const PostEditForm: React.FC<PostEditFormProps> = ({ posts }) => {
-	console.log(posts)
+	// TODO Input系のコンポーネント呼び出し
 
-	return (
-		<>
-			{/* TODO: UploadPageを再利用するのではなく、その下にあるコンポーネントを再利用する */}
-			{/* <PostsCard posts={posts} componentType="profile" /> */}
-		</>
-	)
+	return <>はろーコンポーネント修正中だよ</>
 }
 
 export default PostEditForm
