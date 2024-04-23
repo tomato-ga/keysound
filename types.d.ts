@@ -16,6 +16,7 @@ export interface Post {
 	createdat: Date
 	updatedat: Date
 	user: {
+		id: string
 		name: string
 		image?: string
 	}
@@ -24,6 +25,7 @@ export interface Post {
 export interface PostsProps {
 	posts: Post[]
 	componentType: 'top' | 'profile' | null
+	isCurrentUser: boolean
 }
 
 export interface PostFormData {
