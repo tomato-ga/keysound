@@ -24,7 +24,6 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		tags: post.tags
 	})
 
-
 	console.log('PostEditForm State', postData)
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -45,8 +44,11 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		setPostData((prevData) => ({ ...prevData, description: e.target.value }))
 	}
 
-	const handlePartsChange = (parts: UpdateParts | null) => {
-		setPostData((prevData) => ({ ...prevData, part: parts }))
+	const handlePartsChange = (parts: PostPart | UpdateParts | null) => {
+		setPostData((prevData) => ({
+			...prevData,
+			part: parts as UpdateParts | null
+		}))
 	}
 
 	const handleTagsChange = (tags: UpdateTags[]) => {
@@ -61,6 +63,8 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 					<form onSubmit={handleSubmit}>
 						<TitleInput title={postData.title} onTitleChange={handleTitleChange} />
 						<DescriptionInput description={postData.description} onDescriptionChange={handleDescriptionChange} />
+
+						{/* TODO パーツの動作確認から */}
 						<PartsInput parts={postData.part} onPartsChange={handlePartsChange} />
 						<TagInput tags={postData.tags.map((tag) => ({ id: '', name: tag }))} onTagsChange={handleTagsChange} />
 						{/* TODO: ファイルを削除できるようにする memo: 上げ直したりする可能性 */}

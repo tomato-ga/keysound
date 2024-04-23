@@ -2,16 +2,16 @@ import React, { useState } from 'react'
 import { PostPart, UpdateParts } from '../../../../types'
 
 interface PartsInputProps {
-	parts: UpdateParts | null
-	onPartsChange: (parts: UpdateParts | null) => void
+	parts: PostPart[] | UpdateParts | null
+	onPartsChange: (parts: PostPart | UpdateParts | null) => void
 }
 
 const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 	const [partInput, setPartInput] = useState<PostPart>({
-		case: parts?.case ?? '',
-		plate: parts?.plate ?? '',
-		switches: parts?.switches ?? '',
-		keyCaps: parts?.keyCaps ?? ''
+		case: Array.isArray(parts) ? parts[0]?.case ?? '' : parts?.case ?? '',
+		plate: Array.isArray(parts) ? parts[0]?.plate ?? '' : parts?.plate ?? '',
+		switches: Array.isArray(parts) ? parts[0]?.switches ?? '' : parts?.switches ?? '',
+		keyCaps: Array.isArray(parts) ? parts[0]?.keyCaps ?? '' : parts?.keyCaps ?? ''
 	})
 
 	const handlePartChange = (field: keyof PostPart, value: string) => {
@@ -22,7 +22,11 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 	}
 
 	const handlePartBlur = () => {
-		onPartsChange(partInput as UpdateParts)
+		if (Array.isArray(parts)) {
+			onPartsChange(partInput)
+		} else {
+			onPartsChange(partInput as UpdateParts)
+		}
 	}
 
 	const handleRemovePart = (field: keyof PostPart) => {

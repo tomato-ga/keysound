@@ -135,10 +135,11 @@ export default function UploadPage() {
 								onDescriptionChange={(e) => setPostData({ ...postData, description: e.target.value })}
 							/>
 
+							{/* TODO パーツの動作確認から */}
 							<PartsInput
 								parts={postData.parts}
 								onPartsChange={(part) => {
-									setPostData({ ...postData, parts: [part] })
+									setPostData({ ...postData, parts: [part as PostPart] })
 								}}
 							/>
 
