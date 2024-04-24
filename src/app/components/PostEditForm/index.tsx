@@ -1,7 +1,7 @@
 // /Users/ore/Documents/GitHub/keysound/src/app/components/PostEditForm/index.tsx
 'use client'
 import { prisma } from '@/app/lib/prisma'
-import { Post, PostFormData, PostPart, PostEditFormData, UpdateTags, UpdateParts } from '../../../../types'
+import { Post, PostFormData, PostPart, UpdateTags, UpdateParts, PostEditFormData } from '../../../../types'
 import TitleInput from '../Upload/TitleInput'
 import DescriptionInput from '../Upload/DescriptionInput'
 import PartsInput from '../Upload/PartsInput'
@@ -29,8 +29,12 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		try {
-			// TODO: 更新リクエストを送信する処理を実装
-			console.log('Updated postData data:', postData)
+			const updatedPostData: PostEditFormData = {
+				...postData,
+				tags: postData.tags
+			}
+			console.log('Updated postData data:', updatedPostData)
+			// TODO: 更新リクエストを送信する処理をServer actionsで実装
 		} catch (error) {
 			console.error('Error updating post:', error)
 		}
@@ -51,8 +55,18 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		}))
 	}
 
-	const handleTagsChange = (tags: UpdateTags[]) => {
-		setPostData((prevData) => ({ ...prevData, tags: tags.map((tag) => tag.name) }))
+	const handleTagsChange = (tags: (string | UpdateTags)[]) => {
+		const updateTags: UpdateTags[] = tags.map((tag) => {
+			if (typeof tag === 'string') {
+				return { tag: { id: '', name: tag }, postId: postData.id, tagId: '' }
+			} else {
+				return tag
+			}
+		})
+		setPostData((prevData) => ({
+			...prevData,
+			tags: updateTags
+		}))
 	}
 
 	return (
@@ -66,7 +80,12 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 
 						{/* TODO パーツの動作確認から */}
 						<PartsInput parts={postData.part} onPartsChange={handlePartsChange} />
-						<TagInput tags={postData.tags.map((tag) => ({ id: '', name: tag }))} onTagsChange={handleTagsChange} />
+						<TagInput<PostEditFormData>
+							postData={postData}
+							setPostData={setPostData}
+							onTagsChange={(tags) => handleTagsChange(tags)}
+						/>
+
 						{/* TODO: ファイルを削除できるようにする memo: 上げ直したりする可能性 */}
 						{/* <FileUploadButton /> */}
 						<SaveButton type="submit" />
