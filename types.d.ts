@@ -53,12 +53,15 @@ export interface UpdateParts {
 }
 
 export interface UpdateTags {
+	tag: {
+		id: string
+		name: string
+	}
 	postId: string
 	tagId: string
-	tag: string
 }
 
 export type PostEditFormData = Omit<Post, 'user'> & {
 	part: UpdateParts | null
-	tags: UpdateTags[]
+	tags: UpdateTags[] | string[]
 }

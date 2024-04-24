@@ -12,7 +12,7 @@ import TagInput from '@/app/components/Upload/Taginput'
 import FileUploadButton from '@/app/components/Upload/FileUploadButton'
 import SaveButton from '@/app/components/Upload/SaveButton'
 import PreviewSection from '@/app/components/Upload/PreviewSection'
-import { PostFormData, PostPart } from '../../../../../types'
+import { PostFormData, PostPart, UpdateTags } from '../../../../../types'
 import { handleSavePost } from '@/app/actions/handleSavePost/handleSavePost'
 import PartsInput from '@/app/components/Upload/PartsInput'
 
@@ -92,8 +92,18 @@ export default function UploadPage() {
 		}
 	}
 
-	const handleTagInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setTagInput(e.target.value)
+	const handleTagsChange = (tags: (string | UpdateTags)[]) => {
+		const stringTags = tags.map((tag) => {
+			if (typeof tag === 'string') {
+				return tag
+			} else {
+				return tag.tag.name
+			}
+		})
+		setPostData((prevState) => ({
+			...prevState,
+			tags: stringTags
+		}))
 	}
 
 	const handleAddTags = () => {
@@ -143,7 +153,7 @@ export default function UploadPage() {
 								}}
 							/>
 
-							<TagInput postData={postData} setPostData={setPostData} />
+							<TagInput postData={postData} setPostData={setPostData} onTagsChange={handleTagsChange} />
 
 							{/* TODO ファイルを削除できるようにする memo: 上げ直したりする可能性 */}
 							<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />

@@ -1,14 +1,19 @@
 import React, { useEffect, useState, useTransition } from 'react'
 import { useDebounce } from './useDebounce'
 import { getSuggestedTags } from '@/app/actions/getSuggestedTags/getSuggestedTags'
-import { PostFormData } from '../../../../types'
+import { PostFormData, UpdateTags } from '../../../../types'
 
-interface TagInputProps {
-	postData: PostFormData
-	setPostData: React.Dispatch<React.SetStateAction<PostFormData>>
+interface TagInputProps<T> {
+	postData: T
+	setPostData: React.Dispatch<React.SetStateAction<T>>
+	onTagsChange: (tags: (string | UpdateTags)[]) => void
 }
 
-const TagInput: React.FC<TagInputProps> = ({ postData, setPostData }) => {
+const TagInput = <T extends { tags?: string[] | UpdateTags[] }>({
+	postData,
+	setPostData,
+	onTagsChange
+}: TagInputProps<T>) => {
 	const [tagInput, setTagInput] = useState<string>('')
 	const [suggestedTags, setSuggestedTags] = useState<string[]>([])
 	const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState<number>(-1)
@@ -67,6 +72,7 @@ const TagInput: React.FC<TagInputProps> = ({ postData, setPostData }) => {
 				...prevState,
 				tags: [...(prevState.tags || []), ...newTags]
 			}))
+			onTagsChange([...(postData.tags || []), ...newTags])
 			setTagInput('')
 			setSelectedSuggestionIndex(-1)
 			setSuggestedTags([])
@@ -74,10 +80,12 @@ const TagInput: React.FC<TagInputProps> = ({ postData, setPostData }) => {
 	}
 
 	const handleRemoveTag = (index: number) => {
+		const newTags = (postData.tags || []).filter((_, i) => i !== index)
 		setPostData((prevState) => ({
 			...prevState,
-			tags: prevState.tags?.filter((_, i) => i !== index) || []
+			tags: newTags
 		}))
+		onTagsChange(newTags)
 	}
 
 	const handleSuggestedTagClick = (tag: string, index: number) => {
@@ -129,7 +137,7 @@ const TagInput: React.FC<TagInputProps> = ({ postData, setPostData }) => {
 				<div className="flex flex-wrap mt-4">
 					{postData.tags?.map((tag, index) => (
 						<div key={index} className="bg-gray-200 rounded-full px-3 py-1 mr-2 mb-2 flex items-center">
-							<span>{tag}</span>
+							<span>{typeof tag === 'string' ? tag : tag.tag.name}</span>
 							<button className="ml-2 text-gray-600 hover:text-gray-800" onClick={() => handleRemoveTag(index)}>
 								×
 							</button>
