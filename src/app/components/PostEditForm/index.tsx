@@ -10,6 +10,12 @@ import FileUploadButton from '../Upload/FileUploadButton'
 import SaveButton from '../Upload/SaveButton'
 import PreviewSection from '../Upload/PreviewSection'
 import { useState, ChangeEvent } from 'react'
+import DeletePostButton from '../DeletePostButton'
+
+type NewType<T, Kind extends string> = T & {
+	[key in `__${Kind}`]: never
+}
+type postId = NewType<string, 'Post'>
 
 const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 	const [postData, setPostData] = useState<PostEditFormData>({
@@ -70,6 +76,15 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		}))
 	}
 
+	const handleDeletePost = async () => {
+		try {
+			// TODO ServerAction実装する
+			console.log('投稿を削除しました')
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
 	return (
 		<div className="bg-white text-black min-h-screen">
 			<div className="container mx-auto px-4 py-8">
@@ -87,9 +102,10 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 							onTagsChange={(tags) => handleTagsChange(tags)}
 						/>
 
-						{/* TODO: ファイルを削除できるようにする memo: 上げ直したりする可能性 */}
-						{/* <FileUploadButton /> */}
 						<SaveButton type="submit" />
+
+						{/* TODO: 投稿を削除できるようにする */}
+						<DeletePostButton onDeleteConfirmed={handleDeletePost} />
 					</form>
 					{/* <PreviewSection /> */}
 				</div>
