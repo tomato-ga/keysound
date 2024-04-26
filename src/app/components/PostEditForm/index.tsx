@@ -35,6 +35,7 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 			}
 			console.log('Updated postData data:', updatedPostData)
 			// TODO: 更新リクエストを送信する処理をServer actionsで実装
+			// TODO 動画を削除できるようにする？
 		} catch (error) {
 			console.error('Error updating post:', error)
 		}
@@ -73,7 +74,7 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		<div className="bg-white text-black min-h-screen">
 			<div className="container mx-auto px-4 py-8">
 				<div className="bg-white">
-					<h1 className="text-4xl font-bold mb-8">投稿を編集</h1>
+					<h1 className="text-4xl font-bold mb-8">投稿を編集する</h1>
 					<form onSubmit={handleSubmit}>
 						<TitleInput title={postData.title} onTitleChange={handleTitleChange} />
 						<DescriptionInput description={postData.description} onDescriptionChange={handleDescriptionChange} />
