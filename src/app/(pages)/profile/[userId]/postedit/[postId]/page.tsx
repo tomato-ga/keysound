@@ -37,9 +37,8 @@ export default async function EditPostPage({ params }: EditPostProps) {
 	}
 
 	return (
-		<div className="bg-gray-500 min-h-screen text-gray-300">
+		<div className=" min-h-screen text-gray-300">
 			<div className="container mx-auto px-4 py-8">
-				<h1 className="text-3xl font-bold mb-8">投稿編集</h1>
 				<PostEditForm post={postData} />
 			</div>
 		</div>

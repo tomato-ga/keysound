@@ -134,6 +134,7 @@ export default function UploadPage() {
 					<div className="bg-white">
 						<h1 className="text-4xl font-bold mb-8">投稿を作成</h1>
 
+						{/* TODO タイトルと動画を必須にする */}
 						<form onSubmit={handleSubmit}>
 							<TitleInput
 								title={postData.title}
