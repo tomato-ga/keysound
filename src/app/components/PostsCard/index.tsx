@@ -52,7 +52,7 @@ export default function PostsCard({ posts, componentType, isCurrentUser }: Posts
 				<>
 					{posts.map((post) => (
 						<div key={post.id} className="bg-white rounded-lg overflow-hidden shadow">
-							<Link href={`/post/${post.id}`}>
+							<Link href={`/post/${post.id}`} key={post.id}>
 								<div className="relative aspect-w-16 aspect-h-9">
 									{post.videoUrl ? (
 										<DynamicVideoPlayer videoUrl={post.videoUrl} />

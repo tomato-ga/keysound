@@ -13,7 +13,7 @@ export default async function Home() {
 	return (
 		<div className="home">
 			<div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4">
-				<PostsCard posts={posts} componentType="top" />
+				<PostsCard posts={posts} componentType="top" isCurrentUser={false} />
 			</div>
 		</div>
 	);
