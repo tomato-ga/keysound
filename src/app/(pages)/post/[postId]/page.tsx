@@ -28,6 +28,8 @@ const PostPage = async ({ params }: PostPageProps) => {
 		}
 	})
 
+	console.log('postdata', post)
+
 	// タグを配列にして格納
 	const tagsArray = post?.tags.map((tagItem) => tagItem.tag.name)
 
