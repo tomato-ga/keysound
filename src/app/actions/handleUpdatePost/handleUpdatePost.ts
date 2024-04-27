@@ -39,24 +39,27 @@ export const handleUpdatePost = async (postId: string, formData: FormData) => {
 	}
 
 	try {
-		await prisma.$transaction(async (prisma) => {
-			const updatePost = await prisma.post.update({
-				where: { id: postData.id },
-				data: {
-					title: postData.title,
-					description: postData.description,
-					updatedat: postData.updatedat
+		await prisma.$transaction(
+			async (prisma) => {
+				const updatePost = await prisma.post.update({
+					where: { id: postData.id },
+					data: {
+						title: postData.title,
+						description: postData.description,
+						updatedat: postData.updatedat
+					}
+				})
+
+				console.log('Updated post:', updatePost)
+
+				if (postData.part) {
+					await updatePartTable(postId, postData.part)
 				}
-			})
 
-			console.log('Updated post:', updatePost)
-
-			if (postData.part) {
-				await updatePartTable(postData.part)
-			}
-
-			await updateTagTable(postData.id, postData.tags)
-		})
+				await updateTagTable(postData.id, postData.tags)
+			},
+			{ timeout: 10000 }
+		)
 
 		console.log('Update successful')
 	} catch (error) {
@@ -93,20 +96,42 @@ const parseUpdateTags = (formData: FormData): UpdateTags[] => {
 	return JSON.parse(tagData) as UpdateTags[]
 }
 
-// TODO partテーブルが存在しない場合は新たに作成する
-const updatePartTable = async (partData: UpdateParts) => {
+// TODO partが存在する場合と、存在しない場合に対応する
+const updatePartTable = async (postId: string, partData: UpdateParts) => {
 	try {
-		await prisma.part.update({
-			where: { postId: partData.postId },
-			data: {
-				case: partData.case,
-				plate: partData.plate,
-				switches: partData.switches,
-				keyCaps: partData.keyCaps
-			}
+		// Partの存在確認を改善
+		const existingPart = await prisma.part.findFirst({
+			where: { postId: postId }
 		})
+
+		console.log('existingPart', existingPart)
+
+		// 既存のPartの更新または新規作成
+		if (existingPart) {
+			await prisma.part.update({
+				where: { postId: postId },
+				data: {
+					case: partData.case,
+					plate: partData.plate,
+					switches: partData.switches,
+					keyCaps: partData.keyCaps
+				}
+			})
+			console.log('Part updated successfully')
+		} else {
+			await prisma.part.create({
+				data: {
+					postId: postId,
+					case: partData.case,
+					plate: partData.plate,
+					switches: partData.switches,
+					keyCaps: partData.keyCaps
+				}
+			})
+			console.log('Part created successfully')
+		}
 	} catch (error) {
-		console.error('updatePartTable error', error)
+		console.error('updatePartTable error:', error)
 		throw error
 	}
 }
