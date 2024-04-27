@@ -11,6 +11,7 @@ import SaveButton from '../Upload/SaveButton'
 import PreviewSection from '../Upload/PreviewSection'
 import { useState, ChangeEvent } from 'react'
 import DeletePostButton from '../DeletePostButton'
+import { handleUpdatePost } from '@/app/actions/handleUpdatePost/handleUpdatePost'
 
 type NewType<T, Kind extends string> = T & {
 	[key in `__${Kind}`]: never
@@ -32,6 +33,8 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 
 	console.log('PostEditForm State', postData)
 
+	const addPostIdhandleUpdatePost = handleUpdatePost.bind(null, postData.id)
+
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		try {
@@ -40,7 +43,7 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 				tags: postData.tags
 			}
 			console.log('Updated postData data:', updatedPostData)
-			// TODO: 更新リクエストを送信する処理をServer actionsで実装
+
 			// TODO 動画を削除できるようにする？
 		} catch (error) {
 			console.error('Error updating post:', error)
@@ -90,11 +93,10 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 			<div className="container mx-auto px-4 py-8">
 				<div className="bg-white">
 					<h1 className="text-4xl font-bold mb-8">投稿を編集する</h1>
-					<form onSubmit={handleSubmit}>
+					<form action={addPostIdhandleUpdatePost}>
 						<TitleInput title={postData.title} onTitleChange={handleTitleChange} />
 						<DescriptionInput description={postData.description} onDescriptionChange={handleDescriptionChange} />
 
-						{/* TODO パーツの動作確認から */}
 						<PartsInput parts={postData.part} onPartsChange={handlePartsChange} />
 						<TagInput<PostEditFormData>
 							postData={postData}
