@@ -120,6 +120,7 @@ const TagInput = <T extends { tags?: string[] | UpdateTags[] }>({
 			<div>
 				<input
 					type="text"
+					name="tags"
 					placeholder="複数のタグを入力する場合は[タグを追加]ボタンを押すか、Enterキーを押してください"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
 					value={tagInput}
