@@ -2,6 +2,8 @@
 
 import { prisma } from '@/app/lib/prisma'
 import { PostEditFormData, UpdateParts, UpdateTags } from '../../../../types'
+import { redirect } from 'next/navigation'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 // 型安全な取得用ユーティリティ関数
 function getStringValue(formData: FormData, key: string): string | undefined {
@@ -13,57 +15,55 @@ function getStringValue(formData: FormData, key: string): string | undefined {
 }
 
 export const handleUpdatePost = async (postId: string, formData: FormData) => {
-	console.log('formData', formData)
-	console.log(postId)
+	console.log('投稿更新プロセスの開始 postId:', postId)
+	console.log('受け取った formData:', formData)
 
 	const id = postId
 	const title = getStringValue(formData, 'title')
 	const description = getStringValue(formData, 'description')
 
-	// updatedatStr が formData から取得できない場合、常に現在の日時を使用
 	const updatedat = new Date()
 
-	console.log('const値', id, title, description)
-
 	if (!id || !title || !description) {
-		throw new Error('Missing required fields')
+		console.error('必要なフィールドが不足しています', { id, title, description })
+		throw new Error('必要なフィールドが不足しています')
 	}
 
 	const postData: Omit<PostEditFormData, 'imageUrl' | 'videoUrl' | 'createdat'> = {
 		id,
 		title,
 		description,
-		updatedat, // 直接 Date オブジェクトを使用
+		updatedat,
 		part: parseUpdateParts(formData),
 		tags: parseUpdateTags(formData)
 	}
 
 	try {
-		await prisma.$transaction(
-			async (prisma) => {
-				const updatePost = await prisma.post.update({
-					where: { id: postData.id },
-					data: {
-						title: postData.title,
-						description: postData.description,
-						updatedat: postData.updatedat
-					}
-				})
+		console.log('データベースで投稿を更新中:', postData)
+		const updatePost = await prisma.post.update({
+			where: { id: postData.id },
+			data: {
+				title: postData.title,
+				description: postData.description,
+				updatedat: postData.updatedat
+			}
+		})
 
-				console.log('Updated post:', updatePost)
+		console.log('投稿が正常に更新されました:', updatePost)
 
-				if (postData.part) {
-					await updatePartTable(postId, postData.part)
-				}
+		if (postData.part) {
+			console.log('投稿に関連するパーツを更新または作成中:', postData.part)
+			await updatePartTable(postId, postData.part)
+		}
 
-				await updateTagTable(postData.id, postData.tags)
-			},
-			{ timeout: 10000 }
-		)
+		console.log('投稿に関連するタグを更新中:', postData.tags)
+		await updateTagTable(postData.id, postData.tags)
 
-		console.log('Update successful')
+		console.log('投稿の更新プロセスが成功しました postId:', postId)
+		revalidateTag(`/post/${postId}`)
+		redirect(`/post/${postId}`)
 	} catch (error) {
-		console.error('Update failed', error)
+		console.error('更新に失敗しました', error, { postId })
 		throw error
 	}
 }
@@ -96,18 +96,16 @@ const parseUpdateTags = (formData: FormData): UpdateTags[] => {
 	return JSON.parse(tagData) as UpdateTags[]
 }
 
-// TODO partが存在する場合と、存在しない場合に対応する
 const updatePartTable = async (postId: string, partData: UpdateParts) => {
 	try {
-		// Partの存在確認を改善
 		const existingPart = await prisma.part.findFirst({
 			where: { postId: postId }
 		})
 
-		console.log('existingPart', existingPart)
+		console.log('既存のパーツのチェック:', existingPart)
 
-		// 既存のPartの更新または新規作成
 		if (existingPart) {
+			console.log('パーツが存在します。更新中...')
 			await prisma.part.update({
 				where: { postId: postId },
 				data: {
@@ -117,8 +115,9 @@ const updatePartTable = async (postId: string, partData: UpdateParts) => {
 					keyCaps: partData.keyCaps
 				}
 			})
-			console.log('Part updated successfully')
+			console.log('パーツが正常に更新されました')
 		} else {
+			console.log('新しいパーツを作成中...')
 			await prisma.part.create({
 				data: {
 					postId: postId,
@@ -128,15 +127,17 @@ const updatePartTable = async (postId: string, partData: UpdateParts) => {
 					keyCaps: partData.keyCaps
 				}
 			})
-			console.log('Part created successfully')
+			console.log('パーツが正常に作成されました')
 		}
 	} catch (error) {
-		console.error('updatePartTable error:', error)
+		console.error('パーツの更新中にエラーが発生しました:', error)
 		throw error
 	}
 }
 
 const updateTagTable = async (postId: string, tags: UpdateTags[] | string[]) => {
+	console.log('tags', tags)
+
 	try {
 		await prisma.postTag.deleteMany({
 			where: { postId }
@@ -159,8 +160,11 @@ const updateTagTable = async (postId: string, tags: UpdateTags[] | string[]) => 
 				})
 			}
 		}
+		await prisma.$transaction(async (prisma) => {
+			await prisma.$executeRaw`COMMIT`
+		})
 	} catch (error) {
-		console.error('updateTagTable error', error)
+		console.error('タグテーブルの更新中にエラーが発生しました', error)
 		throw error
 	}
 }
