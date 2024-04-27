@@ -90,6 +90,7 @@ const parseUpdateParts = (formData: FormData): UpdateParts | null => {
 
 const parseUpdateTags = (formData: FormData): UpdateTags[] => {
 	const tagData = getStringValue(formData, 'tags')
+	console.log('tagData', tagData) // タグデータをコンソールに出力
 	if (!tagData) {
 		return []
 	}
@@ -137,6 +138,11 @@ const updatePartTable = async (postId: string, partData: UpdateParts) => {
 
 const updateTagTable = async (postId: string, tags: UpdateTags[] | string[]) => {
 	console.log('tags', tags)
+
+	if (tags.length === 0) {
+		console.log('更新するタグがありません') // タグが空の場合のログ出力
+		return
+	}
 
 	try {
 		await prisma.postTag.deleteMany({
