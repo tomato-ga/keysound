@@ -12,7 +12,7 @@ import TagInput from '@/app/components/Upload/Taginput'
 import FileUploadButton from '@/app/components/Upload/FileUploadButton'
 import SaveButton from '@/app/components/Upload/SaveButton'
 import PreviewSection from '@/app/components/Upload/PreviewSection'
-import { PostFormData, PostPart, UpdateTags } from '../../../../../types'
+import { PostFormData, PostPart } from '../../../../../types'
 import { handleSavePost } from '@/app/actions/handleSavePost/handleSavePost'
 import PartsInput from '@/app/components/Upload/PartsInput'
 import CategoryInput from '@/app/components/Upload/CategoryInput'
@@ -94,19 +94,19 @@ export default function UploadPage() {
 		}
 	}
 
-	const handleTagsChange = (tags: (string | UpdateTags)[]) => {
-		const stringTags = tags.map((tag) => {
-			if (typeof tag === 'string') {
-				return tag
-			} else {
-				return tag.tag.name
-			}
-		})
-		setPostData((prevState) => ({
-			...prevState,
-			tags: stringTags
-		}))
-	}
+	// const handleTagsChange = (tags: (string | UpdateTags)[]) => {
+	// 	const stringTags = tags.map((tag) => {
+	// 		if (typeof tag === 'string') {
+	// 			return tag
+	// 		} else {
+	// 			return tag.tag.name
+	// 		}
+	// 	})
+	// 	setPostData((prevState) => ({
+	// 		...prevState,
+	// 		tags: stringTags
+	// 	}))
+	// }
 
 	// const handleAddTags = () => {
 	// 	if (tagInput.trim()) {

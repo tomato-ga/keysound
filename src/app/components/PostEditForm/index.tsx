@@ -1,7 +1,7 @@
 // /Users/ore/Documents/GitHub/keysound/src/app/components/PostEditForm/index.tsx
 'use client'
 import { prisma } from '@/app/lib/prisma'
-import { Post, PostFormData, PostPart, UpdateTags, UpdateParts, PostEditFormData } from '../../../../types'
+import { Post, PostFormData, PostPart, UpdateParts, PostEditFormData } from '../../../../types'
 import TitleInput from '../Upload/TitleInput'
 import DescriptionInput from '../Upload/DescriptionInput'
 import PartsInput from '../Upload/PartsInput'
@@ -28,9 +28,8 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		videoUrl: post.videoUrl ?? '',
 		createdat: post.createdat,
 		updatedat: post.updatedat,
-		part: post.part,
-		category: post.category
-		// tags: post.tags
+		part: post.part || null,
+		category: post.category || ''
 	})
 
 	console.log('PostEditForm State', postData)
@@ -67,19 +66,19 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		}))
 	}
 
-	const handleTagsChange = (tags: (string | UpdateTags)[]) => {
-		const updateTags: UpdateTags[] = tags.map((tag) => {
-			if (typeof tag === 'string') {
-				return { tag: { id: '', name: tag }, postId: postData.id, tagId: '' }
-			} else {
-				return tag
-			}
-		})
-		setPostData((prevData) => ({
-			...prevData,
-			tags: updateTags
-		}))
-	}
+	// const handleTagsChange = (tags: (string | UpdateTags)[]) => {
+	// 	const updateTags: UpdateTags[] = tags.map((tag) => {
+	// 		if (typeof tag === 'string') {
+	// 			return { tag: { id: '', name: tag }, postId: postData.id, tagId: '' }
+	// 		} else {
+	// 			return tag
+	// 		}
+	// 	})
+	// 	setPostData((prevData) => ({
+	// 		...prevData,
+	// 		tags: updateTags
+	// 	}))
+	// }
 
 	const handleDeletePost = async () => {
 		try {

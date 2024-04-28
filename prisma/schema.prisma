@@ -39,10 +39,11 @@ model Post {
   createdat   DateTime  @default(now())
   updatedat   DateTime  @updatedAt
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tags        PostTag[]
   likes       Like[]
   comments    Comment[]
   part        Part?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  String?
 }
 
 model Part {
@@ -55,19 +56,10 @@ model Part {
   postId   String @unique
 }
 
-model Tag {
-  id    String    @id @default(cuid())
-  name  String    @unique
-  posts PostTag[]
-}
-
-model PostTag {
-  postId String
-  tagId  String
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([postId, tagId])
+model Category {
+  id    String @id @default(cuid())
+  name  String @unique
+  posts Post[]
 }
 
 model Like {
