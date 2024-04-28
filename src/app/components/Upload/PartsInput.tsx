@@ -38,7 +38,7 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 	}
 
 	return (
-		<div className="mb-8">
+		<div className="mb-8 pt-4">
 			<h2 className="text-2xl font-semibold mb-2">パーツ</h2>
 			<div>
 				<input

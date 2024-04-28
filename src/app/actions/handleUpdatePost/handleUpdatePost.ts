@@ -35,7 +35,8 @@ export const handleUpdatePost = async (postId: string, formData: FormData) => {
 		description,
 		updatedat,
 		part: parseUpdateParts(formData),
-		tags: parseUpdateTags(formData)
+		category: ''
+		// tags: parseUpdateTags(formData)
 	}
 
 	try {
@@ -56,8 +57,8 @@ export const handleUpdatePost = async (postId: string, formData: FormData) => {
 			await updatePartTable(postId, postData.part)
 		}
 
-		console.log('投稿に関連するタグを更新中:', postData.tags)
-		await updateTagTable(postData.id, postData.tags)
+		// console.log('投稿に関連するタグを更新中:', postData.tags)
+		// await updateTagTable(postData.id, postData.tags)
 
 		console.log('投稿の更新プロセスが成功しました postId:', postId)
 		revalidateTag(`/post/${postId}`)
