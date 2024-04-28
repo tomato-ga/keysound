@@ -33,7 +33,8 @@ export interface PostFormData {
 	description: string
 	videourl?: string
 	parts: PostPart[]
-	tags?: string[]
+	category: string
+	// tags?: string[]
 }
 
 export interface PostPart {
@@ -63,5 +64,6 @@ export interface UpdateTags {
 
 export type PostEditFormData = Omit<Post, 'user'> & {
 	part: UpdateParts | null
-	tags: UpdateTags[] | string[]
+	category: string
+	// tags: UpdateTags[] | string[]
 }

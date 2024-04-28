@@ -15,6 +15,7 @@ import PreviewSection from '@/app/components/Upload/PreviewSection'
 import { PostFormData, PostPart, UpdateTags } from '../../../../../types'
 import { handleSavePost } from '@/app/actions/handleSavePost/handleSavePost'
 import PartsInput from '@/app/components/Upload/PartsInput'
+import CategoryInput from '@/app/components/Upload/CategoryInput'
 
 export default function UploadPage() {
 	const router = useRouter()
@@ -25,7 +26,8 @@ export default function UploadPage() {
 		description: '',
 		parts: [{}],
 		videourl: '',
-		tags: []
+		category: ''
+		// tags: []
 	})
 
 	const fileInputRef = useRef<HTMLInputElement>(null)
@@ -106,26 +108,26 @@ export default function UploadPage() {
 		}))
 	}
 
-	const handleAddTags = () => {
-		if (tagInput.trim()) {
-			const newTags = tagInput
-				.split(',')
-				.map((tag) => tag.trim())
-				.filter((tag) => tag !== '')
-			setPostData((prevState) => ({
-				...prevState,
-				tags: [...(prevState.tags || []), ...newTags]
-			}))
-			setTagInput('')
-		}
-	}
+	// const handleAddTags = () => {
+	// 	if (tagInput.trim()) {
+	// 		const newTags = tagInput
+	// 			.split(',')
+	// 			.map((tag) => tag.trim())
+	// 			.filter((tag) => tag !== '')
+	// 		setPostData((prevState) => ({
+	// 			...prevState,
+	// 			tags: [...(prevState.tags || []), ...newTags]
+	// 		}))
+	// 		setTagInput('')
+	// 	}
+	// }
 
-	const handleRemoveTag = (index: number) => {
-		setPostData((prevState) => ({
-			...prevState,
-			tags: prevState.tags?.filter((_, i) => i !== index) || []
-		}))
-	}
+	// const handleRemoveTag = (index: number) => {
+	// 	setPostData((prevState) => ({
+	// 		...prevState,
+	// 		tags: prevState.tags?.filter((_, i) => i !== index) || []
+	// 	}))
+	// }
 
 	if (status === 'authenticated') {
 		return (
@@ -146,7 +148,8 @@ export default function UploadPage() {
 								onDescriptionChange={(e) => setPostData({ ...postData, description: e.target.value })}
 							/>
 
-							{/* TODO パーツの動作確認から */}
+							<CategoryInput onCategoryChange={(category) => setPostData({ ...postData, category })} />
+
 							<PartsInput
 								parts={postData.parts}
 								onPartsChange={(part) => {
@@ -154,7 +157,7 @@ export default function UploadPage() {
 								}}
 							/>
 
-							<TagInput postData={postData} setPostData={setPostData} onTagsChange={handleTagsChange} />
+							{/* <TagInput postData={postData} setPostData={setPostData} onTagsChange={handleTagsChange} /> */}
 
 							{/* TODO ファイルを削除できるようにする memo: 上げ直したりする可能性 */}
 							<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />

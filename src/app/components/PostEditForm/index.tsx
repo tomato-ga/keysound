@@ -12,6 +12,7 @@ import PreviewSection from '../Upload/PreviewSection'
 import { useState, ChangeEvent } from 'react'
 import DeletePostButton from '../DeletePostButton'
 import { handleUpdatePost } from '@/app/actions/handleUpdatePost/handleUpdatePost'
+import CategoryInput from '../Upload/CategoryInput'
 
 type NewType<T, Kind extends string> = T & {
 	[key in `__${Kind}`]: never
@@ -28,27 +29,28 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		createdat: post.createdat,
 		updatedat: post.updatedat,
 		part: post.part,
-		tags: post.tags
+		category: post.category
+		// tags: post.tags
 	})
 
 	console.log('PostEditForm State', postData)
 
 	const addPostIdhandleUpdatePost = handleUpdatePost.bind(null, postData.id)
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-		try {
-			const updatedPostData: PostEditFormData = {
-				...postData,
-				tags: postData.tags
-			}
-			console.log('Updated postData data:', updatedPostData)
+	// const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	// 	e.preventDefault()
+	// 	try {
+	// 		const updatedPostData: PostEditFormData = {
+	// 			...postData,
+	// 			tags: postData.tags
+	// 		}
+	// 		console.log('Updated postData data:', updatedPostData)
 
-			// TODO 動画を削除できるようにする？
-		} catch (error) {
-			console.error('Error updating post:', error)
-		}
-	}
+	// 		// TODO 動画を削除できるようにする？
+	// 	} catch (error) {
+	// 		console.error('Error updating post:', error)
+	// 	}
+	// }
 
 	const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setPostData((prevData) => ({ ...prevData, title: e.target.value }))
@@ -97,12 +99,14 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 						<TitleInput title={postData.title} onTitleChange={handleTitleChange} />
 						<DescriptionInput description={postData.description} onDescriptionChange={handleDescriptionChange} />
 
+						<CategoryInput onCategoryChange={(category) => setPostData({ ...postData, category })} />
+
 						<PartsInput parts={postData.part} onPartsChange={handlePartsChange} />
-						<TagInput<PostEditFormData>
+						{/* <TagInput<PostEditFormData>
 							postData={postData}
 							setPostData={setPostData}
 							onTagsChange={(tags) => handleTagsChange(tags)}
-						/>
+						/> */}
 
 						<SaveButton type="submit" />
 
