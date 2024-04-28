@@ -31,21 +31,9 @@ export const handleSavePost = async (formData: PostFormData, userEmail: string) 
 						switches: formData.parts[0]?.switches || '',
 						keyCaps: formData.parts[0]?.keyCaps || ''
 					}
-				},
-				tags: {
-					create:
-						formData.tags?.map((tagName) => ({
-							tag: {
-								connectOrCreate: {
-									where: { name: tagName },
-									create: { name: tagName }
-								}
-							}
-						})) || []
 				}
 			},
 			include: {
-				tags: { include: { tag: true } },
 				part: true
 			}
 		})

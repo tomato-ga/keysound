@@ -1,7 +1,7 @@
 'use server'
 
 import { prisma } from '@/app/lib/prisma'
-import { PostEditFormData, UpdateParts, UpdateTags } from '../../../../types'
+import { PostEditFormData, UpdateParts } from '../../../../types'
 import { redirect } from 'next/navigation'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
@@ -89,14 +89,14 @@ const parseUpdateParts = (formData: FormData): UpdateParts | null => {
 	}
 }
 
-const parseUpdateTags = (formData: FormData): UpdateTags[] => {
-	const tagData = getStringValue(formData, 'tags')
-	console.log('tagData', tagData) // タグデータをコンソールに出力
-	if (!tagData) {
-		return []
-	}
-	return JSON.parse(tagData) as UpdateTags[]
-}
+// const parseUpdateTags = (formData: FormData): UpdateTags[] => {
+// 	const tagData = getStringValue(formData, 'tags')
+// 	console.log('tagData', tagData) // タグデータをコンソールに出力
+// 	if (!tagData) {
+// 		return []
+// 	}
+// 	return JSON.parse(tagData) as UpdateTags[]
+// }
 
 const updatePartTable = async (postId: string, partData: UpdateParts) => {
 	try {
@@ -137,41 +137,41 @@ const updatePartTable = async (postId: string, partData: UpdateParts) => {
 	}
 }
 
-const updateTagTable = async (postId: string, tags: UpdateTags[] | string[]) => {
-	console.log('tags', tags)
+// const updateTagTable = async (postId: string, tags: UpdateTags[] | string[]) => {
+// console.log('tags', tags)
 
-	if (tags.length === 0) {
-		console.log('更新するタグがありません') // タグが空の場合のログ出力
-		return
-	}
+// if (tags.length === 0) {
+// 	console.log('更新するタグがありません') // タグが空の場合のログ出力
+// 	return
+// }
 
-	try {
-		await prisma.postTag.deleteMany({
-			where: { postId }
-		})
+// try {
+// 	await prisma.postTag.deleteMany({
+// 		where: { postId }
+// 	})
 
-		for (const tag of tags) {
-			if (typeof tag === 'string') {
-				await prisma.postTag.create({
-					data: {
-						post: { connect: { id: postId } },
-						tag: { connectOrCreate: { where: { name: tag }, create: { name: tag } } }
-					}
-				})
-			} else {
-				await prisma.postTag.create({
-					data: {
-						post: { connect: { id: postId } },
-						tag: { connect: { id: tag.tagId } }
-					}
-				})
-			}
-		}
-		await prisma.$transaction(async (prisma) => {
-			await prisma.$executeRaw`COMMIT`
-		})
-	} catch (error) {
-		console.error('タグテーブルの更新中にエラーが発生しました', error)
-		throw error
-	}
-}
+// 	for (const tag of tags) {
+// 		if (typeof tag === 'string') {
+// 			await prisma.postTag.create({
+// 				data: {
+// 					post: { connect: { id: postId } },
+// 					tag: { connectOrCreate: { where: { name: tag }, create: { name: tag } } }
+// 				}
+// 			})
+// 		} else {
+// 			await prisma.postTag.create({
+// 				data: {
+// 					post: { connect: { id: postId } },
+// 					tag: { connect: { id: tag.tagId } }
+// 				}
+// 			})
+// 		}
+// 	}
+// 	await prisma.$transaction(async (prisma) => {
+// 		await prisma.$executeRaw`COMMIT`
+// 	})
+// } catch (error) {
+// 	console.error('タグテーブルの更新中にエラーが発生しました', error)
+// 	throw error
+// }
+// }

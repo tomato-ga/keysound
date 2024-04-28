@@ -19,11 +19,6 @@ const PostPage = async ({ params }: PostPageProps) => {
 		where: { id: params.postId },
 		include: {
 			user: true,
-			tags: {
-				include: {
-					tag: true
-				}
-			},
 			part: true
 		}
 	})
@@ -31,7 +26,7 @@ const PostPage = async ({ params }: PostPageProps) => {
 	console.log('postdata', post)
 
 	// タグを配列にして格納
-	const tagsArray = post?.tags.map((tagItem) => tagItem.tag.name)
+	// const tagsArray = post?.tags.map((tagItem) => tagItem.tag.name)
 
 	// パーツを配列にして格納
 
@@ -66,13 +61,13 @@ const PostPage = async ({ params }: PostPageProps) => {
 						</div>
 
 						<h1 className="text-gray-600 text-4xl font-bold py-4">{post.title}</h1>
-						<div className="tag">
+						{/* <div className="tag">
 							{tagsArray?.map((tag, index) => (
 								<div key={index} className="text-gray-600 bg-blue-50 rounded-md px-4 py-2 mr-2 mb-2 inline-block">
 									#{tag}
 								</div>
 							))}
-						</div>
+						</div> */}
 
 						<h2 className="text-gray-600 font-bold py-4 text-2xl">パーツ</h2>
 						<div className="bg-white rounded-lg py-2">
