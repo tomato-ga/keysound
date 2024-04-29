@@ -62,12 +62,12 @@ export const handleUpdatePost = async (postId: string, formData: FormData) => {
 		// await updateTagTable(postData.id, postData.tags)
 
 		console.log('投稿の更新プロセスが成功しました postId:', postId)
-		revalidateTag(`/post/${postId}`)
-		redirect(`/post/${postId}`)
 	} catch (error) {
 		console.error('更新に失敗しました', error, { postId })
 		throw error
 	}
+	revalidateTag(`/post/${postId}`)
+	redirect(`/post/${postId}`)
 }
 
 const parseUpdateParts = (formData: FormData): UpdateParts | null => {
@@ -137,4 +137,3 @@ const updatePartTable = async (postId: string, partData: UpdateParts) => {
 		throw error
 	}
 }
-

@@ -19,8 +19,6 @@ import CategoryInput from '@/app/components/Upload/CategoryInput'
 
 import { savePostAction } from '@/app/actions/savePost/savePost'
 
-
-
 export default function UploadPage() {
 	const router = useRouter()
 	const status = SessionCheck()
@@ -36,8 +34,6 @@ export default function UploadPage() {
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
-
-
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -125,9 +121,13 @@ export default function UploadPage() {
 								}}
 							/>
 
-								{/* TODO ファイルアップロードはできてるけど、videourlが取得できていないところから */}
-								{/* TODO 一度動画アップロードしたら、削除（取り消し）できるようにしたい */}
-							<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />
+							{/* TODO ファイルアップロードはできてるけど、videourlが取得できていないところから */}
+							{/* TODO 一度動画アップロードしたら、削除（取り消し）できるようにしたい */}
+							<FileUploadButton
+								onFileChange={handleFileChange}
+								hasUploadedVideo={hasUploadedVideo}
+								videoUrl={postData.videourl}
+							/>
 
 							<SaveButton type="submit" />
 						</form>
