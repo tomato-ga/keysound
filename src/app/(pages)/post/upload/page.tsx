@@ -17,6 +17,10 @@ import { handleSavePost } from '@/app/actions/handleSavePost/handleSavePost'
 import PartsInput from '@/app/components/Upload/PartsInput'
 import CategoryInput from '@/app/components/Upload/CategoryInput'
 
+import { savePostAction } from '@/app/actions/savePost/savePost'
+
+
+
 export default function UploadPage() {
 	const router = useRouter()
 	const status = SessionCheck()
@@ -32,6 +36,8 @@ export default function UploadPage() {
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
+
+
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -99,7 +105,7 @@ export default function UploadPage() {
 						<h1 className="text-4xl font-bold mb-8">投稿を作成</h1>
 
 						{/* TODO タイトルと動画を必須にする */}
-						<form onSubmit={handleSubmit}>
+						<form action={savePostAction}>
 							<TitleInput
 								title={postData.title}
 								onTitleChange={(e) => setPostData({ ...postData, title: e.target.value })}
@@ -119,6 +125,7 @@ export default function UploadPage() {
 								}}
 							/>
 
+								{/* TODO 一度動画アップロードしたら、削除（取り消し）できるようにしたい */}
 							<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />
 
 							<SaveButton type="submit" />
