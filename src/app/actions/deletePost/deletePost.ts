@@ -20,6 +20,8 @@ export const deletePost = async (userId: string, postId: string) => {
 			where: { id: postId }
 		})
 
+		// TODO 投稿を削除したら、動画も削除する
+
 		console.log('投稿の削除プロセスが成功しました postId:', postId)
 		// revalidatePath('/')
 		// revalidateTag(`/profile/${userId}/postedit/${postId}`)

@@ -40,21 +40,6 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 
 	const addPostIdhandleUpdatePost = handleUpdatePost.bind(null, postData.id)
 
-	// const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-	// 	e.preventDefault()
-	// 	try {
-	// 		const updatedPostData: PostEditFormData = {
-	// 			...postData,
-	// 			tags: postData.tags
-	// 		}
-	// 		console.log('Updated postData data:', updatedPostData)
-
-	// 		// TODO 動画を削除できるようにする？
-	// 	} catch (error) {
-	// 		console.error('Error updating post:', error)
-	// 	}
-	// }
-
 	const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setPostData((prevData) => ({ ...prevData, title: e.target.value }))
 	}
@@ -69,20 +54,6 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 			part: parts as UpdateParts | null
 		}))
 	}
-
-	// const handleTagsChange = (tags: (string | UpdateTags)[]) => {
-	// 	const updateTags: UpdateTags[] = tags.map((tag) => {
-	// 		if (typeof tag === 'string') {
-	// 			return { tag: { id: '', name: tag }, postId: postData.id, tagId: '' }
-	// 		} else {
-	// 			return tag
-	// 		}
-	// 	})
-	// 	setPostData((prevData) => ({
-	// 		...prevData,
-	// 		tags: updateTags
-	// 	}))
-	// }
 
 	const handleDeletePost = async () => {
 		try {

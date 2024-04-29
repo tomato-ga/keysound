@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 
 import TitleInput from '@/app/components/Upload/TitleInput'
 import DescriptionInput from '@/app/components/Upload/DescriptionInput'
-import TagInput from '@/app/components/Upload/Taginput'
+
 import FileUploadButton from '@/app/components/Upload/FileUploadButton'
 import SaveButton from '@/app/components/Upload/SaveButton'
 import PreviewSection from '@/app/components/Upload/PreviewSection'
@@ -30,11 +30,8 @@ export default function UploadPage() {
 		// tags: []
 	})
 
-	const fileInputRef = useRef<HTMLInputElement>(null)
-
 	const [isLoading, setIsLoading] = useState(false)
 	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
-	const [tagInput, setTagInput] = useState<string>('')
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -94,41 +91,6 @@ export default function UploadPage() {
 		}
 	}
 
-	// const handleTagsChange = (tags: (string | UpdateTags)[]) => {
-	// 	const stringTags = tags.map((tag) => {
-	// 		if (typeof tag === 'string') {
-	// 			return tag
-	// 		} else {
-	// 			return tag.tag.name
-	// 		}
-	// 	})
-	// 	setPostData((prevState) => ({
-	// 		...prevState,
-	// 		tags: stringTags
-	// 	}))
-	// }
-
-	// const handleAddTags = () => {
-	// 	if (tagInput.trim()) {
-	// 		const newTags = tagInput
-	// 			.split(',')
-	// 			.map((tag) => tag.trim())
-	// 			.filter((tag) => tag !== '')
-	// 		setPostData((prevState) => ({
-	// 			...prevState,
-	// 			tags: [...(prevState.tags || []), ...newTags]
-	// 		}))
-	// 		setTagInput('')
-	// 	}
-	// }
-
-	// const handleRemoveTag = (index: number) => {
-	// 	setPostData((prevState) => ({
-	// 		...prevState,
-	// 		tags: prevState.tags?.filter((_, i) => i !== index) || []
-	// 	}))
-	// }
-
 	if (status === 'authenticated') {
 		return (
 			<div className="bg-white text-black min-h-screen">
@@ -157,9 +119,6 @@ export default function UploadPage() {
 								}}
 							/>
 
-							{/* <TagInput postData={postData} setPostData={setPostData} onTagsChange={handleTagsChange} /> */}
-
-							{/* TODO ファイルを削除できるようにする memo: 上げ直したりする可能性 */}
 							<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />
 
 							<SaveButton type="submit" />
