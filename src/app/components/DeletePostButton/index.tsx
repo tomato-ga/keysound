@@ -10,7 +10,8 @@ const DeletePostButton: React.FC<DeletePostButtonProps> = ({ onDeleteConfirmed }
 	const handleDeleteClick = () => {
 		setShowConfirmation(true)
 	}
-	const handleConfirmDelete = () => {
+	const handleConfirmDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault()
 		onDeleteConfirmed()
 		setShowConfirmation(false)
 	}
