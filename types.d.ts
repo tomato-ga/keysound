@@ -54,6 +54,7 @@ export interface UpdateParts {
 }
 
 export type PostEditFormData = Omit<Post, 'user'> & {
+	user: { id: string }
 	part: UpdateParts | null
 	category: string
 	// tags: UpdateTags[] | string[]

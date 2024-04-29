@@ -5,14 +5,13 @@ import { Post, PostFormData, PostPart, UpdateParts, PostEditFormData } from '../
 import TitleInput from '../Upload/TitleInput'
 import DescriptionInput from '../Upload/DescriptionInput'
 import PartsInput from '../Upload/PartsInput'
-import TagInput from '../Upload/Taginput'
-import FileUploadButton from '../Upload/FileUploadButton'
 import SaveButton from '../Upload/SaveButton'
-import PreviewSection from '../Upload/PreviewSection'
 import { useState, ChangeEvent } from 'react'
 import DeletePostButton from '../DeletePostButton'
 import { handleUpdatePost } from '@/app/actions/handleUpdatePost/handleUpdatePost'
 import CategoryInput from '../Upload/CategoryInput'
+import { deletePost } from '@/app/actions/deletePost/deletePost'
+import { redirect } from 'next/navigation'
 
 type NewType<T, Kind extends string> = T & {
 	[key in `__${Kind}`]: never
@@ -20,6 +19,8 @@ type NewType<T, Kind extends string> = T & {
 type postId = NewType<string, 'Post'>
 
 const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
+	console.log('post', post)
+
 	const [postData, setPostData] = useState<PostEditFormData>({
 		id: post.id,
 		title: post.title,
@@ -29,7 +30,10 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		createdat: post.createdat,
 		updatedat: post.updatedat,
 		part: post.part || null,
-		category: post.category || ''
+		category: post.category || '',
+		user: {
+			id: post.user.id
+		}
 	})
 
 	console.log('PostEditForm State', postData)
@@ -82,7 +86,7 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 
 	const handleDeletePost = async () => {
 		try {
-			// TODO ServerAction実装する
+			await deletePost(post.user.id, postData.id)
 			console.log('投稿を削除しました')
 		} catch (error) {
 			console.error(error)
@@ -110,8 +114,8 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 						<SaveButton type="submit" />
 
 						{/* TODO: 投稿を削除できるようにする */}
-						<DeletePostButton onDeleteConfirmed={handleDeletePost} />
 					</form>
+					<DeletePostButton onDeleteConfirmed={handleDeletePost} />
 					{/* <PreviewSection /> */}
 				</div>
 			</div>

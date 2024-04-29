@@ -20,7 +20,7 @@ export default async function EditPostPage({ params }: EditPostProps) {
 
 	const postData = await prisma.post.findFirst({
 		where: { id: postId, userId },
-		include: { part: true, category: true }
+		include: { part: true, category: true, user: true }
 	})
 
 	console.log('postData', postData)
@@ -29,10 +29,15 @@ export default async function EditPostPage({ params }: EditPostProps) {
 		notFound()
 	}
 
+	const postDataForForm = {
+		...postData,
+		category: postData.category ? postData.category.name : '' // これにより category は string 型になる
+	}
+
 	return (
 		<div className=" min-h-screen text-gray-300">
 			<div className="container mx-auto px-4 py-8">
-				<PostEditForm post={postData} />
+				<PostEditForm post={postDataForForm} />
 			</div>
 		</div>
 	)

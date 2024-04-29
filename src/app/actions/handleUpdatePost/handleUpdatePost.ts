@@ -29,7 +29,7 @@ export const handleUpdatePost = async (postId: string, formData: FormData) => {
 		throw new Error('必要なフィールドが不足しています')
 	}
 
-	const postData: Omit<PostEditFormData, 'imageUrl' | 'videoUrl' | 'createdat'> = {
+	const postData: Omit<PostEditFormData, 'imageUrl' | 'videoUrl' | 'createdat' | 'user'> = {
 		id,
 		title,
 		description,
