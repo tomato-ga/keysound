@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth/next'
 import { PostFormData } from '../../../../types'
 import { handleSavePost } from '../handleSavePost/handleSavePost'
 import { authOptions } from '@/auth/[...nextauth]'
+import { redirect } from 'next/navigation'
 
 export const savePostAction = async (formData: FormData) => {
 	console.log('savePostAction formdata', formData)
@@ -19,7 +20,6 @@ export const savePostAction = async (formData: FormData) => {
 	const partSwitches = formData.get('partSwitches') as string
 	const partKeyCaps = formData.get('partKeyCaps') as string
 
-
 	const postData: PostFormData = {
 		title,
 		description,
@@ -30,16 +30,19 @@ export const savePostAction = async (formData: FormData) => {
 
 	console.log('savePostAction', postData)
 
+	let postId
 	try {
 		const session = await getServerSession(authOptions)
 		if (!session?.user?.email) {
 			throw Error('User not found')
 		}
 
-		const postId = await handleSavePost(postData, session?.user.email)
-		return { postId }
+		postId = await handleSavePost(postData, session?.user.email)
+		// return { postId }
 	} catch (error) {
 		console.error('Error saving post: ', error)
 		throw error
 	}
+
+	redirect(`/post/${postId}`)
 }

@@ -6,12 +6,14 @@ import { ChangeEvent } from "react";
 interface FileUploadButtonProps {
 	onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	hasUploadedVideo: boolean;
+	videoUrl: string | undefined
 }
 
 // TODO ファイルアップロードできてるのにURLが取得できていないのは、formのnameに指定していないからだ。
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({
 	onFileChange,
 	hasUploadedVideo,
+	videoUrl
 }) => {
 	const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -30,6 +32,7 @@ const FileUploadButton: React.FC<FileUploadButtonProps> = ({
 				accept="video/*"
 				disabled={hasUploadedVideo}
 			/>
+			<input type="hidden" name="videourl" value={videoUrl}/>
 			<button
 				className="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded"
 				title="動画をアップロードする"
