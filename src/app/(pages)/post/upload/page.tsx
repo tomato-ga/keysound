@@ -125,6 +125,7 @@ export default function UploadPage() {
 								}}
 							/>
 
+								{/* TODO ファイルアップロードはできてるけど、videourlが取得できていないところから */}
 								{/* TODO 一度動画アップロードしたら、削除（取り消し）できるようにしたい */}
 							<FileUploadButton onFileChange={handleFileChange} hasUploadedVideo={hasUploadedVideo} />
 

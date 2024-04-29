@@ -8,6 +8,7 @@ interface FileUploadButtonProps {
 	hasUploadedVideo: boolean;
 }
 
+// TODO ファイルアップロードできてるのにURLが取得できていないのは、formのnameに指定していないからだ。
 const FileUploadButton: React.FC<FileUploadButtonProps> = ({
 	onFileChange,
 	hasUploadedVideo,

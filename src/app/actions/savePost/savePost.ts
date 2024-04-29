@@ -8,6 +8,8 @@ import { authOptions } from '@/auth/[...nextauth]'
 export const savePostAction = async (formData: FormData) => {
 	console.log('savePostAction formdata', formData)
 
+	// TODO videoURLが取得できていない。パーツは取得できているけど、nullになるのはなぜか
+	// test console -> parts: [ { case: null, plate: null, switches: null, keyCaps: null } ]
 	const title = formData.get('title') as string
 	const description = formData.get('description') as string
 	const videourl = formData.get('videourl') as string
@@ -16,6 +18,7 @@ export const savePostAction = async (formData: FormData) => {
 	const partPlate = formData.get('partPlate') as string
 	const partSwitches = formData.get('partSwitches') as string
 	const partKeyCaps = formData.get('partKeyCaps') as string
+
 
 	const postData: PostFormData = {
 		title,
