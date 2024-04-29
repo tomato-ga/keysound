@@ -20,7 +20,6 @@ export const handleSavePost = async (formData: PostFormData, userEmail: string) 
 
 		const createdPost = await prisma.post.create({
 			data: {
-				userId: user.id,
 				title: formData.title,
 				description: formData.description,
 				videoUrl: formData.videourl || null,
@@ -31,11 +30,12 @@ export const handleSavePost = async (formData: PostFormData, userEmail: string) 
 						switches: formData.parts[0]?.switches || '',
 						keyCaps: formData.parts[0]?.keyCaps || ''
 					}
-				}
+				},
+				// TODO Category nameが保存されるか確認する
+				...(formData.category && { category: { connect: { id: formData.category } } }),
+				user: { connect: { id: user.id } } // ここでユーザー情報を設定
 			},
-			include: {
-				part: true
-			}
+			include: { part: true, category: true }
 		})
 
 		console.log('createdPost', createdPost)
