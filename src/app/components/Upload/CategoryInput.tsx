@@ -29,26 +29,23 @@ export default function CategoryInput({ onCategoryChange }: CategoryInputProps) 
 			</FormLabel>
 			<RadioGroup
 				aria-labelledby="keyboard-label"
-				defaultValue="カスタム"
+				defaultValue="1"
 				size="lg"
 				sx={{ gap: 1.5 }}
 				name="category"
 				onChange={handleCategoryChange}
 			>
-				{['カスタム', '自作', 'メーカー'].map((value) => (
-					<Sheet
-						key={value}
-						sx={{
-							p: 2,
-							borderRadius: 'md',
-							boxShadow: 'sm'
-						}}
-					>
+				{[
+					{ id: '1', name: 'カスタム' },
+					{ id: '2', name: '自作' },
+					{ id: '3', name: 'メーカー' }
+				].map((category) => (
+					<Sheet key={category.id} sx={{ p: 2, borderRadius: 'md', boxShadow: 'sm' }}>
 						<Radio
-							label={`${value}キーボード`}
+							label={`${category.name}キーボード`}
 							overlay
 							disableIcon
-							value={value}
+							value={category.id}
 							slotProps={{
 								label: ({ checked }) => ({
 									sx: {
@@ -62,7 +59,6 @@ export default function CategoryInput({ onCategoryChange }: CategoryInputProps) 
 										...(checked && {
 											'--variant-borderWidth': '2px',
 											'&&': {
-												// && to increase the specificity to win the base :hover styles
 												borderColor: theme.vars.palette.primary[500]
 											}
 										})
