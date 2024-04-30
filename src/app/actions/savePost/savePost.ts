@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation'
 export const savePostAction = async (formData: FormData) => {
 	console.log('savePostAction formdata', formData)
 
-	// TODO videoURLが取得できていない。パーツは取得できているけど、nullになるのはなぜか
+	// TODO パーツは取得できているけど、nullになるのはなぜか
 	// test console -> parts: [ { case: null, plate: null, switches: null, keyCaps: null } ]
 	const title = formData.get('title') as string
 	const description = formData.get('description') as string

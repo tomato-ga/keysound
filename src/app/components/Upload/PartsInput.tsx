@@ -43,7 +43,7 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 			<div>
 				<input
 					type="text"
-					name="case"
+					name="partCase"
 					placeholder="ケース"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
 					value={partInput.case ?? ''}
@@ -57,7 +57,7 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 				/>
 				<input
 					type="text"
-					name="plate"
+					name="partPlate"
 					placeholder="プレート"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
 					value={partInput.plate ?? ''}
@@ -71,7 +71,7 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 				/>
 				<input
 					type="text"
-					name="switches"
+					name="partSwitches"
 					placeholder="スイッチ"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
 					value={partInput.switches ?? ''}
@@ -85,7 +85,7 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 				/>
 				<input
 					type="text"
-					name="keyCaps"
+					name="partKeyCaps"
 					placeholder="キーキャップ"
 					className="w-full bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500 mb-2"
 					value={partInput.keyCaps ?? ''}
