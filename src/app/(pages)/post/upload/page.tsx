@@ -78,20 +78,20 @@ export default function UploadPage() {
 		}
 	}
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
+	// const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	// 	e.preventDefault()
 
-		try {
-			if (!userEmail) {
-				throw Error('User not found')
-			}
+	// 	try {
+	// 		if (!userEmail) {
+	// 			throw Error('User not found')
+	// 		}
 
-			const postId = await handleSavePost(postData, userEmail)
-			router.push(`/post/${postId}`)
-		} catch (error) {
-			console.error('Error saving post: ', error)
-		}
-	}
+	// 		const postId = await handleSavePost(postData, userEmail)
+	// 		router.push(`/post/${postId}`)
+	// 	} catch (error) {
+	// 		console.error('Error saving post: ', error)
+	// 	}
+	// }
 
 	if (status === 'authenticated') {
 		return (
