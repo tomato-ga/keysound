@@ -18,6 +18,9 @@ import PartsInput from '@/app/components/Upload/PartsInput'
 import CategoryInput from '@/app/components/Upload/CategoryInput'
 
 import { savePostAction } from '@/app/actions/savePost/savePost'
+import RemoveVideoButton from '@/app/components/Upload/RemoveVideoButton'
+
+import { handleRemoveVideo } from '@/app/actions/handleRemoveVideo/handleRemoveVideo'
 
 export default function UploadPage() {
 	const router = useRouter()
@@ -78,6 +81,14 @@ export default function UploadPage() {
 		}
 	}
 
+	const handleRemoveVideoClick = async () => {
+		const result = await handleRemoveVideo(postData)
+		if (result.success) {
+			setPostData({ ...postData, videourl: result.videourl })
+			setHasUploadedVideo(false)
+		}
+	}
+
 	// const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 	// 	e.preventDefault()
 
@@ -121,7 +132,6 @@ export default function UploadPage() {
 								}}
 							/>
 
-							{/* TODO ファイルアップロードはできてるけど、videourlが取得できていないところから */}
 							{/* TODO 一度動画アップロードしたら、削除（取り消し）できるようにしたい */}
 							<FileUploadButton
 								onFileChange={handleFileChange}
@@ -131,6 +141,7 @@ export default function UploadPage() {
 
 							<SaveButton type="submit" />
 						</form>
+						<RemoveVideoButton onRemoveVideo={handleRemoveVideoClick} hasUploadedVideo={hasUploadedVideo} />
 
 						<PreviewSection videoUrl={postData.videourl} isLoading={isLoading} />
 					</div>
