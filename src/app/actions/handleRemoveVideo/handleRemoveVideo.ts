@@ -25,13 +25,8 @@ export const handleRemoveVideo = async (postData: PostFormData) => {
 			console.error('Error: Video URL is invalid')
 			return { success: false, videourl: postData.videourl, message: 'Video URL is invalid' }
 		}
-	} catch (e: unknown) {
-		if (e instanceof Error) {
-			// eはError型であるため、messageプロパティが安全に利用できる
-			console.error(e.message)
-		} else {
-			// eがError型でない場合の処理
-			console.error('An unexpected error occurred.')
-		}
+	} catch (error) {
+		console.error('Error:', error)
+		return { success: false, videourl: postData.videourl, message: 'An unexpected error occurred' }
 	}
 }

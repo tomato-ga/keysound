@@ -1,3 +1,5 @@
+// /Users/ore/Documents/GitHub/keysound/src/app/api/r2delete/route.ts
+
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3'
 import { NextRequest, NextResponse } from 'next/server'
