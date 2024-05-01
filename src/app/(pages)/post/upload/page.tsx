@@ -155,17 +155,6 @@ export default function UploadPage() {
 
 							<SaveButton type="button" disabled={isSaveButtonDisabled} onClick={handleFormSubmission} />
 
-							<ToastContainer
-								position="top-right"
-								autoClose={5000}
-								hideProgressBar
-								newestOnTop
-								closeOnClick
-								rtl={false}
-								pauseOnFocusLoss
-								draggable
-								pauseOnHover
-							/>
 						</form>
 						<RemoveVideoButton onRemoveVideo={handleRemoveVideoClick} hasUploadedVideo={hasUploadedVideo} />
 
