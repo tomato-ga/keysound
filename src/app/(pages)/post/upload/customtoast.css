@@ -1,0 +1,28 @@
+/* CustomToastify.css */
+
+/*MEMO 参考にする https://fkhadra.github.io/react-toastify/how-to-style/ */
+.Toastify__toast {
+    background-color: #fff;
+    color: #000;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%; /* 横幅を400pxに設定 */
+    height: 80%;
+  }
+  
+  .Toastify__toast--success {
+    border-left: 6px solid #4caf50;
+  }
+  
+  .Toastify__toast--error {
+    border-left: 6px solid #f44336;
+  }
+  
+  .Toastify__toast-body {
+    font-size: 20px;
+    padding: 12px;
+  }
+  
+  .Toastify__progress-bar {
+    background: #4caf50;
+  }
