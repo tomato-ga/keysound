@@ -122,7 +122,6 @@ export default function UploadPage() {
 								}}
 							/>
 
-							{/* TODO 一度動画アップロードしたら、削除（取り消し）できるようにしたい */}
 							<FileUploadButton
 								ref={fileInputRef}
 								onFileChange={handleFileChange}

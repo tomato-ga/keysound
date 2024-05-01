@@ -57,7 +57,7 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 
 	const handleDeletePost = async () => {
 		try {
-			await deletePost(post.user.id, postData.id)
+			await deletePost(post.user.id, postData.id, postData.videoUrl)
 			console.log('投稿を削除しました')
 		} catch (error) {
 			console.error(error)
@@ -76,15 +76,8 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 						<CategoryInput onCategoryChange={(category) => setPostData({ ...postData, category })} />
 
 						<PartsInput parts={postData.part} onPartsChange={handlePartsChange} />
-						{/* <TagInput<PostEditFormData>
-							postData={postData}
-							setPostData={setPostData}
-							onTagsChange={(tags) => handleTagsChange(tags)}
-						/> */}
 
 						<SaveButton type="submit" />
-
-						{/* TODO: 投稿を削除できるようにする */}
 					</form>
 					<DeletePostButton onDeleteConfirmed={handleDeletePost} />
 					{/* <PreviewSection /> */}

@@ -31,7 +31,6 @@ export const handleSavePost = async (formData: PostFormData, userEmail: string) 
 						keyCaps: formData.parts[0]?.keyCaps || ''
 					}
 				},
-				// TODO Category nameが保存されるか確認する
 				...(formData.category && { category: { connect: { id: formData.category } } }),
 				user: { connect: { id: user.id } } // ここでユーザー情報を設定
 			},

@@ -1,12 +1,5 @@
-/**
- * TypeScript React の `DynamicVideoPlayer` コンポーネントは、`react-player` ライブラリを使用して、動的 URL
- * とレスポンシブなスタイルを備えたビデオ プレーヤーをレンダリングします。
- * @param  - 提供されている TypeScript React コードの `DynamicVideoPlayer` コンポーネントは、動的な URL とレスポンシブなスタイルを使用してビデオ
- * プレーヤーをレンダリングします。
- */
-
-// /Users/ore/Documents/GitHub/keysound/src/app/components/VideoPlayer/index.tsx
 'use client'
+import { useState, useEffect } from 'react'
 import ReactPlayer from 'react-player/lazy'
 
 interface DynamicVideoPlayerProps {
@@ -15,8 +8,22 @@ interface DynamicVideoPlayerProps {
 	loop?: boolean
 }
 
-// TODO playingを修正する -> モバイル表示の時に勝手に再生されたらデータ消費してしまうため、モバイルはデフォルトfalseにする。WiFi接続状態を確認できた場合はtrueにできる？
 const DynamicVideoPlayer = ({ videoUrl, controls, loop }: DynamicVideoPlayerProps) => {
+	const [isMobile, setIsMobile] = useState(false)
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth <= 768) // 画面幅が768px以下をモバイルとみなす
+		}
+
+		window.addEventListener('resize', handleResize)
+		handleResize() // 初回レンダリング時に画面幅を判定
+
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+
 	return (
 		<ReactPlayer
 			url={videoUrl}
@@ -26,7 +33,7 @@ const DynamicVideoPlayer = ({ videoUrl, controls, loop }: DynamicVideoPlayerProp
 			controls={controls}
 			volume={0}
 			muted={true}
-			playing={true}
+			playing={!isMobile} // モバイルの場合はplayingをfalseに設定
 			loop={loop}
 			playsinline={true}
 		/>

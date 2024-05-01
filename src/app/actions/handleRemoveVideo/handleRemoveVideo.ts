@@ -1,7 +1,13 @@
 'use server'
-import { PostFormData } from '../../../../types'
 
+import { PostFormData } from '../../../../types'
 import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3'
+
+interface RemoveVideoResult {
+	success: boolean
+	videourl: string | undefined
+	message: string
+}
 
 const s3Client = new S3Client({
 	region: 'auto',
@@ -12,32 +18,34 @@ const s3Client = new S3Client({
 	}
 })
 
-export const handleRemoveVideo = async (postData: PostFormData) => {
+export const handleRemoveVideo = async (
+	input: PostFormData | string | null | undefined
+): Promise<RemoveVideoResult> => {
+	let videourl: string | undefined
 	try {
-		const videoKey = postData.videourl?.split('/').pop()
+		videourl = typeof input === 'object' ? input?.videourl : input
+		const videoKey = videourl?.split('/').pop()
 		if (videoKey) {
 			const objectKey = `uploads/${videoKey}`
 			const deleteParams = {
 				Bucket: process.env.R2_BUCKET_NAME,
 				Key: objectKey
 			}
-
 			const result = await s3Client.send(new DeleteObjectCommand(deleteParams))
 			console.log('Delete result:', JSON.stringify(result, null, 2))
-
 			if (result.$metadata.httpStatusCode === 204) {
 				console.log('動画を削除しました')
 				return { success: true, videourl: '', message: '動画を削除しました' }
 			} else {
 				console.error('動画の削除に失敗しました')
-				return { success: false, videourl: postData.videourl, message: '動画の削除に失敗しました' }
+				return { success: false, videourl: videourl, message: '動画の削除に失敗しました' }
 			}
 		} else {
 			console.error('Error: Video URL is invalid')
-			return { success: false, videourl: postData.videourl, message: 'Video URL is invalid' }
+			return { success: false, videourl: videourl, message: 'Video URL is invalid' }
 		}
 	} catch (error) {
 		console.error('Error:', error)
-		return { success: false, videourl: postData.videourl, message: 'An unexpected error occurred' }
+		return { success: false, videourl: videourl, message: 'An unexpected error occurred' }
 	}
 }
