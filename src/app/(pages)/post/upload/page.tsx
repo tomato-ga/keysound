@@ -102,11 +102,11 @@ export default function UploadPage() {
 		e.preventDefault()
 		if (!postData.title || !postData.videourl) {
 			if (!postData.title && !postData.videourl) {
-				toast.error('タイトルと動画をアップロードしてください')
+				toast('タイトルと動画をアップロードしてください')
 			} else if (!postData.title) {
-				toast.error('タイトルは必須です')
+				toast('タイトルは必須です')
 			} else if (!postData.videourl) {
-				toast.error('動画をアップロードしてください')
+				toast('動画をアップロードしてください')
 			}
 		} else {
 			// フォームの送信
@@ -154,7 +154,6 @@ export default function UploadPage() {
 							/>
 
 							<SaveButton type="button" disabled={isSaveButtonDisabled} onClick={handleFormSubmission} />
-
 						</form>
 						<RemoveVideoButton onRemoveVideo={handleRemoveVideoClick} hasUploadedVideo={hasUploadedVideo} />
 
