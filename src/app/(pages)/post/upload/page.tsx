@@ -81,11 +81,16 @@ export default function UploadPage() {
 		}
 	}
 
+	const fileInputRef = useRef<HTMLInputElement>(null)
+
 	const handleRemoveVideoClick = async () => {
 		const result = await handleRemoveVideo(postData)
 		if (result.success) {
-			setPostData({ ...postData, videourl: result.videourl })
+			setPostData({ ...postData, videourl: '' })
 			setHasUploadedVideo(false)
+			if (fileInputRef.current) {
+				fileInputRef.current.value = ''
+			}
 		}
 	}
 
@@ -119,6 +124,7 @@ export default function UploadPage() {
 
 							{/* TODO 一度動画アップロードしたら、削除（取り消し）できるようにしたい */}
 							<FileUploadButton
+								ref={fileInputRef}
 								onFileChange={handleFileChange}
 								hasUploadedVideo={hasUploadedVideo}
 								videoUrl={postData.videourl}
