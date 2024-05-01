@@ -96,27 +96,30 @@ export default function UploadPage() {
 		}
 	}
 
-	const isSaveButtonDisabled = !postData.title || !hasUploadedVideo
-
-	const handleFormSubmission = (e: React.MouseEvent<HTMLButtonElement>) => {
+	const handleFormSubmission = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault()
 		if (!postData.title || !postData.videourl) {
 			if (!postData.title && !postData.videourl) {
-				toast('タイトルと動画をアップロードしてください')
+				toast('タイトルと動画アップロードは必須です')
 			} else if (!postData.title) {
 				toast('タイトルは必須です')
 			} else if (!postData.videourl) {
-				toast('動画をアップロードしてください')
+				toast('動画アップロードは必須です')
 			}
 		} else {
-			// フォームの送信
-			document.forms[0].submit()
+			const formData = new FormData()
+			formData.append('title', postData.title)
+			formData.append('description', postData.description)
+			formData.append('videourl', postData.videourl)
+			formData.append('category', postData.category)
+			formData.append('partCase', postData.parts[0]?.case || '')
+			formData.append('partPlate', postData.parts[0]?.plate || '')
+			formData.append('partSwitches', postData.parts[0]?.switches || '')
+			formData.append('partKeyCaps', postData.parts[0]?.keyCaps || '')
+
+			await savePostAction(formData)
 		}
 	}
-
-	useEffect(() => {
-		toast('ページが読み込まれました。')
-	}, [])
 
 	if (status === 'authenticated') {
 		return (
@@ -125,8 +128,7 @@ export default function UploadPage() {
 					<div className="bg-white">
 						<h1 className="text-4xl font-bold mb-8">投稿を作成</h1>
 
-						{/* TODO タイトルと動画を必須にする */}
-						<form action={savePostAction}>
+						<form>
 							<TitleInput
 								title={postData.title}
 								onTitleChange={(e) => setPostData({ ...postData, title: e.target.value })}
@@ -153,7 +155,7 @@ export default function UploadPage() {
 								videoUrl={postData.videourl}
 							/>
 
-							<SaveButton type="button" disabled={isSaveButtonDisabled} onClick={handleFormSubmission} />
+							<SaveButton type="button" onClick={handleFormSubmission} />
 						</form>
 						<RemoveVideoButton onRemoveVideo={handleRemoveVideoClick} hasUploadedVideo={hasUploadedVideo} />
 
