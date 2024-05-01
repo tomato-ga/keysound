@@ -43,14 +43,7 @@ export default async function ProfilePage() {
 						プロフィールを編集
 					</button>
 				</Link>
-
-				{/* TODO session.user.idとprofile.user.idが一緒だったら、各ポストに投稿を編集できるようにするリンクを設置する ポストデータを取得済みだったら、それをpropsでEdit画面に渡せばいい */}
-				{/* TODO 投稿一覧にオプションで編集画面へのLinkをつけて、「編集する」を押したら、ポストの編集画面に移動する？ */}
-				{/* TODO /post.id/editへ遷移するRouteへ変更する */}
-
-				{/* <Link href={`/profile/${profile.user.id}/postedit`}>
-					<button className="mt-4 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">投稿を編集</button>
-				</Link> */}
+				
 				<h2 className="mt-8 mb-4 text-2xl font-bold">投稿一覧</h2>
 				<PostsCard posts={profile.user.posts} componentType="profile" isCurrentUser={isCurrentUser} />
 			</div>

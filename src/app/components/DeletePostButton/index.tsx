@@ -21,8 +21,8 @@ const DeletePostButton: React.FC<DeletePostButtonProps> = ({ onDeleteConfirmed }
 	}
 
 	return (
-		<div>
-			<button className="bg-red-500 text-white px-4 py-2 rounded" onClick={handleDeleteClick}>
+		<div className='text-center'>
+			<button className="bg-red-500 text-white font-bold px-4 py-2 rounded" onClick={handleDeleteClick}>
 				投稿を削除する
 			</button>
 			{showConfirmation && (

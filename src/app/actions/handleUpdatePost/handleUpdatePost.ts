@@ -35,7 +35,6 @@ export const handleUpdatePost = async (postId: string, formData: FormData) => {
 		description,
 		updatedat,
 		part: parseUpdateParts(formData),
-		// TODO category指定する
 		category: ''
 		// tags: parseUpdateTags(formData)
 	}
