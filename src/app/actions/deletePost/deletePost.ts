@@ -35,3 +35,4 @@ export const deletePost = async (userId: string, postId: string, videourl: strin
 	revalidatePath(`/profile/${userId}/postedit/${postId}`)
 	redirect('/profile')
 }
+
