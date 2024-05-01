@@ -23,6 +23,7 @@ import { handleRemoveVideo } from '@/app/actions/handleRemoveVideo/handleRemoveV
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import './customtoast.css'
 
 export default function UploadPage() {
 	const router = useRouter()
@@ -44,13 +45,13 @@ export default function UploadPage() {
 		const file = e.target.files?.[0]
 		if (file) {
 			if (!file.type.startsWith('video/')) {
-				alert('動画ファイルのみアップロードできます')
+				toast('動画ファイルのみアップロードできます')
 				return
 			}
 
 			const fileSizeInMB = file.size / (1024 * 1024)
 			if (fileSizeInMB > 100) {
-				alert('ファイルサイズが100MBを超えています。動画のファイルサイズが100MB以下の場合にアップロードできます')
+				toast.error('ファイルサイズが100MBを超えています。動画のファイルサイズが100MB以下の場合にアップロードできます')
 				return
 			}
 
@@ -100,11 +101,11 @@ export default function UploadPage() {
 		e.preventDefault()
 		if (!postData.title || !postData.videourl) {
 			if (!postData.title && !postData.videourl) {
-				toast('タイトルと動画アップロードは必須です')
+				toast.error('タイトルと動画アップロードは必須です')
 			} else if (!postData.title) {
-				toast('タイトルは必須です')
+				toast.error('タイトルは必須です')
 			} else if (!postData.videourl) {
-				toast('動画アップロードは必須です')
+				toast.error('動画アップロードは必須です')
 			}
 		} else {
 			const formData = new FormData()

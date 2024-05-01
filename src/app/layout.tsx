@@ -40,6 +40,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 							pauseOnFocusLoss
 							draggable
 							pauseOnHover
+							style={{ width: '500px' }}
 						/>
 					</main>
 					<Sidebar />
