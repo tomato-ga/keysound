@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, ChangeEvent } from 'react'
+import { useState, useRef, ChangeEvent, useEffect } from 'react'
 import { SessionCheck } from '@/app/func/Sessioncheck'
 import { UserIdCheck } from '@/app/func/Useridcheck'
 import Link from 'next/link'
@@ -19,8 +19,10 @@ import CategoryInput from '@/app/components/Upload/CategoryInput'
 
 import { savePostAction } from '@/app/actions/savePost/savePost'
 import RemoveVideoButton from '@/app/components/Upload/RemoveVideoButton'
-
 import { handleRemoveVideo } from '@/app/actions/handleRemoveVideo/handleRemoveVideo'
+
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function UploadPage() {
 	const router = useRouter()
@@ -94,6 +96,28 @@ export default function UploadPage() {
 		}
 	}
 
+	const isSaveButtonDisabled = !postData.title || !hasUploadedVideo
+
+	const handleFormSubmission = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault()
+		if (!postData.title || !postData.videourl) {
+			if (!postData.title && !postData.videourl) {
+				toast.error('タイトルと動画をアップロードしてください')
+			} else if (!postData.title) {
+				toast.error('タイトルは必須です')
+			} else if (!postData.videourl) {
+				toast.error('動画をアップロードしてください')
+			}
+		} else {
+			// フォームの送信
+			document.forms[0].submit()
+		}
+	}
+
+	useEffect(() => {
+		toast('ページが読み込まれました。')
+	}, [])
+
 	if (status === 'authenticated') {
 		return (
 			<div className="bg-white text-black min-h-screen">
@@ -129,7 +153,19 @@ export default function UploadPage() {
 								videoUrl={postData.videourl}
 							/>
 
-							<SaveButton type="submit" />
+							<SaveButton type="button" disabled={isSaveButtonDisabled} onClick={handleFormSubmission} />
+
+							<ToastContainer
+								position="top-right"
+								autoClose={5000}
+								hideProgressBar
+								newestOnTop
+								closeOnClick
+								rtl={false}
+								pauseOnFocusLoss
+								draggable
+								pauseOnHover
+							/>
 						</form>
 						<RemoveVideoButton onRemoveVideo={handleRemoveVideoClick} hasUploadedVideo={hasUploadedVideo} />
 
