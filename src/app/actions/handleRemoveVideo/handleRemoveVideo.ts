@@ -1,25 +1,36 @@
 'use server'
 import { PostFormData } from '../../../../types'
 
+import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3'
+
+const s3Client = new S3Client({
+	region: 'auto',
+	endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+	credentials: {
+		accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+		secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!
+	}
+})
+
 export const handleRemoveVideo = async (postData: PostFormData) => {
 	try {
 		const videoKey = postData.videourl?.split('/').pop()
 		if (videoKey) {
-			const url = `${process.env.NEXT_PUBLIC_API_URL}/api/r2delete?query=${encodeURIComponent(videoKey)}`
-			const params = {
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json'
-				}
+			const objectKey = `uploads/${videoKey}`
+			const deleteParams = {
+				Bucket: process.env.R2_BUCKET_NAME,
+				Key: objectKey
 			}
-			const response = await fetch(url, params)
-			const data = await response.json()
-			if (response.ok) {
-				console.log(data.message)
-				return { success: true, videourl: '' }
+
+			const result = await s3Client.send(new DeleteObjectCommand(deleteParams))
+			console.log('Delete result:', JSON.stringify(result, null, 2))
+
+			if (result.$metadata.httpStatusCode === 204) {
+				console.log('動画を削除しました')
+				return { success: true, videourl: '', message: '動画を削除しました' }
 			} else {
-				console.error('Error:', data.message || 'Unknown error occurred')
-				return { success: false, videourl: postData.videourl, message: data.message || 'Unknown error occurred' }
+				console.error('動画の削除に失敗しました')
+				return { success: false, videourl: postData.videourl, message: '動画の削除に失敗しました' }
 			}
 		} else {
 			console.error('Error: Video URL is invalid')
