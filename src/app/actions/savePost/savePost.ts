@@ -18,6 +18,16 @@ export const savePostAction = async (formData: FormData) => {
 	const partSwitches = formData.get('partSwitches') as string
 	const partKeyCaps = formData.get('partKeyCaps') as string
 
+	if (!title) {
+		alert('タイトルは必須です')
+		return
+	}
+
+	if (!videourl) {
+		alert('動画のアップロードは必須です')
+		return
+	}
+
 	const postData: PostFormData = {
 		title,
 		description,

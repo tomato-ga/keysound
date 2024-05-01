@@ -26,6 +26,7 @@ const FileUploadButton = forwardRef<HTMLInputElement, FileUploadButtonProps>(
 					onChange={onFileChange}
 					accept="video/*"
 					disabled={hasUploadedVideo}
+					required
 				/>
 				<input type="hidden" name="videourl" value={videoUrl} />
 				<button
