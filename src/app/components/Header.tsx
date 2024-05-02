@@ -58,9 +58,6 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 					<Link href="/about" onClick={handleLinkClick}>
 						<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">検索</span>
 					</Link>
-					<Link href="/profile" onClick={handleLinkClick}>
-						<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">プロフィール</span>
-					</Link>
 
 					<Link href="/about" onClick={handleLinkClick}>
 						<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">About</span>
@@ -68,23 +65,27 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 					<Link href="/blog" onClick={handleLinkClick}>
 						<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">Blog</span>
 					</Link>
+
 					{session ? (
-						<Link href="/post/upload" onClick={handleLinkClick}>
-							<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">音を投稿する</span>
-						</Link>
+						<>
+							<Link href="/post/upload" onClick={handleLinkClick}>
+								<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">
+									音を投稿する
+								</span>
+							</Link>
+							<Link href="/profile" onClick={handleLinkClick}>
+								<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">
+									プロフィール
+								</span>
+							</Link>
+							<Link href="/login" onClick={handleLinkClick}>
+								<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">ログアウト</span>
+							</Link>
+						</>
 					) : (
 						<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">
 							投稿するにはログインが必要です
 						</span>
-					)}
-					{session ? (
-						<Link href="/login" onClick={handleLinkClick}>
-							<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">ログアウト</span>
-						</Link>
-					) : (
-						<Link href="/login" onClick={handleLinkClick}>
-							<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">ログイン</span>
-						</Link>
 					)}
 				</div>
 			</div>
