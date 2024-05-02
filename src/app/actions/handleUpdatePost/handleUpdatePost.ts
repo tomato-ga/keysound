@@ -14,18 +14,17 @@ function getStringValue(formData: FormData, key: string): string | undefined {
 	return undefined
 }
 
-export const handleUpdatePost = async (postId: string, formData: FormData) => {
-	console.log('投稿更新プロセスの開始 postId:', postId)
+export const handleUpdatePost = async (formData: FormData) => {
 	console.log('受け取った formData:', formData)
 
-	const id = postId
+	const id = getStringValue(formData, 'id')
 	const title = getStringValue(formData, 'title')
 	const description = getStringValue(formData, 'description')
 
 	const updatedat = new Date()
 
 	if (!id || !title || !description) {
-		console.error('必要なフィールドが不足しています', { id, title, description })
+		console.error('必要なフィールドが不足しています', { title, description })
 		throw new Error('必要なフィールドが不足しています')
 	}
 
@@ -54,19 +53,19 @@ export const handleUpdatePost = async (postId: string, formData: FormData) => {
 
 		if (postData.part) {
 			console.log('投稿に関連するパーツを更新または作成中:', postData.part)
-			await updatePartTable(postId, postData.part)
+			await updatePartTable(postData.id, postData.part)
 		}
 
 		// console.log('投稿に関連するタグを更新中:', postData.tags)
 		// await updateTagTable(postData.id, postData.tags)
 
-		console.log('投稿の更新プロセスが成功しました postId:', postId)
+		console.log('投稿の更新プロセスが成功しました postId:', id)
 	} catch (error) {
-		console.error('更新に失敗しました', error, { postId })
+		console.error('更新に失敗しました', error, { id })
 		throw error
 	}
-	revalidateTag(`/post/${postId}`)
-	redirect(`/post/${postId}`)
+	revalidateTag(`/post/${id}`)
+	redirect(`/post/${id}`)
 }
 
 const parseUpdateParts = (formData: FormData): UpdateParts | null => {
