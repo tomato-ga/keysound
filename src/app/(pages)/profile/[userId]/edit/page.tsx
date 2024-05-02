@@ -30,9 +30,9 @@ export default async function EditProfilePage({
 	}
 
 	return (
-		<div className="bg-gray-900 min-h-screen text-gray-300">
+		<div className="bg-white min-h-screen text-gray-300">
 			<div className="container mx-auto px-4 py-8">
-				<h1 className="text-3xl font-bold mb-8">プロフィール編集</h1>
+				<h1 className="text-3xl font-bold mb-8 text-gray-600">プロフィール編集</h1>
 				<ProfileEditForm profile={profile} />
 			</div>
 		</div>

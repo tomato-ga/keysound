@@ -1,6 +1,5 @@
 // src/app/components/ProfileEditForm.tsx
 'use client'
-
 import React from 'react'
 import { prisma } from '@/app/lib/prisma'
 
@@ -23,10 +22,11 @@ interface ProfileEditFormProps {
 const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
 	const [screenName, setScreenName] = React.useState(profile.screenName ?? '')
 	const [bio, setBio] = React.useState(profile.bio ?? '')
-
 	console.log('profile', profile)
 
-	// server actionsに変更する
+	// TODO プロフィールアップデートをserver actionsに変更する
+	// TODO スクリーンネームを表示する　Googleアカウントの名前を表に出さない -> DBの設計と、dynamic routeを修正する
+	
 	const updateProfile = async () => {
 		const res = await fetch(`/api/db/userUpdate`, {
 			method: 'POST',
@@ -35,8 +35,8 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
 			},
 			body: JSON.stringify({ userId: profile.id, screenName, bio })
 		})
-		// プロフィール更新後の処理（例: プロフィール表示画面へのリダイレクト）
 
+		// プロフィール更新後の処理（例: プロフィール表示画面へのリダイレクト）
 		if (res.ok) {
 			window.location.href = `/profile/${profile.user.id}`
 		}
@@ -48,22 +48,34 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
 	}
 
 	return (
-		<form className="profile-edit-form" onSubmit={handleSubmit}>
-			<div className="form-group">
-				<label htmlFor="screenName">スクリーンネーム</label>
+		<form className="profile-edit-form text-gray-600" onSubmit={handleSubmit}>
+			<div className="mb-8">
+				<label htmlFor="screenName" className="block mb-2">
+					スクリーンネーム
+				</label>
 				<input
 					type="text"
 					id="screenName"
 					value={screenName!}
+					className="w-full md:w-1/2 bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
 					onChange={(e) => setScreenName(e.target.value)}
 					required
 				/>
 			</div>
-			<div className="form-group">
-				<label htmlFor="bio">自己紹介</label>
-				<textarea id="bio" value={bio} onChange={(e) => setBio(e.target.value)} />
+			<div className="mb-8">
+				<label htmlFor="bio" className="block mb-2">
+					自己紹介
+				</label>
+				<textarea
+					id="bio"
+					value={bio}
+					className="w-full md:w-1/2 bg-gray-50 border border-gray-400 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+					onChange={(e) => setBio(e.target.value)}
+				/>
 			</div>
-			<button type="submit">保存</button>
+			<button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+				保存
+			</button>
 		</form>
 	)
 }
