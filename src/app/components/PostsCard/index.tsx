@@ -15,7 +15,7 @@ export default function PostsCard({ posts, componentType, isCurrentUser }: Posts
 			{componentType === 'top' && (
 				<>
 					{posts.map((post) => (
-						<div className="mt-2">
+						<div className="mt-2" key={post.id}>
 							<Link href={`/post/${post.id}`} key={post.id}>
 								<div className="bg-white rounded-lg overflow-hidden shadow m-2 md:m-2 lg:m-2 mx-auto h-full flex flex-col justify-between">
 									<div>
@@ -52,7 +52,7 @@ export default function PostsCard({ posts, componentType, isCurrentUser }: Posts
 			{componentType === 'profile' && (
 				<>
 					{posts.map((post) => (
-						<div key={post.id} className="bg-white rounded-lg overflow-hidden shadow">
+						<div key={post.id} className="bg-white rounded-lg overflow-hidden shadow mb-8">
 							<Link href={`/post/${post.id}`}>
 								<div className="relative aspect-w-16 aspect-h-9">
 									{post.videoUrl ? (
@@ -66,12 +66,15 @@ export default function PostsCard({ posts, componentType, isCurrentUser }: Posts
 									)}
 								</div>
 							</Link>
+
 							<div className="px-4 py-6 relative">
-								<h3 className="text-black text-lg md:text-xl font-semibold mb-2">{post.title}</h3>
-								<p className="text-gray-700 mb-2 md:mb-4 h-20 overflow-hidden text-ellipsis">
-									{truncateDescription(post.description, 80)}
-								</p>
-								<p className="text-gray-600 text-xs md:text-sm">{formatDate(post.updatedat)}</p>
+								<Link href={`/post/${post.id}`}>
+									<h3 className="text-black text-lg md:text-xl font-semibold mb-2">{post.title}</h3>
+									<p className="text-gray-700 mb-2 md:mb-4 h-20 overflow-hidden text-ellipsis">
+										{truncateDescription(post.description, 80)}
+									</p>
+									<p className="text-gray-600 text-xs md:text-sm">{formatDate(post.updatedat)}</p>
+								</Link>
 								{isCurrentUser && (
 									<div className="absolute top-2 right-2">
 										<PostOptionsButton postId={post.id} userId={post.user.id} />

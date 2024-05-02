@@ -13,6 +13,10 @@ import CategoryInput from '../Upload/CategoryInput'
 import { deletePost } from '@/app/actions/deletePost/deletePost'
 import { redirect } from 'next/navigation'
 
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import '../../../../customtoast.css'
+
 type NewType<T, Kind extends string> = T & {
 	[key in `__${Kind}`]: never
 }
@@ -64,12 +68,33 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		}
 	}
 
+	// TODO パーツが更新されない。updateしたら、updateatを表示する
+	const handleFormSubmission = async (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault()
+		if (!postData.title) {
+			if (!postData.title) {
+				toast.error('タイトルは必須です')
+			}
+		} else {
+			const formData = new FormData()
+			formData.append('title', postData.title)
+			formData.append('description', postData.description)
+			formData.append('category', postData.category)
+			formData.append('partCase', postData.part?.case || '')
+			formData.append('partPlate', postData.part?.plate || '')
+			formData.append('partSwitches', postData.part?.switches || '')
+			formData.append('partKeyCaps', postData.part?.keyCaps || '')
+
+			await addPostIdhandleUpdatePost(formData)
+		}
+	}
+
 	return (
 		<div className="bg-white text-black min-h-screen">
 			<div className="container mx-auto px-4 py-8">
 				<div className="bg-white">
 					<h1 className="text-4xl font-bold mb-8">投稿を編集する</h1>
-					<form action={addPostIdhandleUpdatePost}>
+					<form>
 						<TitleInput title={postData.title} onTitleChange={handleTitleChange} />
 						<DescriptionInput description={postData.description} onDescriptionChange={handleDescriptionChange} />
 
@@ -77,10 +102,9 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 
 						<PartsInput parts={postData.part} onPartsChange={handlePartsChange} />
 
-						<SaveButton type="submit" />
+						<SaveButton type="submit" onClick={handleFormSubmission} />
 					</form>
 					<DeletePostButton onDeleteConfirmed={handleDeletePost} />
-					{/* <PreviewSection /> */}
 				</div>
 			</div>
 		</div>

@@ -23,7 +23,7 @@ import { handleRemoveVideo } from '@/app/actions/handleRemoveVideo/handleRemoveV
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import './customtoast.css'
+import '../../../../../customtoast.css'
 
 export default function UploadPage() {
 	const router = useRouter()
