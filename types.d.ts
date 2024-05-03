@@ -7,25 +7,11 @@ export interface DefaultSession {
 	expires: ISODateString
 }
 
-export interface Post {
-	id: string
-	title: string
-	description: string
-	imageUrl?: string | null
-	videoUrl?: string | null
-	createdat: Date
-	updatedat: Date
-	user: {
-		id: string
-		name: string
-		image?: string
-	}
-}
-
 export interface PostsProps {
 	posts: Post[]
 	componentType: 'top' | 'profile' | null
 	isCurrentUser: boolean
+	screenName?: string | null | undefined
 }
 
 export interface PostFormData {
@@ -53,11 +39,19 @@ export interface UpdateParts {
 	postId: string
 }
 
-export type PostEditFormData = Omit<Post, 'user'> & {
-	user: { id: string }
+export type PostEditFormData = {
+	id: string
+	title: string
+	description: string
+	imageUrl?: string | null
+	videoUrl?: string | null
+	createdat: Date
+	updatedat: Date
+	user: {
+		id: string
+	}
 	part: UpdateParts | null
 	category: string
-	// tags: UpdateTags[] | string[]
 }
 
 // export interface UpdateTags {
@@ -68,3 +62,43 @@ export type PostEditFormData = Omit<Post, 'user'> & {
 // 	postId: string
 // 	tagId: string
 // }
+
+export type PostWithUserProfile = Post & {
+	user: User & {
+		profile: Profile | null
+	}
+}
+
+export interface User {
+	id: string
+	name: string
+	image?: string
+}
+
+export interface Profile {
+	id: string
+	bio: string | null
+	screenName: string | null
+	userId: string
+}
+
+export interface Post {
+	id: string
+	title: string
+	description: string
+	imageUrl?: string | null
+	videoUrl?: string | null
+	createdat: Date
+	updatedat: Date
+	user: User
+	categoryId: string | null
+}
+
+export interface TopPostsProps {
+	posts: PostWithUserProfile[]
+}
+
+export interface ProfilePostsProps {
+	posts: Post[]
+	isCurrentUser: boolean
+}

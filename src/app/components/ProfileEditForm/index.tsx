@@ -22,11 +22,10 @@ interface ProfileEditFormProps {
 const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
 	const [screenName, setScreenName] = React.useState(profile.screenName ?? '')
 	const [bio, setBio] = React.useState(profile.bio ?? '')
-	console.log('profile', profile)
 
 	// TODO プロフィールアップデートをserver actionsに変更する
 	// TODO スクリーンネームを表示する　Googleアカウントの名前を表に出さない -> DBの設計と、dynamic routeを修正する
-	
+
 	const updateProfile = async () => {
 		const res = await fetch(`/api/db/userUpdate`, {
 			method: 'POST',
@@ -38,7 +37,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
 
 		// プロフィール更新後の処理（例: プロフィール表示画面へのリダイレクト）
 		if (res.ok) {
-			window.location.href = `/profile/${profile.user.id}`
+			window.location.href = `/profile/${profile.screenName}`
 		}
 	}
 
