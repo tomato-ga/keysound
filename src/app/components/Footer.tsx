@@ -1,6 +1,6 @@
 // Footer.tsx
-import React from "react";
-import Link from "next/link";
+import React from 'react'
+import Link from 'next/link'
 
 const Footer = () => {
 	return (
@@ -8,11 +8,9 @@ const Footer = () => {
 			<div className="container mx-auto px-4">
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
 					<div>
-						<h3 className="text-cyan-400 text-xl font-semibold mb-4">
-							キーボードサウンド
-						</h3>
+						<h3 className="text-cyan-400 text-xl font-semibold mb-4">キーボードサウンド</h3>
 						<p className="text-gray-400 mb-4">
-							キーボードサウンドは、キーボード愛好家のためのコミュニティです。自分のお気に入りのキーボードサウンドを投稿したり、他の人の投稿を探索したりしましょう。
+							キーボードサウンドは、キーボード愛好家のためのコミュニティです。自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできます。
 						</p>
 					</div>
 					<div>
@@ -41,31 +39,15 @@ const Footer = () => {
 						</ul>
 					</div>
 					<div>
-						<h3 className="text-cyan-400 text-xl font-semibold mb-4">
-							フォローする
-						</h3>
+						<h3 className="text-cyan-400 text-xl font-semibold mb-4">フォローする</h3>
 						<ul className="text-gray-400 space-y-2">
 							<li>
-								<Link
-									href="https://twitter.com/yourusername"
-									className="hover:text-cyan-400"
-								>
+								<Link href="https://twitter.com/yourusername" className="hover:text-cyan-400">
 									Twitter
 								</Link>
 							</li>
 							<li>
-								<Link
-									href="https://facebook.com/yourusername"
-									className="hover:text-cyan-400"
-								>
-									Facebook
-								</Link>
-							</li>
-							<li>
-								<Link
-									href="https://instagram.com/yourusername"
-									className="hover:text-cyan-400"
-								>
+								<Link href="https://instagram.com/yourusername" className="hover:text-cyan-400">
 									Instagram
 								</Link>
 							</li>
@@ -78,7 +60,7 @@ const Footer = () => {
 				</p>
 			</div>
 		</footer>
-	);
-};
+	)
+}
 
-export default Footer;
+export default Footer

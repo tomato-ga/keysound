@@ -38,7 +38,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
 
 		// プロフィール更新後の処理（例: プロフィール表示画面へのリダイレクト）
 		if (res.ok) {
-			redirect(`/profile/${profile.screenName}`)
+			window.location.href = `/profile/${profile.screenName}`
 		}
 	}
 
