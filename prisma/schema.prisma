@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
+  id        String    @id @default(cuid())
   name      String
   email     String    @unique
   image     String
@@ -22,7 +22,7 @@ model User {
 }
 
 model Profile {
-  id         String  @id @default(uuid())
+  id         String  @id @default(cuid())
   bio        String?
   screenName String? @unique
   userId     String  @unique
@@ -52,8 +52,8 @@ model Part {
   plate    String
   switches String
   keyCaps  String
-  post     Post   @relation(fields: [postId], references: [id])
   postId   String @unique
+  post     Post   @relation(fields: [postId], references: [id])
 }
 
 model Category {
@@ -69,15 +69,20 @@ model Like {
   createdat DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
 }
 
 model Comment {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
   postId    String
   body      String
-  createdat DateTime @default(now())
-  updatedat DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdat DateTime  @default(now())
+  updatedat DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parent    Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Comment[] @relation("CommentToComment")
+  parentId  String?
 }

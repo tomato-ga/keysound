@@ -11,8 +11,7 @@ interface EditPostProps {
 }
 
 export default async function EditPostPage({ params }: EditPostProps) {
-	const userId = params.userId
-	const postId = params.postId
+
 
 	if (!userId || !postId) {
 		return <div className="text-red-500">ユーザーセッションが見つかりません</div>

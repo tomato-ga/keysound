@@ -4,6 +4,7 @@ import React from 'react'
 import { prisma } from '@/app/lib/prisma'
 import { formatDate } from '@/app/func/postFunc'
 import dynamic from 'next/dynamic'
+import { profile } from 'console'
 
 const DynamicVideoPlayer = dynamic<{ videoUrl: string; controls: boolean }>(
 	() => import('../../../components/VideoPlayer'),
@@ -18,7 +19,7 @@ const PostPage = async ({ params }: PostPageProps) => {
 	const post = await prisma.post.findUnique({
 		where: { id: params.postId },
 		include: {
-			user: true,
+			user: { include: { profile: true } },
 			part: true
 		}
 	})
@@ -51,11 +52,11 @@ const PostPage = async ({ params }: PostPageProps) => {
 						<div className="flex items-center mb-4">
 							<img
 								src={post.user.image || '/default-avatar.jpg'}
-								alt={post.user.name}
+								alt={post.user.profile?.screenName ?? 'スクリーンネームがありません'}
 								className="w-10 h-10 sm:w-12 sm:h-12 rounded-full mr-4"
 							/>
 							<div>
-								<p className="text-gray-900 font-semibold">{post.user.name}</p>
+								<p className="text-gray-900 font-semibold">{post.user.profile?.screenName}</p>
 								<p className="text-gray-600 text-sm">{formatDate(post.createdat)}</p>
 							</div>
 						</div>

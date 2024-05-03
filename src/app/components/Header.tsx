@@ -1,8 +1,9 @@
 'use client'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import useMenubarStore from '../stores/useMenubar'
 import { Session } from 'next-auth'
+import { getScreenName } from '../actions/getScreenName/getScreenName'
 
 interface HeaderProps {
 	session: Session | null
@@ -11,6 +12,17 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ session }) => {
 	const { toggleMenubar, menubarOpen, closeMenubar } = useMenubarStore()
 	const menubarRef = useRef<HTMLDivElement>(null)
+	const [screenName, setScreenName] = useState<string | null>(null)
+
+	useEffect(() => {
+		const fetchScreenName = async () => {
+			if (session) {
+				const name = await getScreenName()
+				setScreenName(name)
+			}
+		}
+		fetchScreenName()
+	}, [session])
 
 	useEffect(() => {
 		const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
@@ -18,7 +30,6 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 				closeMenubar()
 			}
 		}
-
 		document.addEventListener('mousedown', handleOutsideClick)
 		document.addEventListener('touchstart', handleOutsideClick)
 		return () => {
@@ -73,7 +84,7 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 									音を投稿する
 								</span>
 							</Link>
-							<Link href="/profile" onClick={handleLinkClick}>
+							<Link href={`/profile/${screenName}`} onClick={handleLinkClick}>
 								<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">
 									プロフィール
 								</span>
