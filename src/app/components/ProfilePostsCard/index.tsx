@@ -16,11 +16,7 @@ export default function ProfilePostsCard({ posts, isCurrentUser, screenName }: P
 							{post.videoUrl ? (
 								<DynamicVideoPlayer videoUrl={post.videoUrl} />
 							) : (
-								<img
-									src={post.imageUrl || '/default-image.jpg'}
-									alt={post.title}
-									className="w-full h-full object-cover"
-								/>
+								<img src={post.imageUrl || ''} alt={post.title} className="w-full h-full object-cover" />
 							)}
 						</div>
 					</Link>
