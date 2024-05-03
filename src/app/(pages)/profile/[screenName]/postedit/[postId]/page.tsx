@@ -7,19 +7,21 @@ import { notFound, useParams } from 'next/navigation'
 import PostEditForm from '@/app/components/PostEditForm'
 
 interface EditPostProps {
-	params: { userId: string; postId: string }
+	params: { screenName: string; postId: string }
 }
 
 export default async function EditPostPage({ params }: EditPostProps) {
-
-
-	if (!userId || !postId) {
+	if (!params.screenName) {
 		return <div className="text-red-500">ユーザーセッションが見つかりません</div>
 	}
 
-	const postData = await prisma.post.findFirst({
-		where: { id: postId, userId },
-		include: { part: true, category: true, user: true }
+	const postData = await prisma.post.findUnique({
+		where: { id: params.postId },
+		include: {
+			user: true,
+			part: true,
+			category: true
+		}
 	})
 
 	console.log('postData', postData)
@@ -28,15 +30,11 @@ export default async function EditPostPage({ params }: EditPostProps) {
 		notFound()
 	}
 
-	const postDataForForm = {
-		...postData,
-		category: postData.category ? postData.category.name : '' // これにより category は string 型になる
-	}
-
 	return (
 		<div className=" min-h-screen text-gray-300">
 			<div className="container mx-auto px-4 py-8">
-				<PostEditForm post={postDataForForm} />
+				{/* TODO 型から修正して、アップデートできるように */}
+				<PostEditForm post={postData} />
 			</div>
 		</div>
 	)

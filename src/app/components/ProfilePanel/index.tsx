@@ -32,8 +32,7 @@ const ProfilePanel: React.FC<ProfilePanelProps> = ({ profile }) => {
 					/>
 				)}
 				<div>
-					<h1 className="profile-name text-2xl font-bold text-gray-600">{profile.user.name}</h1>
-					<p className="profile-screen-name text-gray-600">@{profile.screenName}</p>
+					<h1 className="profile-name text-2xl font-bold text-gray-600">@{profile.screenName}</h1>
 				</div>
 			</div>
 			{profile.bio && <p className="profile-bio text-gray-600">{profile.bio}</p>}

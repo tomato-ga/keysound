@@ -4,10 +4,10 @@ import Link from 'next/link'
 
 type PostOptionsButtonProps = {
 	postId: string
-	userId: string
+	screenName: string | null | undefined
 }
 
-export default function PostOptionsButton({ postId, userId }: PostOptionsButtonProps) {
+export default function PostOptionsButton({ postId, screenName }: PostOptionsButtonProps) {
 	const [isOpen, setIsOpen] = useState(false)
 
 	const toggleOptions = () => {
@@ -38,7 +38,7 @@ export default function PostOptionsButton({ postId, userId }: PostOptionsButtonP
 			{isOpen && (
 				<div className="absolute right-0 mt-2 py-2 w-48 bg-white rounded-md shadow-lg z-20">
 					<Link
-						href={`/profile/${userId}/postedit/${postId}`}
+						href={`/profile/${screenName}/postedit/${postId}`}
 						className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
 					>
 						投稿を編集

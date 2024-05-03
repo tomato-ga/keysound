@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic'
 import PostOptionsButton from '../PostOptionButton'
 const DynamicVideoPlayer = dynamic(() => import('../VideoPlayer'), { ssr: false })
 
-export default function ProfilePostsCard({ posts, isCurrentUser }: ProfilePostsProps) {
+export default function ProfilePostsCard({ posts, isCurrentUser, screenName }: ProfilePostsProps) {
 	return (
 		<>
 			{posts.map((post) => (
@@ -34,7 +34,7 @@ export default function ProfilePostsCard({ posts, isCurrentUser }: ProfilePostsP
 						</Link>
 						{isCurrentUser && (
 							<div className="absolute top-2 right-2">
-								<PostOptionsButton postId={post.id} userId={post.user.id} />
+								<PostOptionsButton postId={post.id} screenName={screenName} />
 							</div>
 						)}
 					</div>

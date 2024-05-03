@@ -19,7 +19,8 @@ type NewType<T, Kind extends string> = T & { [key in `__${Kind}`]: never }
 type postId = NewType<string, 'Post'>
 
 const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
-	console.log('post', post)
+	console.log('PostEditForm データ確認post', post)
+
 	const [postData, setPostData] = useState<PostEditFormData>({
 		id: post.id,
 		title: post.title,
@@ -28,9 +29,9 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		videoUrl: post.videoUrl ?? '',
 		createdat: post.createdat,
 		updatedat: post.updatedat,
+		user: post.user,
 		part: post.part || null,
-		category: post.category || '',
-		user: { id: post.user.id }
+		category: post.category || ''
 	})
 	console.log('PostEditForm State', postData)
 

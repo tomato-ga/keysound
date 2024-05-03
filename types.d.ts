@@ -47,11 +47,9 @@ export type PostEditFormData = {
 	videoUrl?: string | null
 	createdat: Date
 	updatedat: Date
-	user: {
-		id: string
-	}
+	user: User
 	part: UpdateParts | null
-	category: string
+	category: Category | null
 }
 
 // export interface UpdateTags {
@@ -101,4 +99,5 @@ export interface TopPostsProps {
 export interface ProfilePostsProps {
 	posts: Post[]
 	isCurrentUser: boolean
+	screenName: string
 }
