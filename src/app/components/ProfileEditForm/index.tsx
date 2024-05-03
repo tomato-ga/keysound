@@ -2,6 +2,7 @@
 'use client'
 import React from 'react'
 import { prisma } from '@/app/lib/prisma'
+import { redirect } from 'next/navigation'
 
 interface ProfileEditFormProps {
 	profile: {
@@ -37,7 +38,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
 
 		// プロフィール更新後の処理（例: プロフィール表示画面へのリダイレクト）
 		if (res.ok) {
-			window.location.href = `/profile/${profile.screenName}`
+			redirect(`/profile/${profile.screenName}`)
 		}
 	}
 

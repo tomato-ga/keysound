@@ -47,9 +47,11 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 	return (
 		<header className="relative bg-white text-black w-full border-b border-gray-300">
 			<div className="flex items-center justify-between w-full h-12 px-3">
-				<Link href="/">
-					<span className="font-bold">キーボードサウンド</span>
-				</Link>
+				<div className="ml-4">
+					<Link href="/">
+						<img src="/siteicon.png" className="h-12 w-auto" alt="みんなのキーボードサウンド" />
+					</Link>
+				</div>
 				<div className="flex items-center justify-end flex-grow">
 					<button onClick={toggleMenubar} className="text-black lg:hidden ml-auto">
 						🍔

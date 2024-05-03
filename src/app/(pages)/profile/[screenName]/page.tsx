@@ -11,13 +11,22 @@ export default async function ProfilePage({ params }: { params: { screenName: st
 	if (!session || !session.user || !session.user.email) {
 		return <div className="text-red-500">ユーザーセッションが見つかりません</div>
 	}
-	console.log('session', session)
 
 	const profile = await prisma.profile.findUnique({
 		where: { screenName: params.screenName },
-		include: { user: { include: { posts: { include: { user: true } } } } }
+		include: {
+			user: {
+				include: {
+					posts: {
+						include: { user: true },
+						orderBy: {
+							updatedat: 'desc'
+						}
+					}
+				}
+			}
+		}
 	})
-	console.log('profile', profile)
 
 	if (!profile) {
 		return <div className="text-red-500">Profile not found</div>
@@ -37,7 +46,7 @@ export default async function ProfilePage({ params }: { params: { screenName: st
 					</Link>
 				)}
 				<h2 className="mt-8 mb-4 text-2xl font-bold">投稿一覧</h2>
-				<ProfilePostsCard posts={profile.user.posts} isCurrentUser={isCurrentUser} />
+				<ProfilePostsCard posts={profile.user.posts} isCurrentUser={isCurrentUser} screenName={params.screenName} />
 			</div>
 		</div>
 	)
