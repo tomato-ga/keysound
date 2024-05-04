@@ -2,6 +2,8 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { Upload } from '@aws-sdk/lib-storage'
+
 require('dotenv').config()
 
 const s3Client = new S3Client({
@@ -23,26 +25,26 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 })
 		}
 
-		console.log('アップロードされたファイル:', file.name)
-
 		const now = new Date()
 		const formattedDate = now.toISOString().split('T')[0]
-		const encodedFileName = encodeURIComponent(file.name) // ファイル名をエンコード
-		const objectKey = `uploads/${formattedDate}_${encodedFileName}` // パスのディレクトリ部分はエンコードしない
+		const encodedFileName = encodeURIComponent(file.name)
+		const objectKey = `${formattedDate}_${encodedFileName}` // 'uploads/' を削除
 
-		const fileStream = file.stream() // Fileオブジェクトからストリームを取得
+		const fileStream = file.stream()
 
-		const uploadParams = {
-			Bucket: process.env.R2_BUCKET_NAME!,
-			Key: objectKey,
-			Body: fileStream // ストリームをBodyに設定
-		}
+		const upload = new Upload({
+			client: s3Client,
+			params: {
+				Bucket: process.env.R2_BUCKET_NAME!,
+				Key: objectKey,
+				Body: fileStream
+			},
+			leavePartsOnError: false
+		})
 
-		console.log('アップロードパラメータ:', uploadParams)
-		const uploadResult = await s3Client.send(new PutObjectCommand(uploadParams))
+		const uploadResult = await upload.done()
 
-		const url = `https://data.keyboard-sound.net/${objectKey}` // 正しいURLが生成される
-
+		const url = `https://data.keyboard-sound.net/${encodeURIComponent(objectKey)}`
 		console.log('アップロード結果:', uploadResult)
 		console.log('生成されたURL:', url)
 
