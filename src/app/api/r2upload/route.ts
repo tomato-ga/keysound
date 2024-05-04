@@ -49,8 +49,11 @@ export async function POST(request: NextRequest) {
 		console.log('生成されたURL:', url)
 
 		return NextResponse.json({ url })
-	} catch (error) {
-		console.error('エラーが発生しました:', error)
+	} catch (error: any) {
+		console.error('エラーが発生しました:')
+		console.error('エラー名:', error.name)
+		console.error('エラーメッセージ:', error.message)
+		console.error('スタックトレース:', error.stack)
 		return NextResponse.json({ error: 'Server Error: Unable to process the request.' }, { status: 500 })
 	}
 }
