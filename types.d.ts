@@ -90,7 +90,7 @@ export interface Post {
 	createdat: Date
 	updatedat: Date
 	user: User
-	categoryId: string | null
+	categoryId?: string | null
 }
 
 export interface TopPostsProps {
