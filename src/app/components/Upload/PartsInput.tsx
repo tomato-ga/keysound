@@ -38,7 +38,7 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 	}
 
 	return (
-		<div className="mb-8 pt-4">
+		<div className="mt-8 mb-8">
 			<h2 className="text-2xl font-semibold mb-2">パーツ</h2>
 			<div>
 				<input
@@ -100,7 +100,7 @@ const PartsInput: React.FC<PartsInputProps> = ({ parts, onPartsChange }) => {
 			</div>
 			<div className="flex flex-col mt-4">
 				{partInput.case && (
-					<div className="bg-gray-200 rounded-md px-3 py-1 mr-2 mb-4 flex items-center font-bold text-lg">
+					<div className="bg-gray-200 rounded-md px-3 py-1 mr-2 mb-4 flex items-center font-bold text-lg ">
 						ケース: {partInput.case}
 						<button
 							type="button"

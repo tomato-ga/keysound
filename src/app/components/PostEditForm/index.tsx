@@ -14,13 +14,14 @@ import { redirect } from 'next/navigation'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import '../../../../customtoast.css'
+import dynamic from 'next/dynamic'
+
+const DynamicVideoPlayer = dynamic(() => import('../VideoPlayer'), { ssr: false })
 
 type NewType<T, Kind extends string> = T & { [key in `__${Kind}`]: never }
 type postId = NewType<string, 'Post'>
 
 const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
-	console.log('PostEditForm データ確認post', post)
-
 	const [postData, setPostData] = useState<PostEditFormData>({
 		id: post.id,
 		title: post.title,
@@ -33,7 +34,6 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		part: post.part || null,
 		category: post.category || ''
 	})
-	console.log('PostEditForm State', postData)
 
 	const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setPostData((prevData) => ({ ...prevData, title: e.target.value }))
@@ -80,6 +80,9 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 			<div className="container mx-auto px-4 py-8">
 				<div className="bg-white">
 					<h1 className="text-4xl font-bold mb-8">投稿を編集する</h1>
+					<div className="mb-4">
+						{postData.videoUrl && <DynamicVideoPlayer videoUrl={postData.videoUrl} loop={false} controls={true} />}
+					</div>
 					<form>
 						<TitleInput title={postData.title} onTitleChange={handleTitleChange} />
 						<DescriptionInput description={postData.description} onDescriptionChange={handleDescriptionChange} />

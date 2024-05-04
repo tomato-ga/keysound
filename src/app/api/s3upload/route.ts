@@ -5,11 +5,11 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 
 require('dotenv').config()
 
-export const config = {
-	api: {
-		bodyParser: false
-	}
-}
+// export const config = {
+// 	api: {
+// 		bodyParser: false
+// 	}
+// }
 
 if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
 	throw new Error('AWS KEY is not found')

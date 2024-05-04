@@ -1,4 +1,3 @@
-// src/app/components/ProfilePostsCard.tsx
 import Link from 'next/link'
 import { truncateDescription, formatDate } from '@/app/func/postFunc'
 import { ProfilePostsProps } from '../../../../types'
@@ -8,13 +7,13 @@ const DynamicVideoPlayer = dynamic(() => import('../VideoPlayer'), { ssr: false 
 
 export default function ProfilePostsCard({ posts, isCurrentUser, screenName }: ProfilePostsProps) {
 	return (
-		<>
+		<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 			{posts.map((post) => (
 				<div key={post.id} className="bg-white rounded-lg overflow-hidden shadow mb-8">
 					<Link href={`/post/${post.id}`}>
 						<div className="relative aspect-w-16 aspect-h-9">
 							{post.videoUrl ? (
-								<DynamicVideoPlayer videoUrl={post.videoUrl} />
+								<DynamicVideoPlayer videoUrl={post.videoUrl} loop={true} />
 							) : (
 								<img src={post.imageUrl || ''} alt={post.title} className="w-full h-full object-cover" />
 							)}
@@ -36,6 +35,6 @@ export default function ProfilePostsCard({ posts, isCurrentUser, screenName }: P
 					</div>
 				</div>
 			))}
-		</>
+		</div>
 	)
 }
