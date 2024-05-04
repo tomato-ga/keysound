@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 			<div className="flex items-center justify-between w-full h-12 px-3">
 				<div className="ml-4">
 					<Link href="/">
-						<img src="/siteicon.png" className="h-12 w-auto" alt="みんなのキーボードサウンド" />
+						<img src="/siteicon.png" className="h-auto w-auto" alt="みんなのキーボードサウンド" />
 					</Link>
 				</div>
 				<div className="flex items-center justify-end flex-grow">
