@@ -44,6 +44,10 @@ export async function POST(request: NextRequest) {
 
 		const url = `https://data.keyboard-sound.net/${uploadParams.Key}`
 
+		// TODO アップロード後の管理画面URL https://data.keyboard-sound.net/uploads%2F2024-05-04_y2mate.is%20-%20The%20Mode%20x%20Alexotos%20Collaboration!-aA_U_A5x-dc-360p-1713274171.mp4
+		// TODO 生成されたURL: https://data.keyboard-sound.net/uploads/2024-05-04_y2mate.is - The Mode x Alexotos Collaboration!-aA_U_A5x-dc-360p-1713274171.mp4
+		//  TODO アクセスしたURL https://data.keyboard-sound.net/uploads/2024-05-04_y2mate.is
+		// TODO 全部URLが違う！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！1
 		console.log('生成されたURL:', url)
 
 		return NextResponse.json({ url })
