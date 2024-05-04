@@ -6,12 +6,12 @@ import { redirect } from 'next/navigation'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
 // 型安全な取得用ユーティリティ関数
-function getStringValue(formData: FormData, key: string): string | undefined {
+function getStringValue(formData: FormData, key: string): string | null {
 	const value = formData.get(key)
 	if (typeof value === 'string') {
 		return value
 	}
-	return undefined
+	return null
 }
 
 export const handleUpdatePost = async (formData: FormData) => {
@@ -20,8 +20,9 @@ export const handleUpdatePost = async (formData: FormData) => {
 	const id = getStringValue(formData, 'id')
 	const title = getStringValue(formData, 'title')
 	const description = getStringValue(formData, 'description')
-
 	const updatedat = new Date()
+	const category = getStringValue(formData, 'category')
+	const screenName = getStringValue(formData, 'screenName')
 
 	if (!id || !title || !description) {
 		console.error('必要なフィールドが不足しています', { title, description })
@@ -34,7 +35,8 @@ export const handleUpdatePost = async (formData: FormData) => {
 		description,
 		updatedat,
 		part: parseUpdateParts(formData),
-		category: ''
+		category,
+		screenName
 		// tags: parseUpdateTags(formData)
 	}
 

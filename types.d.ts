@@ -50,7 +50,7 @@ export type PostEditFormData = {
 	user: User
 	part: UpdateParts | null
 	category: Category | null
-	screenName: string
+	screenName: string | null
 }
 
 // export interface UpdateTags {
