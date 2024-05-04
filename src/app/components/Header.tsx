@@ -75,9 +75,6 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 					<Link href="/about" onClick={handleLinkClick}>
 						<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">About</span>
 					</Link>
-					<Link href="/blog" onClick={handleLinkClick}>
-						<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">Blog</span>
-					</Link>
 
 					{session ? (
 						<>

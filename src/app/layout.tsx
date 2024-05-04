@@ -13,7 +13,7 @@ import Sidebar from './components/Sidebar'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-const noto = Noto_Sans_JP({ subsets: ['latin'] })
+const noto = Noto_Sans_JP({ subsets: ['latin'], weight: ['500'] })
 
 export const metadata: Metadata = {
 	title: 'keyboard sound',

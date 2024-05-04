@@ -100,3 +100,7 @@ const PostPage = async ({ params }: PostPageProps) => {
 }
 
 export default PostPage
+
+
+
+// Request details: redirect_uri=https://keysound-git-main-tomatodev.vercel.app/api/auth/callback/google
