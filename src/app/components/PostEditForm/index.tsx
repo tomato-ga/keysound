@@ -32,7 +32,8 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		updatedat: post.updatedat,
 		user: post.user,
 		part: post.part || null,
-		category: post.category || ''
+		category: post.category || '',
+		screenName: post.screenName || ''
 	})
 
 	const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -49,12 +50,11 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 
 	const handleDeletePost = async () => {
 		try {
-			await deletePost(post.user.id, postData.id, postData.videoUrl)
+			await deletePost(post.screenName, postData.id, postData.videoUrl)
 			console.log('投稿を削除しました')
 		} catch (error) {
 			console.error(error)
 		}
-		redirect('/') // 削除後にリダイレクトする
 	}
 
 	const handleFormSubmission = async (e: React.MouseEvent<HTMLButtonElement>) => {

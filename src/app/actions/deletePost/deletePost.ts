@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { handleRemoveVideo } from '../handleRemoveVideo/handleRemoveVideo'
 
-export const deletePost = async (userId: string, postId: string, videourl: string | null | undefined) => {
+export const deletePost = async (screenName: string, postId: string, videourl: string | null | undefined) => {
 	try {
 		console.log('投稿削除プロセスの開始 postId:', postId)
 
@@ -32,7 +32,6 @@ export const deletePost = async (userId: string, postId: string, videourl: strin
 		console.error('削除に失敗しました', error, { postId })
 		throw error
 	}
-	revalidatePath(`/profile/${userId}/postedit/${postId}`)
-	redirect('/profile')
+	revalidatePath(`/profile/${screenName}`)
+	redirect(`/profile/${screenName}`)
 }
-
