@@ -71,6 +71,7 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 			formData.append('plate', postData.part?.plate || '')
 			formData.append('switches', postData.part?.switches || '')
 			formData.append('keyCaps', postData.part?.keyCaps || '')
+			formData.append('screenName', postData.screenName || '')
 			await handleUpdatePost(formData)
 		}
 	}
