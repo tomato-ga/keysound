@@ -3,6 +3,7 @@
 import React from 'react'
 import { prisma } from '@/app/lib/prisma'
 import { redirect } from 'next/navigation'
+import { profileUpdateAction } from '@/app/actions/profileUpdate/profileUpdate'
 
 interface ProfileEditFormProps {
 	profile: {
@@ -24,20 +25,10 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
 	const [screenName, setScreenName] = React.useState(profile.screenName ?? '')
 	const [bio, setBio] = React.useState(profile.bio ?? '')
 
-	// TODO プロフィールアップデートをserver actionsに変更する
-	// TODO スクリーンネームを表示する　Googleアカウントの名前を表に出さない -> DBの設計と、dynamic routeを修正する
-
 	const updateProfile = async () => {
-		const res = await fetch(`/api/db/userUpdate`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ userId: profile.id, screenName, bio })
-		})
-
+		const userUpdate = await profileUpdateAction({ profileId: profile.id, screenName: screenName, bio: bio })
 		// プロフィール更新後の処理（例: プロフィール表示画面へのリダイレクト）
-		if (res.ok) {
+		if (userUpdate) {
 			window.location.href = `/profile/${profile.screenName}`
 		}
 	}

@@ -46,11 +46,7 @@ const Footer = () => {
 									Twitter
 								</Link>
 							</li>
-							<li>
-								<Link href="https://instagram.com/yourusername" className="hover:text-cyan-400">
-									Instagram
-								</Link>
-							</li>
+							
 						</ul>
 					</div>
 				</div>

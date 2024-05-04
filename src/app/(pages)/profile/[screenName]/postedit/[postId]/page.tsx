@@ -33,7 +33,6 @@ export default async function EditPostPage({ params }: EditPostProps) {
 	return (
 		<div className=" min-h-screen text-gray-300">
 			<div className="container mx-auto px-4 py-8">
-				{/* TODO 型から修正して、アップデートできるように */}
 				<PostEditForm post={postData} />
 			</div>
 		</div>

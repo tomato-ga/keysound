@@ -25,7 +25,7 @@ export default function CategoryInput({ onCategoryChange }: CategoryInputProps) 
 					letterSpacing: '0.15rem'
 				}}
 			>
-				<h2 className="text-2xl font-semibold mb-2">キーボードの種類</h2>
+				<h2 className="text-2xl font-semibold ">キーボードの種類</h2>
 			</FormLabel>
 			<RadioGroup
 				aria-labelledby="keyboard-label"
