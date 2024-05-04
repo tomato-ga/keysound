@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 		const uploadResult = await s3Client.send(new PutObjectCommand(uploadParams))
 		console.log('Upload Result:', uploadResult)
 
-		const url = `https://pub-3d45db444833425593ae504062a80c02.r2.dev/${uploadParams.Key}`
+		const url = `https://data.keyboard-sound.net/${uploadParams.Key}`
 		console.log(url)
 
 		return NextResponse.json({ url })
