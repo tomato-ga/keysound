@@ -96,9 +96,11 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 							</Link>
 						</>
 					) : (
-						<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">
-							投稿するにはログインが必要です
-						</span>
+						<Link href="/login" onClick={handleLinkClick}>
+							<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">
+								投稿するにはログインが必要です
+							</span>
+						</Link>
 					)}
 				</div>
 			</div>
