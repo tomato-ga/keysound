@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
 		console.log('アップロード結果:', uploadResult)
 
-		const url = `https://data.keyboard-sound.net/${decodeURIComponent(uploadParams.Key)}`
+		const url = `https://data.keyboard-sound.net/${uploadParams.Key}`
 
 		console.log('生成されたURL:', url)
 
