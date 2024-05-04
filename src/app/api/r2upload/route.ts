@@ -27,27 +27,23 @@ export async function POST(request: NextRequest) {
 
 		const now = new Date()
 		const formattedDate = now.toISOString().split('T')[0]
-		const fileBuffer = await file.arrayBuffer()
-		const fileStream = new Uint8Array(fileBuffer)
+		const encodedFileName = encodeURIComponent(file.name) // ファイル名をエンコード
+		const objectKey = `uploads/${formattedDate}_${encodedFileName}` // パスのディレクトリ部分はエンコードしない
+
+		const fileStream = file.stream() // Fileオブジェクトからストリームを取得
 
 		const uploadParams = {
 			Bucket: process.env.R2_BUCKET_NAME!,
-			Key: `uploads/${formattedDate}_${file.name}`,
-			Body: fileStream
+			Key: objectKey,
+			Body: fileStream // ストリームをBodyに設定
 		}
 
 		console.log('アップロードパラメータ:', uploadParams)
-
 		const uploadResult = await s3Client.send(new PutObjectCommand(uploadParams))
 
+		const url = `https://data.keyboard-sound.net/${objectKey}` // 正しいURLが生成される
+
 		console.log('アップロード結果:', uploadResult)
-
-		const url = `https://data.keyboard-sound.net/${uploadParams.Key}`
-
-		// TODO アップロード後の管理画面URL https://data.keyboard-sound.net/uploads%2F2024-05-04_y2mate.is%20-%20The%20Mode%20x%20Alexotos%20Collaboration!-aA_U_A5x-dc-360p-1713274171.mp4
-		// TODO 生成されたURL: https://data.keyboard-sound.net/uploads/2024-05-04_y2mate.is - The Mode x Alexotos Collaboration!-aA_U_A5x-dc-360p-1713274171.mp4
-		//  TODO アクセスしたURL https://data.keyboard-sound.net/uploads/2024-05-04_y2mate.is
-		// TODO 全部URLが違う！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！1
 		console.log('生成されたURL:', url)
 
 		return NextResponse.json({ url })
