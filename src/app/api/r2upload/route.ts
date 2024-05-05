@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 		console.log('アップロード結果:', uploadResult)
 		console.log('生成されたURL:', url)
 
-		return NextResponse.json({ url })
+		return NextResponse.json({ uploadResult })
 	} catch (error: any) {
 		console.error('エラーが発生しました:')
 		console.error('エラー名:', error.name)
