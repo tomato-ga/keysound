@@ -8,11 +8,6 @@ const nextConfig = {
 				port: ''
 			}
 		]
-	},
-	api: {
-		bodyParser: {
-			sizeLimit: '200mb' // APIリクエストボディのサイズ制限を100MBに設定
-		}
 	}
 }
 

@@ -77,6 +77,19 @@ export default function UploadPage() {
 			console.log('uploadResponse確認', uploadResponse)
 
 			if (!uploadResponse.ok) {
+				try {
+					const errorData = await uploadResponse.json()
+					console.error('Upload failed with error data:', errorData)
+					throw new Error(`Upload failed: ${errorData.message}`)
+				} catch (parseError) {
+					console.error('Failed to parse error response:', parseError)
+					throw new Error('Upload failed')
+				}
+			}
+
+			console.log('uploadResponse確認', uploadResponse)
+
+			if (!uploadResponse.ok) {
 				throw new Error('Upload failed')
 			}
 

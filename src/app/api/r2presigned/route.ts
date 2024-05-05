@@ -16,14 +16,16 @@ export async function GET(req: NextRequest, res: NextResponse) {
 	if (req.method !== 'GET') {
 		return NextResponse.json({ error: 'Method Not Allowed' }, { status: 405 })
 	}
-	const formData = await req.formData()
-	const file = formData.get('file') as File | null
+	const searchParams = req.nextUrl.searchParams
+	const paramsFileName = searchParams.get('fileName')
 
-	if (!file) {
+	console.log('file', paramsFileName)
+
+	if (!searchParams) {
 		return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 })
 	}
 
-	const objectKey = `uploads/${encodeURIComponent(file.name)}`
+	const objectKey = `uploads/${paramsFileName}`
 
 	try {
 		const command = new PutObjectCommand({
@@ -32,9 +34,11 @@ export async function GET(req: NextRequest, res: NextResponse) {
 			ContentType: 'application/octet-stream'
 		})
 		const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
+
+		
 		return NextResponse.json({ url }, { status: 200 })
 	} catch (error) {
-		console.error('Error generating signed URL:', error)
+		console.error('エラーが発生しましたError generating signed URL:', error)
 		return NextResponse.json({ error: 'Server Error: Unable to process the request.' }, { status: 500 })
 	}
 }
