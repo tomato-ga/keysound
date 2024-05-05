@@ -26,7 +26,7 @@ export const handleRemoveVideo = async (
 		videourl = typeof input === 'object' ? input?.videourl : input
 		const videoKey = videourl?.split('/').pop()
 		if (videoKey) {
-			const objectKey = `uploads/${videoKey}`
+			const objectKey = `${videoKey}`
 			const deleteParams = {
 				Bucket: process.env.R2_BUCKET_NAME,
 				Key: objectKey
