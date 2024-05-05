@@ -136,7 +136,8 @@ export default function UploadPage() {
 			formData.append('partKeyCaps', postData.parts[0]?.keyCaps || '')
 
 			const postId = await savePostAction(formData)
-			redirect(`/post/${postId}`)
+
+			useRouter().push(`/post/${postId}`)
 		}
 	}
 
