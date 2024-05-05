@@ -1,4 +1,4 @@
-// /Users/ore/Documents/GitHub/keysound/src/app/api/s3upload/route.ts
+// /Users/donbe/Codes/keysound/src/app/api/r2upload/route.ts
 
 import { NextRequest, NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
