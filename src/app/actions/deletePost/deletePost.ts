@@ -37,5 +37,4 @@ export const deletePost = async (
 		throw error
 	}
 	revalidatePath(`/profile/${screenName}`)
-	redirect(`/profile/${screenName}`)
 }
