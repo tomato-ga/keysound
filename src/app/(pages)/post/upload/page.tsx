@@ -34,7 +34,7 @@ export default function UploadPage() {
 		description: '',
 		parts: [{}],
 		videourl: '',
-		category: ''
+		category: '1'
 		// tags: []
 	})
 
@@ -135,9 +135,10 @@ export default function UploadPage() {
 			formData.append('partSwitches', postData.parts[0]?.switches || '')
 			formData.append('partKeyCaps', postData.parts[0]?.keyCaps || '')
 
+			console.log('Submitting with category:', postData.category)
 			const postId = await savePostAction(formData)
 
-			useRouter().push(`/post/${postId}`)
+			router.push(`/post/${postId}`)
 		}
 	}
 
@@ -159,7 +160,13 @@ export default function UploadPage() {
 								onDescriptionChange={(e) => setPostData({ ...postData, description: e.target.value })}
 							/>
 
-							<CategoryInput onCategoryChange={(category) => setPostData({ ...postData, category })} />
+							<CategoryInput
+								currentCategory={postData.category}
+								onCategoryChange={(category) => {
+									console.log('Selected category ID:', category)
+									setPostData({ ...postData, category })
+								}}
+							/>
 
 							<PartsInput
 								parts={postData.parts}

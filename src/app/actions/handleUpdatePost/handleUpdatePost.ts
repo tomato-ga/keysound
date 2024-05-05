@@ -1,5 +1,4 @@
 'use server'
-
 import { prisma } from '@/app/lib/prisma'
 import { PostEditFormData, UpdateParts } from '../../../../types'
 import { redirect } from 'next/navigation'
@@ -11,12 +10,11 @@ function getStringValue(formData: FormData, key: string): string | null {
 	if (typeof value === 'string') {
 		return value
 	}
-	return null
+	return ''
 }
 
 export const handleUpdatePost = async (formData: FormData) => {
 	console.log('受け取った formData:', formData)
-
 	const id = getStringValue(formData, 'id')
 	const title = getStringValue(formData, 'title')
 	const description = getStringValue(formData, 'description')
@@ -24,15 +22,19 @@ export const handleUpdatePost = async (formData: FormData) => {
 	const category = getStringValue(formData, 'category')
 	const screenName = getStringValue(formData, 'screenName')
 
-	if (!id || !title || !description) {
-		console.error('必要なフィールドが不足しています', { title, description })
+	if (!id || !title) {
+		console.error('必要なフィールドが不足しています', { title })
 		throw new Error('必要なフィールドが不足しています')
+	}
+
+	if (category === 'undefined' || !category) {
+		throw new Error('カテゴリIDが提供されていません。')
 	}
 
 	const postData: Omit<PostEditFormData, 'imageUrl' | 'videoUrl' | 'createdat' | 'user'> = {
 		id,
 		title,
-		description,
+		description: description ?? '',
 		updatedat,
 		part: parseUpdateParts(formData),
 		category,
@@ -47,10 +49,12 @@ export const handleUpdatePost = async (formData: FormData) => {
 			data: {
 				title: postData.title,
 				description: postData.description,
-				updatedat: postData.updatedat
+				updatedat: postData.updatedat,
+				category: {
+					connect: { id: postData.category }
+				}
 			}
 		})
-
 		console.log('投稿が正常に更新されました:', updatePost)
 
 		if (postData.part) {
@@ -66,6 +70,7 @@ export const handleUpdatePost = async (formData: FormData) => {
 		console.error('更新に失敗しました', error, { id })
 		throw error
 	}
+
 	revalidateTag(`/post/${id}`)
 	redirect(`/post/${id}`)
 }
@@ -90,13 +95,13 @@ const parseUpdateParts = (formData: FormData): UpdateParts | null => {
 	}
 }
 
-// const parseUpdateTags = (formData: FormData): UpdateTags[] => {
-// 	const tagData = getStringValue(formData, 'tags')
-// 	console.log('tagData', tagData) // タグデータをコンソールに出力
-// 	if (!tagData) {
-// 		return []
-// 	}
-// 	return JSON.parse(tagData) as UpdateTags[]
+// const parseUpdateTags = (formData: FormData): UpdateTags\[\] => {
+//   const tagData = getStringValue(formData, 'tags')
+//   console.log('tagData', tagData) // タグデータをコンソールに出力
+//   if (!tagData) {
+//     return \[\]
+//   }
+//   return JSON.parse(tagData) as UpdateTags\[\]
 // }
 
 const updatePartTable = async (postId: string, partData: UpdateParts) => {
@@ -104,9 +109,7 @@ const updatePartTable = async (postId: string, partData: UpdateParts) => {
 		const existingPart = await prisma.part.findFirst({
 			where: { postId: postId }
 		})
-
 		console.log('既存のパーツのチェック:', existingPart)
-
 		if (existingPart) {
 			console.log('パーツが存在します。更新中...')
 			await prisma.part.update({

@@ -7,7 +7,7 @@ import { authOptions } from '@/auth/[...nextauth]'
 import { redirect } from 'next/navigation'
 
 export const savePostAction = async (formData: FormData) => {
-	console.log('savePostAction formdata', formData)
+	console.log('savePostAction formdata: ', formData)
 
 	const title = formData.get('title') as string
 	const description = formData.get('description') as string
