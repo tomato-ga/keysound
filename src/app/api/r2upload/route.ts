@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 		const file = formData.get('file') as File | null
 
 		if (!file) {
-			return new NextResponse(JSON.stringify({ error: 'No file uploaded.' }), { status: 400 })
+			return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 })
 		}
 
 		const now = new Date()
@@ -35,9 +35,9 @@ export async function POST(request: NextRequest) {
 
 		const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 }) // Generate a signed URL valid for 1 hour
 
-		return new NextResponse(JSON.stringify({ url }), { status: 200 })
+		return NextResponse.json({ url }, { status: 200 })
 	} catch (error) {
 		console.error('Error:', error)
-		return new NextResponse(JSON.stringify({ error: 'Server Error: Unable to process the request.' }), { status: 500 })
+		return NextResponse.json({ error: 'Server Error: Unable to process the request.' }, { status: 500 })
 	}
 }
