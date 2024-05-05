@@ -57,11 +57,14 @@ export default function UploadPage() {
 		setIsLoading(true)
 
 		try {
+			console.log('アップロードをスタート')
 			const presignResponse = await fetch(`/api/r2presigned?fileName=${encodeURIComponent(file.name)}`)
 			const presignData = await presignResponse.json()
 			if (!presignResponse.ok) {
 				throw new Error(presignData.error || 'Failed to get presigned URL')
 			}
+
+			console.log('署名付きURL発行', presignData)
 
 			const uploadResponse = await fetch(presignData.url, {
 				method: 'PUT',
@@ -70,6 +73,8 @@ export default function UploadPage() {
 				},
 				body: file
 			})
+
+			console.log('uploadResponse確認', uploadResponse)
 
 			if (!uploadResponse.ok) {
 				throw new Error('Upload failed')
