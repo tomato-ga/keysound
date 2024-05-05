@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
 		const uploadResult = await upload.done()
 
-		const url = `https://data.keyboard-sound.net/${encodeURIComponent(objectKey)}`
+		const url = `https://gravuregazo.com/${encodeURIComponent(objectKey)}`
 		console.log('アップロード結果:', uploadResult)
 		console.log('生成されたURL:', url)
 
