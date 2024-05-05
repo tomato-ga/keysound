@@ -4,6 +4,8 @@ import Link from 'next/link'
 import useMenubarStore from '../stores/useMenubar'
 import { Session } from 'next-auth'
 import { getScreenName } from '../actions/getScreenName/getScreenName'
+import Image from 'next/image'
+import sitePic from './site.webp'
 
 interface HeaderProps {
 	session: Session | null
@@ -49,7 +51,8 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 			<div className="flex items-center justify-between w-full h-12 px-3">
 				<div className="ml-4 h-full">
 					<Link href="/">
-						<img src="/site.png" className="h-full w-auto" alt="みんなのキーボードサウンド" />
+						<Image src={sitePic} alt="site" />
+						<img src="/site.webp" className="h-full w-auto" alt="みんなのキーボードサウンド" />
 					</Link>
 				</div>
 				<div className="flex items-center justify-end flex-grow">
