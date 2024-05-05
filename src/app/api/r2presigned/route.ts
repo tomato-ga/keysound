@@ -25,17 +25,17 @@ export async function GET(req: NextRequest, res: NextResponse) {
 		return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 })
 	}
 
-	const objectKey = `uploads/${paramsFileName}`
+	const objectKey = `${paramsFileName}`
 
 	try {
 		const command = new PutObjectCommand({
 			Bucket: process.env.R2_BUCKET_NAME,
 			Key: objectKey,
-			ContentType: 'application/octet-stream'
+			ContentType: ''
 		})
 		const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
 
-		
+
 		return NextResponse.json({ url }, { status: 200 })
 	} catch (error) {
 		console.error('エラーが発生しましたError generating signed URL:', error)

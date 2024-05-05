@@ -87,12 +87,6 @@ export default function UploadPage() {
 				}
 			}
 
-			console.log('uploadResponse確認', uploadResponse)
-
-			if (!uploadResponse.ok) {
-				throw new Error('Upload failed')
-			}
-
 			console.log('File uploaded successfully:', presignData.url)
 			setPostData((prev) => ({ ...prev, videourl: presignData.url }))
 			setHasUploadedVideo(true)
