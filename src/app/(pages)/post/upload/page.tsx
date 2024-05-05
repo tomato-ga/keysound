@@ -78,8 +78,10 @@ export default function UploadPage() {
 			console.log('File uploaded successfully:', presignData.url)
 			setPostData((prev) => ({ ...prev, videourl: presignData.url }))
 			setHasUploadedVideo(true)
-		} catch (error) {
+		} catch (error: any) {
 			console.error('Error uploading file:', error)
+			console.error('Error uploading file:', error.name)
+			console.error('Error uploading file:', error.message)
 			toast.error('アップロードに失敗しました。')
 		} finally {
 			setIsLoading(false)
