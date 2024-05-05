@@ -86,9 +86,10 @@ export default function UploadPage() {
 					throw new Error('Upload failed')
 				}
 			}
+			const uploadFileUrl = `https://gravuregazo.com/` + encodeURIComponent(file.name)
 
 			console.log('File uploaded successfully:', presignData.url)
-			setPostData((prev) => ({ ...prev, videourl: presignData.url }))
+			setPostData((prev) => ({ ...prev, videourl: uploadFileUrl }))
 			setHasUploadedVideo(true)
 		} catch (error: any) {
 			console.error('Error uploading file:', error)

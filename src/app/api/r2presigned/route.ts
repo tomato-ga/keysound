@@ -19,7 +19,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
 	const searchParams = req.nextUrl.searchParams
 	const paramsFileName = searchParams.get('fileName')
 
-	console.log('file', paramsFileName)
+	console.log('filename', paramsFileName)
 
 	if (!searchParams) {
 		return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 })
@@ -34,7 +34,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
 			ContentType: ''
 		})
 		const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
-
 
 		return NextResponse.json({ url }, { status: 200 })
 	} catch (error) {
