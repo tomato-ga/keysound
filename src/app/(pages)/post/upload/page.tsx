@@ -65,7 +65,7 @@ export default function UploadPage() {
 				if (presignResponse.ok) {
 					// プリサインURLにファイルをアップロード
 					const uploadResponse = await fetch(presignData.url, {
-						method: 'PUT',
+						method: 'POST',
 						headers: {
 							'Content-Type': file.type // ファイルタイプを正しく設定
 						},

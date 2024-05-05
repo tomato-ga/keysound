@@ -14,7 +14,7 @@ const s3Client = new S3Client({
 	}
 })
 
-export default async function PUT(req: NextApiRequest, res: NextApiResponse) {
+export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method !== 'GET') {
 		return res.status(405).json({ error: 'Method Not Allowed' })
 	}
