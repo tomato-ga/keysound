@@ -5,7 +5,7 @@ export async function insertUserData(
 	image?: string,
 ): Promise<{ userExists: boolean }> {
 	try {
-		const response = await fetch("http://localhost:3000/api/db/userSave", {
+		const response = await fetch("/api/db/userSave", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
