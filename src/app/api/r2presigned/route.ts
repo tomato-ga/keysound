@@ -25,7 +25,9 @@ export async function GET(req: NextRequest, res: NextResponse) {
 		return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 })
 	}
 
-	const objectKey = `${paramsFileName}`
+	const now = new Date()
+	const formattedDate = now.toISOString().split('T')[0]
+	const objectKey = `${formattedDate}_${paramsFileName}`
 
 	try {
 		const command = new PutObjectCommand({
