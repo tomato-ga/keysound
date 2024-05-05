@@ -10,7 +10,9 @@ import DeletePostButton from '../DeletePostButton'
 import { handleUpdatePost } from '@/app/actions/handleUpdatePost/handleUpdatePost'
 import CategoryInput from '../Upload/CategoryInput'
 import { deletePost } from '@/app/actions/deletePost/deletePost'
-import { redirect } from 'next/navigation'
+import { RedirectType, redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import '../../../../customtoast.css'
@@ -52,6 +54,7 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		try {
 			await deletePost(post.screenName, postData.id, postData.videoUrl)
 			console.log('投稿を削除しました')
+			useRouter().push(`/profile/${post.screenName}`)
 		} catch (error) {
 			console.error(error)
 		}
