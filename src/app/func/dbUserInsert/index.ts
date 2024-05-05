@@ -1,5 +1,7 @@
 // dbUserInsert.ts
 
+'use server'
+
 import { prisma } from '@/app/lib/prisma' // prismaインスタンスのインポートを確認
 
 export async function insertUserData(name: string, email: string, image: string): Promise<{ userExists: boolean }> {
