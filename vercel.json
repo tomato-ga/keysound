@@ -19,7 +19,7 @@
       }
     ],
     "functions": {
-      "api/r2upload.ts": {
+      "api/*": {
         "maxDuration": 120,
         "memory": 3008
       }
