@@ -5,13 +5,15 @@ import RadioGroup from '@mui/joy/RadioGroup'
 import Sheet from '@mui/joy/Sheet'
 
 interface CategoryInputProps {
+	currentCategory: string
 	onCategoryChange: (category: string) => void
 }
 
-export default function CategoryInput({ onCategoryChange }: CategoryInputProps) {
-	const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+export default function CategoryInput({ currentCategory, onCategoryChange }: CategoryInputProps) {
+	const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		onCategoryChange(e.target.value)
 	}
+
 
 	return (
 		<Box sx={{ width: 300 }}>
@@ -29,11 +31,11 @@ export default function CategoryInput({ onCategoryChange }: CategoryInputProps) 
 			</FormLabel>
 			<RadioGroup
 				aria-labelledby="keyboard-label"
-				defaultValue="1"
 				size="lg"
 				sx={{ gap: 1.5 }}
 				name="category"
 				onChange={handleCategoryChange}
+				value={currentCategory}
 			>
 				{[
 					{ id: '1', name: 'カスタム' },
@@ -59,7 +61,7 @@ export default function CategoryInput({ onCategoryChange }: CategoryInputProps) 
 										...(checked && {
 											'--variant-borderWidth': '2px',
 											'&&': {
-												borderColor: theme.vars.palette.primary[500]
+												borderColor: theme.vars.palette.primary[500] // 青いボーダーを適用
 											}
 										})
 									})

@@ -24,6 +24,9 @@ type NewType<T, Kind extends string> = T & { [key in `__${Kind}`]: never }
 type postId = NewType<string, 'Post'>
 
 const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
+	console.log('PostEditFormデータ: ', post)
+
+	const router = useRouter()
 	const [postData, setPostData] = useState<PostEditFormData>({
 		id: post.id,
 		title: post.title,
@@ -34,7 +37,7 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		updatedat: post.updatedat,
 		user: post.user,
 		part: post.part || null,
-		category: post.category || '',
+		category: post.category?.id || '',
 		screenName: post.screenName || ''
 	})
 
@@ -54,7 +57,7 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 		try {
 			await deletePost(post.screenName, postData.id, postData.videoUrl)
 			console.log('投稿を削除しました')
-			useRouter().push(`/profile/${post.screenName}`)
+			router.push(`/profile/${post.screenName}`)
 		} catch (error) {
 			console.error(error)
 		}
@@ -69,12 +72,21 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 			formData.append('id', postData.id)
 			formData.append('title', postData.title)
 			formData.append('description', postData.description)
+
+			console.log('Submitting with category ID:', postData.category)
+			if (!postData.category || postData.category === 'undefined') {
+				console.error('カテゴリIDが設定されていません。')
+				toast.error('カテゴリは必須です')
+				return
+			}
 			formData.append('category', postData.category)
+
 			formData.append('case', postData.part?.case || '')
 			formData.append('plate', postData.part?.plate || '')
 			formData.append('switches', postData.part?.switches || '')
 			formData.append('keyCaps', postData.part?.keyCaps || '')
 			formData.append('screenName', postData.screenName || '')
+
 			await handleUpdatePost(formData)
 		}
 	}
@@ -90,7 +102,10 @@ const PostEditForm: React.FC<{ post: PostEditFormData }> = ({ post }) => {
 					<form>
 						<TitleInput title={postData.title} onTitleChange={handleTitleChange} />
 						<DescriptionInput description={postData.description} onDescriptionChange={handleDescriptionChange} />
-						<CategoryInput onCategoryChange={(category) => setPostData({ ...postData, category })} />
+						<CategoryInput
+							currentCategory={postData.category}
+							onCategoryChange={(category) => setPostData({ ...postData, category })}
+						/>
 						<PartsInput parts={postData.part} onPartsChange={handlePartsChange} />
 						<SaveButton type="submit" onClick={handleFormSubmission} />
 					</form>
