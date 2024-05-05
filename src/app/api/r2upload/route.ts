@@ -55,8 +55,6 @@ export async function POST(request: NextRequest) {
 	} catch (error: any) {
 		console.error('エラーが発生しました:')
 		console.error('エラー名:', error.name)
-		console.error('エラーメッセージ:', error.message)
-		console.error('スタックトレース:', error.stack)
 		return NextResponse.json({ error: 'Server Error: Unable to process the request.' }, { status: 500 })
 	}
 }

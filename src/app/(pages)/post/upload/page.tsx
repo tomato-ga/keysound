@@ -68,10 +68,9 @@ export default function UploadPage() {
 
 				if (response.ok) {
 					const data = await response.json()
-					const uploadResult = data.uploadResult
 					const url = data.url
 
-					console.log('responseチェック', uploadResult, url)
+					console.log('responseチェック', url)
 
 					setPostData((prevPostData) => ({
 						...prevPostData,
