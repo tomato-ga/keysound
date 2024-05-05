@@ -43,52 +43,45 @@ export default function UploadPage() {
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
-		if (file) {
-			if (!file.type.startsWith('video/')) {
-				toast('動画ファイルのみアップロードできます')
-				return
+		if (!file) return
+		if (!file.type.startsWith('video/')) {
+			toast('動画ファイルのみアップロードできます')
+			return
+		}
+		const fileSizeInMB = file.size / (1024 * 1024)
+		if (fileSizeInMB > 100) {
+			toast.error('ファイルサイズが100MBを超えています。動画のファイルサイズが100MB以下の場合にアップロードできます')
+			return
+		}
+
+		setIsLoading(true)
+
+		try {
+			const presignResponse = await fetch(`/api/get-presigned-url?fileName=${encodeURIComponent(file.name)}`)
+			const presignData = await presignResponse.json()
+			if (!presignResponse.ok) {
+				throw new Error(presignData.error || 'Failed to get presigned URL')
 			}
 
-			const fileSizeInMB = file.size / (1024 * 1024)
-			if (fileSizeInMB > 100) {
-				toast.error('ファイルサイズが100MBを超えています。動画のファイルサイズが100MB以下の場合にアップロードできます')
-				return
+			const uploadResponse = await fetch(presignData.url, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': file.type
+				},
+				body: file
+			})
+
+			if (!uploadResponse.ok) {
+				throw new Error('Upload failed')
 			}
 
-			setIsLoading(true)
-
-			try {
-				// プリサインURLを取得するためのAPIリクエスト
-				const presignResponse = await fetch(`/api/r2upload?fileName=${encodeURIComponent(file.name)}`)
-				const presignData = await presignResponse.json()
-
-				if (presignResponse.ok) {
-					// プリサインURLにファイルをアップロード
-					const uploadResponse = await fetch(presignData.url, {
-						method: 'GET',
-						headers: {
-							'Content-Type': file.type // ファイルタイプを正しく設定
-						},
-						body: file
-					})
-
-					if (uploadResponse.ok) {
-						console.log('File uploaded successfully to:', presignData.url)
-						setPostData((prevPostData) => ({
-							...prevPostData,
-							videourl: presignData.url
-						}))
-						setHasUploadedVideo(true)
-					} else {
-						console.error('Error uploading file:', uploadResponse.statusText)
-					}
-				} else {
-					console.error('Failed to get presigned URL:', presignData.error)
-				}
-			} catch (error) {
-				console.error('Error uploading file:', error)
-			}
-
+			console.log('File uploaded successfully:', presignData.url)
+			setPostData((prev) => ({ ...prev, videourl: presignData.url }))
+			setHasUploadedVideo(true)
+		} catch (error) {
+			console.error('Error uploading file:', error)
+			toast.error('アップロードに失敗しました。')
+		} finally {
 			setIsLoading(false)
 		}
 	}
