@@ -4,7 +4,7 @@ import { useState, useRef, ChangeEvent, useEffect } from 'react'
 import { SessionCheck } from '@/app/func/Sessioncheck'
 import { UserIdCheck } from '@/app/func/Useridcheck'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 
 import TitleInput from '@/app/components/Upload/TitleInput'
 import DescriptionInput from '@/app/components/Upload/DescriptionInput'
@@ -135,7 +135,8 @@ export default function UploadPage() {
 			formData.append('partSwitches', postData.parts[0]?.switches || '')
 			formData.append('partKeyCaps', postData.parts[0]?.keyCaps || '')
 
-			await savePostAction(formData)
+			const postId = await savePostAction(formData)
+			redirect(`/post/${postId}`)
 		}
 	}
 

@@ -36,11 +36,9 @@ export const savePostAction = async (formData: FormData) => {
 		}
 
 		postId = await handleSavePost(postData, session?.user.email)
-		// return { postId }
+		return postId
 	} catch (error) {
 		console.error('Error saving post: ', error)
 		throw error
 	}
-
-	redirect(`/post/${postId}`)
 }
