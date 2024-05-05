@@ -44,7 +44,8 @@ export async function POST(request: NextRequest) {
 
 		const uploadResult = await upload.done()
 
-		const url = `https://data.keyboard-sound.net/${objectKey}`
+		// MEMO ドメインテスト
+		const url = `https://gravuregazo.com/${objectKey}`
 		console.log('アップロード結果:', uploadResult)
 		console.log('生成されたURL:', url)
 
