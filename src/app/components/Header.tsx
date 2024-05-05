@@ -10,8 +10,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ session }) => {
-	console.log('session: ', session)
-
 	const { toggleMenubar, menubarOpen, closeMenubar } = useMenubarStore()
 	const menubarRef = useRef<HTMLDivElement>(null)
 	const [screenName, setScreenName] = useState<string | null>(null)

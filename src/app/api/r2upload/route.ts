@@ -9,7 +9,7 @@ require('dotenv').config()
 const s3Client = new S3Client({
 	region: 'auto',
 	// endpoint: `https://.r2.cloudflarestorage.com`,
-	endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/keyb`,
+	endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/keyb/`,
 	credentials: {
 		accessKeyId: process.env.R2_ACCESS_KEY_ID!,
 		secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!
@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
 
 		const now = new Date()
 		const formattedDate = now.toISOString().split('T')[0]
-		const encodedFileName = encodeURIComponent(file.name)
-		const objectKey = `${formattedDate}_${encodedFileName}` // 'uploads/' を削除
+		// const encodedFileName = encodeURIComponent(file.name)
+		const objectKey = `${formattedDate}_${file.name}` // 'uploads/' を削除
 
 		const fileStream = file.stream()
 
