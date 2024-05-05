@@ -66,10 +66,13 @@ export default function UploadPage() {
 					body: formData
 				})
 
-				console.log('upload api responseチェック', response)
-
 				if (response.ok) {
 					const data = await response.json()
+					const uploadResult = data.uploadResult
+					const url = data.url
+
+					console.log('responseチェック', uploadResult, url)
+
 					setPostData((prevPostData) => ({
 						...prevPostData,
 						videourl: data.url
