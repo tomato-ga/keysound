@@ -2,7 +2,6 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 const s3Client = new S3Client({
 	region: 'auto',
@@ -13,7 +12,7 @@ const s3Client = new S3Client({
 	}
 })
 
-export async function GET(request: NextRequest) {
+export async function PUT(request: NextRequest) {
 	try {
 		const formData = await request.formData()
 		const file = formData.get('file') as File | null
@@ -27,17 +26,19 @@ export async function GET(request: NextRequest) {
 		const encodedFileName = encodeURIComponent(file.name)
 		const objectKey = `uploads/${formattedDate}_${encodedFileName}`
 
-		const command = new PutObjectCommand({
+		const uploadParams = {
 			Bucket: process.env.R2_BUCKET_NAME,
 			Key: objectKey,
-			ContentType: file.type // Set content type based on the file type
-		})
+			Body: file.stream(), // Use the file stream directly for upload
+			ContentType: file.type // Set the content type based on the file type
+		}
 
-		const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 }) // Generate a signed URL valid for 1 hour
+		await s3Client.send(new PutObjectCommand(uploadParams))
 
-		return NextResponse.json({ url }, { status: 200 })
+		const url = `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${objectKey}`
+		return NextResponse.json({ message: 'File uploaded successfully', url }, { status: 200 })
 	} catch (error) {
-		console.error('Error:', error)
+		console.error('Error uploading file:', error)
 		return NextResponse.json({ error: 'Server Error: Unable to process the request.' }, { status: 500 })
 	}
 }
