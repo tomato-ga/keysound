@@ -57,7 +57,7 @@ export default function UploadPage() {
 		setIsLoading(true)
 
 		try {
-			const presignResponse = await fetch(`/api/get-presigned-url?fileName=${encodeURIComponent(file.name)}`)
+			const presignResponse = await fetch(`/api/r2presigned?fileName=${encodeURIComponent(file.name)}`)
 			const presignData = await presignResponse.json()
 			if (!presignResponse.ok) {
 				throw new Error(presignData.error || 'Failed to get presigned URL')
