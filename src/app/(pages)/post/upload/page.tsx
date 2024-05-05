@@ -58,33 +58,38 @@ export default function UploadPage() {
 			setIsLoading(true)
 
 			try {
-				const formData = new FormData()
-				formData.append('file', file)
+				// プリサインURLを取得するためのAPIリクエスト
+				const presignResponse = await fetch(`/api/r2upload?fileName=${encodeURIComponent(file.name)}`)
+				const presignData = await presignResponse.json()
 
-				const response = await fetch('/api/r2upload', {
-					method: 'POST',
-					body: formData
-				})
+				if (presignResponse.ok) {
+					// プリサインURLにファイルをアップロード
+					const uploadResponse = await fetch(presignData.url, {
+						method: 'PUT',
+						headers: {
+							'Content-Type': file.type // ファイルタイプを正しく設定
+						},
+						body: file
+					})
 
-				if (response.ok) {
-					const data = await response.json()
-					const url = data.url
-
-					console.log('responseチェック', url)
-
-					setPostData((prevPostData) => ({
-						...prevPostData,
-						videourl: data.url
-					}))
-					setHasUploadedVideo(true)
+					if (uploadResponse.ok) {
+						console.log('File uploaded successfully to:', presignData.url)
+						setPostData((prevPostData) => ({
+							...prevPostData,
+							videourl: presignData.url
+						}))
+						setHasUploadedVideo(true)
+					} else {
+						console.error('Error uploading file:', uploadResponse.statusText)
+					}
 				} else {
-					console.error('Error uploading file:', response.statusText)
+					console.error('Failed to get presigned URL:', presignData.error)
 				}
-				setIsLoading(false)
 			} catch (error) {
 				console.error('Error uploading file:', error)
-				setIsLoading(false)
 			}
+
+			setIsLoading(false)
 		}
 	}
 

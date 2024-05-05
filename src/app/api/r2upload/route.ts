@@ -1,60 +1,39 @@
 // /Users/donbe/Codes/keysound/src/app/api/r2upload/route.ts
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
-import { Upload } from '@aws-sdk/lib-storage'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
-require('dotenv').config()
-
+// AWS SDKのS3Clientを設定（Cloudflare R2はAWS S3と互換性がある）
 const s3Client = new S3Client({
 	region: 'auto',
-	// endpoint: `https://.r2.cloudflarestorage.com`,
-	endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com/keyb`,
+	endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`, // Cloudflare R2のエンドポイント
 	credentials: {
 		accessKeyId: process.env.R2_ACCESS_KEY_ID!,
 		secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!
 	}
 })
 
-export async function POST(request: NextRequest) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+	if (req.method !== 'GET') {
+		return res.status(405).json({ error: 'Method Not Allowed' })
+	}
+
+	const { fileName } = req.query as { fileName: string }
+
 	try {
-		const formData = await request.formData()
-		const file = formData.get('file') as File | null
-
-		if (!file) {
-			console.log('ファイルがアップロードされていません。')
-			return NextResponse.json({ error: 'No file uploaded.' }, { status: 400 })
-		}
-
-		const now = new Date()
-		const formattedDate = now.toISOString().split('T')[0]
-		// const encodedFileName = encodeURIComponent(file.name)
-		const objectKey = `${formattedDate}_${file.name}` // 'uploads/' を削除
-
-		const fileStream = file.stream()
-
-		const upload = new Upload({
-			client: s3Client,
-			params: {
-				Bucket: process.env.R2_BUCKET_NAME!,
-				Key: objectKey,
-				Body: fileStream
-			},
-			leavePartsOnError: false
+		const command = new PutObjectCommand({
+			Bucket: process.env.R2_BUCKET_NAME!,
+			Key: fileName,
+			ContentType: 'application/octet-stream' // 適切なContent-Typeを設定
 		})
 
-		const uploadResult = await upload.done()
+		// URLの有効期限を1時間に設定
+		const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
 
-		console.log('uploadResult', uploadResult)
-		// MEMO ドメインテスト
-		const url = `https://gravuregazo.com/keyb/${objectKey}`
-		console.log('アップロード結果:', uploadResult)
-		console.log('生成されたURL:', url)
-
-		return NextResponse.json({ url })
-	} catch (error: any) {
-		console.error('エラーが発生しました:')
-		console.error('エラー名:', error.name)
-		return NextResponse.json({ error: 'Server Error: Unable to process the request.' }, { status: 500 })
+		res.status(200).json({ url })
+	} catch (error) {
+		console.error('Failed to create presigned URL:', error)
+		res.status(500).json({ error: 'Failed to create presigned URL' })
 	}
 }
