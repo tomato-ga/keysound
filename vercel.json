@@ -1,8 +1,8 @@
 {
-    "github": {
-      "silent": true,
-      "enabled": false
-    },
-    "ignoreBuildStep": "git branch --show-current | grep -v '^main$'"
-  }
-  
+    "regions": ["hnd1"],
+      "git": {
+        "deploymentEnabled": {
+          "main": true
+        }
+    }
+}
