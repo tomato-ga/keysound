@@ -66,6 +66,8 @@ export default function UploadPage() {
 					body: formData
 				})
 
+				console.log('upload api responseチェック', response)
+
 				if (response.ok) {
 					const data = await response.json()
 					setPostData((prevPostData) => ({
