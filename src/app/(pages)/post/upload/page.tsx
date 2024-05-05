@@ -86,7 +86,7 @@ export default function UploadPage() {
 					throw new Error('Upload failed')
 				}
 			}
-			const uploadFileUrl = `https://data.keyboard-sound.net/` + encodeURIComponent(file.name)
+			const uploadFileUrl = `https://data.keyboard-sound.net/` + presignData.objectKey
 
 			console.log('File uploaded successfully:', presignData.url)
 			setPostData((prev) => ({ ...prev, videourl: uploadFileUrl }))

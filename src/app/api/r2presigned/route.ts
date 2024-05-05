@@ -37,7 +37,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
 		})
 		const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 })
 
-		return NextResponse.json({ url }, { status: 200 })
+		return NextResponse.json({ url, objectKey }, { status: 200 })
 	} catch (error) {
 		console.error('エラーが発生しましたError generating signed URL:', error)
 		return NextResponse.json({ error: 'Server Error: Unable to process the request.' }, { status: 500 })
