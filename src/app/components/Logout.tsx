@@ -1,4 +1,5 @@
 import { useSession, signOut } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 import { FaGoogle } from 'react-icons/fa'
 
 export default function Logout() {
@@ -19,6 +20,7 @@ export default function Logout() {
 			</div>
 		)
 	}
+	redirect('/')
 
 	return null
 }

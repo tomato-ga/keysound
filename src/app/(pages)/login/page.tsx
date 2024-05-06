@@ -11,10 +11,23 @@ import { revalidatePath } from 'next/cache'
 const LoginPage = () => {
 	const router = useRouter()
 	const { data: session, status } = useSession()
-	const [userExists, setUserExists] = useState(false)
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [profileData, setProfileData] = useState<{
+		userExists: boolean
+		user?:
+			| ({ profile?: { id: string; bio: string | null; screenName: string | null; userId: string } | null } & {
+					id: string
+					name: string
+					email: string
+					image: string
+					createdat: Date
+					updatedat: Date
+			  })
+			| undefined
+	} | null>(null)
 
 	useEffect(() => {
-		const insertUser = async () => {
+		const fetchProfileData = async () => {
 			if (status === 'authenticated' && session) {
 				const email = session.user?.email || ''
 				const image = session.user?.image || ''
@@ -22,20 +35,24 @@ const LoginPage = () => {
 					const name = email.split('@')[0]
 					try {
 						const result = await insertUserData(name, email, image)
-						setUserExists(result.userExists)
-						revalidatePath(`/profile/`)
-						revalidatePath(`/profile/[screenName]`)
+						setProfileData(result)
+						setIsLoggedIn(true)
+						revalidatePath('profile')
 					} catch (error) {
 						console.error('データ挿入時のエラー:', error)
-						// エラーメッセージを表示するなどの適切な処理を行う
 					}
 				}
 			}
 		}
-		if (status === 'authenticated') {
-			insertUser()
-		}
+
+		fetchProfileData()
 	}, [status, session])
+
+	useEffect(() => {
+		if (isLoggedIn && profileData && profileData.user && profileData.user.profile) {
+			router.push(`/profile/${profileData.user.profile.screenName}`)
+		}
+	}, [isLoggedIn, profileData])
 
 	return (
 		<div className="bg-white min-h-screen text-gray-300">
