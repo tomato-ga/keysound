@@ -5,21 +5,26 @@ import Login from '@/app/components/Login'
 import Logout from '@/app/components/Logout'
 import { useSession } from 'next-auth/react'
 import { insertUserData } from '@/app/func/dbUserInsert'
+import { useRouter } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
 
 const LoginPage = () => {
+	const router = useRouter()
 	const { data: session, status } = useSession()
 	const [userExists, setUserExists] = useState(false)
 
 	useEffect(() => {
 		const insertUser = async () => {
 			if (status === 'authenticated' && session) {
-				const name = session.user?.name || ''
 				const email = session.user?.email || ''
 				const image = session.user?.image || ''
 				if (email) {
+					const name = email.split('@')[0]
 					try {
 						const result = await insertUserData(name, email, image)
 						setUserExists(result.userExists)
+						revalidatePath(`/profile/`)
+						revalidatePath(`/profile/[screenName]`)
 					} catch (error) {
 						console.error('データ挿入時のエラー:', error)
 						// エラーメッセージを表示するなどの適切な処理を行う
@@ -30,7 +35,7 @@ const LoginPage = () => {
 		if (status === 'authenticated') {
 			insertUser()
 		}
-	}, [status])
+	}, [status, session])
 
 	return (
 		<div className="bg-white min-h-screen text-gray-300">
@@ -43,7 +48,7 @@ const LoginPage = () => {
 								<p className="text-xl font-semibold text-gray-600">ようこそ、{session.user?.name}さん</p>
 							</div>
 						</div>
-						{userExists && <p className="text-green-400 font-bold mb-4 text-center">ログインしています</p>}
+						{/* {userExists && <p className="text-green-400 font-bold mb-4 text-center">ログインしています</p>} */}
 						<div className="text-center">
 							<Logout />
 						</div>
