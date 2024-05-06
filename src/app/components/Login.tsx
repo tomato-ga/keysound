@@ -10,17 +10,23 @@ export default function Login() {
 
 	if (status !== 'authenticated') {
 		return (
-			<div className="flex justify-center items-center ">
-				<button
-					onClick={() => signIn('google', { prompt: 'login' })}
-					className="flex items-center bg-white text-gray-600 border border-gray-300 rounded-md px-6 py-3 text-base font-bold cursor-pointer hover:bg-gray-100 transition duration-300"
-				>
-					<div className="flex justify-center items-center w-6 h-6 mr-3 text-blue-600 text-lg">
-						<FaGoogle />
-					</div>
-					<span>Googleでログインする</span>
-				</button>
-			</div>
+			<>
+				<div className="flex justify-center items-center ">
+					<button
+						onClick={() => signIn('google', { prompt: 'login' })}
+						className="flex items-center bg-white text-gray-600 border border-gray-300 rounded-md px-6 py-3 text-base font-bold cursor-pointer hover:bg-gray-100 transition duration-300"
+					>
+						<div className="flex justify-center items-center w-6 h-6 mr-3 text-blue-600 text-lg">
+							<FaGoogle />
+						</div>
+						<span>Googleでログインする</span>
+					</button>
+				</div>
+				<p className="text-sm text-gray-400 mt-4 text-center">初回ログインをすると<br/>
+				Googleのユーザー名が設定されます<br/>
+				(プロフィールページで変更可能です)
+				</p>
+			</>
 		)
 	}
 

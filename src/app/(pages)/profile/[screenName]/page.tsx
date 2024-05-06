@@ -7,13 +7,16 @@ import ProfilePanel from '@/app/components/ProfilePanel'
 import ProfilePostsCard from '@/app/components/ProfilePostsCard'
 
 export default async function ProfilePage({ params }: { params: { screenName: string } }) {
+	const decodedScreenName = decodeURIComponent(params.screenName)
+	console.log(decodedScreenName, params.screenName)
+
 	const session = await getServerSession(authOptions)
 	if (!session || !session.user || !session.user.email) {
 		return <div className="text-red-500">ユーザーセッションが見つかりません</div>
 	}
 
 	const profile = await prisma.profile.findUnique({
-		where: { screenName: params.screenName },
+		where: { screenName: decodedScreenName },
 		include: {
 			user: {
 				include: {
@@ -28,8 +31,10 @@ export default async function ProfilePage({ params }: { params: { screenName: st
 		}
 	})
 
+	console.log('profile確認', profile)
+
 	if (!profile) {
-		return <div className="text-red-500">Profile not found</div>
+		return <div className="text-red-500">プロフィールが見つかりません。しばらくしてからもう一度お試しください。</div>
 	}
 
 	const isCurrentUser = session?.user?.email === profile.user.email

@@ -2,6 +2,7 @@
 import { prisma } from '@/app/lib/prisma'
 import { PostFormData } from '../../../../types'
 import { profile } from 'console'
+import { revalidatePath } from 'next/cache'
 
 interface profileUpdateActionProps {
 	profileId: string
@@ -23,7 +24,8 @@ export const profileUpdateAction = async ({ profileId, screenName, bio }: profil
 			throw new Error('User not found')
 		}
 
-		return userProfile.id
+		revalidatePath(`/profile${userProfile.screenName}`)
+		return userProfile.screenName
 	} catch (error) {
 		console.error('Error creating post:', error)
 		throw error

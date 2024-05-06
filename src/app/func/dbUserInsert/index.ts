@@ -14,6 +14,8 @@ export async function insertUserData(name: string, email: string, image: string)
 			include: { profile: true } // 関連する Profile も取得
 		})
 
+		console.log('existingUser', existingUser)
+
 		if (!existingUser) {
 			// ユーザーが存在しない場合は新規作成
 			const user = await prisma.user.create({
@@ -34,7 +36,9 @@ export async function insertUserData(name: string, email: string, image: string)
 				}
 			})
 
-			return { userExists: false, user: user }
+			console.log('user', user)
+
+			return { userExists: false, username: user.name }
 		} else {
 			// ユーザーが既に存在する場合
 			return { userExists: true, user: existingUser }
