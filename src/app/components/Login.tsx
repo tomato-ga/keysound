@@ -22,9 +22,12 @@ export default function Login() {
 						<span>Googleでログインする</span>
 					</button>
 				</div>
-				<p className="text-sm text-gray-400 mt-4 text-center">初回ログインをすると<br/>
-				Googleのユーザー名が設定されます<br/>
-				(プロフィールページで変更可能です)
+				<p className="text-sm text-gray-400 mt-4 text-center">
+					初回ログインをすると
+					<br />
+					Googleメールアドレスの@より前の部分がユーザー名に設定されます
+					<br />
+					(プロフィールページで変更可能です)
 				</p>
 			</>
 		)
