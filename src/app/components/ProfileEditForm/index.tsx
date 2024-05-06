@@ -1,8 +1,7 @@
 // src/app/components/ProfileEditForm.tsx
 'use client'
 import React from 'react'
-import { prisma } from '@/app/lib/prisma'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { profileUpdateAction } from '@/app/actions/profileUpdate/profileUpdate'
 
 interface ProfileEditFormProps {
@@ -22,6 +21,7 @@ interface ProfileEditFormProps {
 }
 
 const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
+	const router = useRouter()
 	const [screenName, setScreenName] = React.useState(profile.screenName ?? '')
 	const [bio, setBio] = React.useState(profile.bio ?? '')
 
@@ -29,7 +29,7 @@ const ProfileEditForm: React.FC<ProfileEditFormProps> = ({ profile }) => {
 		const userUpdate = await profileUpdateAction({ profileId: profile.id, screenName: screenName, bio: bio })
 		// プロフィール更新後の処理（例: プロフィール表示画面へのリダイレクト）
 		if (userUpdate) {
-			window.location.href = `/profile/${profile.screenName}`
+			router.push(`/profile/${userUpdate}`)
 		}
 	}
 

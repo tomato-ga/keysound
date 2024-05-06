@@ -10,7 +10,7 @@ interface EditProfilePageProps {
 }
 
 export default async function EditProfilePage({ params }: EditProfilePageProps) {
-	const screenName = params.screenName
+	const screenName = decodeURIComponent(params.screenName)
 
 	if (!screenName) {
 		return <div className="text-red-500">ユーザーセッションが見つかりません</div>
