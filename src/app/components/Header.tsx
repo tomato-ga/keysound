@@ -90,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 									プロフィール
 								</span>
 							</Link>
-							<Link href="/login" onClick={handleLinkClick}>
+							<Link href="/logout" onClick={handleLinkClick}>
 								<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">ログアウト</span>
 							</Link>
 						</>
