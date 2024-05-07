@@ -31,7 +31,19 @@ const PostPage = async ({ params }: PostPageProps) => {
 	const name = await getScreenName()
 	const isCurrentUser = post?.user.profile?.screenName === name
 
-	console.log('current user: ', isCurrentUser, name)
+	const linkifyText = (text: string) => {
+		const urlRegex = /(https?:\/\/[^\s]+)/g
+		return text.split(urlRegex).map((part, index) => {
+			if (part.match(urlRegex)) {
+				return (
+					<a key={index} href={part} target="_blank" rel="noopener noreferrer">
+						{part}
+					</a>
+				)
+			}
+			return part
+		})
+	}
 
 	if (!post) {
 		return <div>Post not found</div>
@@ -91,7 +103,9 @@ const PostPage = async ({ params }: PostPageProps) => {
 								</ul>
 							)}
 						</div>
-						<p className="text-gray-600 leading-relaxed mb-8 py-4 whitespace-pre-wrap">{post.description}</p>
+						<p className="text-gray-600 leading-relaxed mb-8 py-4 whitespace-pre-wrap">
+							{linkifyText(post.description)}
+						</p>
 					</div>
 				</div>
 			</div>
@@ -100,7 +114,5 @@ const PostPage = async ({ params }: PostPageProps) => {
 }
 
 export default PostPage
-
-
 
 // Request details: redirect_uri=https://keysound-git-main-tomatodev.vercel.app/api/auth/callback/google
