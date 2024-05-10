@@ -10,7 +10,9 @@ const Footer = () => {
 					<div>
 						<h3 className="text-cyan-400 text-xl font-semibold mb-4">キーボードサウンド</h3>
 						<p className="text-gray-400 mb-4">
-							キーボードサウンドは、キーボード愛好家のためのコミュニティです。自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできます。
+							キーボードサウンドは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。
+							自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。
+							ぜひみなさんのキーボードの音を聞かせてください。
 						</p>
 					</div>
 					<div>
@@ -26,7 +28,7 @@ const Footer = () => {
 									About
 								</Link>
 							</li>
-							<li>
+							{/* <li>
 								<Link href="/blog" className="hover:text-cyan-400">
 									Blog
 								</Link>
@@ -35,11 +37,11 @@ const Footer = () => {
 								<Link href="/contact" className="hover:text-cyan-400">
 									お問い合わせ
 								</Link>
-							</li>
+							</li> */}
 						</ul>
 					</div>
 					<div>
-						<h3 className="text-cyan-400 text-xl font-semibold mb-4">フォローする</h3>
+						{/* <h3 className="text-cyan-400 text-xl font-semibold mb-4">フォローする</h3>
 						<ul className="text-gray-400 space-y-2">
 							<li>
 								<Link href="https://twitter.com/yourusername" className="hover:text-cyan-400">
@@ -47,7 +49,7 @@ const Footer = () => {
 								</Link>
 							</li>
 							
-						</ul>
+						</ul> */}
 					</div>
 				</div>
 				<hr className="border-gray-700" />
