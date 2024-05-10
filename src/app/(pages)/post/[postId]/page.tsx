@@ -103,7 +103,7 @@ const PostPage = async ({ params }: PostPageProps) => {
 								</ul>
 							)}
 						</div>
-						<p className="text-gray-600 leading-relaxed mb-8 py-4 whitespace-pre-wrap">
+						<p className="text-gray-600 leading-relaxed mb-8 py-4 whitespace-pre-wrap break-words">
 							{linkifyText(post.description)}
 						</p>
 					</div>
