@@ -70,9 +70,9 @@ const Header: React.FC<HeaderProps> = ({ session }) => {
 					<button onClick={closeMenubar} className="self-end text-xl font-bold lg:hidden">
 						×
 					</button>
-					<Link href="/search" onClick={handleLinkClick}>
+					{/* <Link href="/search" onClick={handleLinkClick}>
 						<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">検索</span>
-					</Link>
+					</Link> */}
 
 					<Link href="/about" onClick={handleLinkClick}>
 						<span className="px-2 py-1 rounded-md cursor-pointer font-semibold hover:bg-gray-200">About</span>
