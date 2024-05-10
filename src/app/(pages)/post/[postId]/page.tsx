@@ -36,7 +36,7 @@ const PostPage = async ({ params }: PostPageProps) => {
 		return text.split(urlRegex).map((part, index) => {
 			if (part.match(urlRegex)) {
 				return (
-					<a key={index} href={part} target="_blank" rel="noopener noreferrer">
+					<a key={index} href={part} target="_blank" rel="noopener noreferrer" className="underline hover:no-underline">
 						{part}
 					</a>
 				)
