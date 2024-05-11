@@ -28,16 +28,16 @@ const Footer = () => {
 									About
 								</Link>
 							</li>
-							{/* <li>
-								<Link href="/blog" className="hover:text-cyan-400">
-									Blog
+							<li>
+								<Link href="/privacypolicy" className="hover:text-cyan-400">
+									プライバシーポリシー
 								</Link>
 							</li>
 							<li>
-								<Link href="/contact" className="hover:text-cyan-400">
-									お問い合わせ
+								<Link href="/terms" className="hover:text-cyan-400">
+									利用規約
 								</Link>
-							</li> */}
+							</li>
 						</ul>
 					</div>
 					<div>
