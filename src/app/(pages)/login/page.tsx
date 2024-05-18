@@ -22,7 +22,7 @@ const LoginPage = () => {
 					image: string
 					createdat: Date
 					updatedat: Date
-			  })
+			})
 			| undefined
 	} | null>(null)
 
