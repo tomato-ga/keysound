@@ -43,7 +43,7 @@ const Sidebar: React.FC = async () => {
 	})
 
 	return (
-		<div className="bg-white p-6 order-2 md:order-1 transform w-full md:w-1/3 lg:w-1/4 rounded-lg shadow-lg">
+		<div className="bg-white p-6 order-2 md:order-1 transform w-full md:w-1/3 lg:w-1/5 border-r mt-2">
 			<div className="text-black space-y-6">
 				<div>
 					<h4 className="text-xl font-bold mb-3">ケース</h4>
@@ -51,8 +51,8 @@ const Sidebar: React.FC = async () => {
 						<div className="flex flex-wrap">
 							{Object.keys(groupedByCase).map((caseName) =>
 								Array.from(groupedByCase[caseName]).map((postId) => (
-									<Link key={postId} href={`/post/${postId}`}>
-										<Button className="m-2">{caseName}</Button>
+									<Link key={postId} href={`/post/${postId}`} className="m-2">
+										<Button className="break-words">{caseName}</Button>
 									</Link>
 								))
 							)}
@@ -67,8 +67,8 @@ const Sidebar: React.FC = async () => {
 						<div className="flex flex-wrap">
 							{Object.keys(groupedBySwitches).map((switchName) =>
 								Array.from(groupedBySwitches[switchName]).map((postId) => (
-									<Link key={postId} href={`/post/${postId}`}>
-										<Button className="m-2">{switchName}</Button>
+									<Link key={postId} href={`/post/${postId}`} className="m-2">
+										<Button className="break-words">{switchName}</Button>
 									</Link>
 								))
 							)}
@@ -83,8 +83,8 @@ const Sidebar: React.FC = async () => {
 						<div className="flex flex-wrap">
 							{Object.keys(groupedByPlate).map((plateName) =>
 								Array.from(groupedByPlate[plateName]).map((postId) => (
-									<Link key={postId} href={`/post/${postId}`}>
-										<Button className="m-2">{plateName}</Button>
+									<Link key={postId} href={`/post/${postId}`} className="m-2">
+										<Button className="break-words">{plateName}</Button>
 									</Link>
 								))
 							)}
@@ -99,8 +99,8 @@ const Sidebar: React.FC = async () => {
 						<div className="flex flex-wrap">
 							{Object.keys(groupedByKeyCaps).map((keyCapsName) =>
 								Array.from(groupedByKeyCaps[keyCapsName]).map((postId) => (
-									<Link key={postId} href={`/post/${postId}`}>
-										<Button className="m-2">{keyCapsName}</Button>
+									<Link key={postId} href={`/post/${postId}`} className="m-2">
+										<Button className="break-words">{keyCapsName}</Button>
 									</Link>
 								))
 							)}
