@@ -18,6 +18,7 @@ export interface PostFormData {
 	title: string
 	description: string
 	videourl?: string
+	youtube?: string
 	parts: PostPart[]
 	category: string
 	// tags?: string[]

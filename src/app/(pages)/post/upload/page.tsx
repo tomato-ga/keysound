@@ -25,6 +25,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import '../../../../../customtoast.css'
 
+import YouTubeEmbedForm from '@/app/components/YouTubeForm'
+
 export default function UploadPage() {
 	const router = useRouter()
 	const status = SessionCheck()
@@ -34,6 +36,7 @@ export default function UploadPage() {
 		description: '',
 		parts: [{}],
 		videourl: '',
+		youtube: '',
 		category: '1'
 		// tags: []
 	})
@@ -49,8 +52,8 @@ export default function UploadPage() {
 			return
 		}
 		const fileSizeInMB = file.size / (1024 * 1024)
-		if (fileSizeInMB > 100) {
-			toast.error('ファイルサイズが100MBを超えています。動画のファイルサイズが100MB以下の場合にアップロードできます')
+		if (fileSizeInMB > 500) {
+			toast.error('ファイルサイズが500MBを超えています。動画のファイルサイズが500MB以下の場合にアップロードできます')
 			return
 		}
 
@@ -114,21 +117,32 @@ export default function UploadPage() {
 		}
 	}
 
+	const handleYouTubeEmbedSubmit = (url: string, startTime: number) => {
+		const formattedUrl = `${url}&start=${startTime}`
+		setPostData((prev) => ({ ...prev, youtube: formattedUrl }))
+		setHasUploadedVideo(true)
+	}
+
 	const handleFormSubmission = async (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault()
-		if (!postData.title || !postData.videourl) {
-			if (!postData.title && !postData.videourl) {
-				toast.error('タイトルと動画アップロードは必須です')
+		if (!postData.title || (!postData.videourl && !postData.youtube)) {
+			if (!postData.title && !postData.videourl && !postData.youtube) {
+				toast.error('タイトルと動画アップロードまたはYouTubeリンクは必須です')
 			} else if (!postData.title) {
 				toast.error('タイトルは必須です')
-			} else if (!postData.videourl) {
-				toast.error('動画アップロードは必須です')
+			} else if (!postData.videourl && !postData.youtube) {
+				toast.error('動画アップロードまたはYouTubeリンクは必須です')
 			}
 		} else {
 			const formData = new FormData()
 			formData.append('title', postData.title)
 			formData.append('description', postData.description)
-			formData.append('videourl', postData.videourl)
+			if (postData.videourl) {
+				formData.append('videourl', postData.videourl)
+			}
+			if (postData.youtube) {
+				formData.append('youtube', postData.youtube)
+			}
 			formData.append('category', postData.category)
 			formData.append('partCase', postData.parts[0]?.case || '')
 			formData.append('partPlate', postData.parts[0]?.plate || '')
@@ -182,11 +196,13 @@ export default function UploadPage() {
 								videoUrl={postData.videourl}
 							/>
 
+							<YouTubeEmbedForm onSubmit={handleYouTubeEmbedSubmit} />
+
 							<SaveButton type="button" onClick={handleFormSubmission} />
 						</form>
 						<RemoveVideoButton onRemoveVideo={handleRemoveVideoClick} hasUploadedVideo={hasUploadedVideo} />
 
-						<PreviewSection videoUrl={postData.videourl} isLoading={isLoading} />
+						<PreviewSection videoUrl={postData.videourl || postData.youtube} isLoading={isLoading} />
 					</div>
 				</div>
 			</div>

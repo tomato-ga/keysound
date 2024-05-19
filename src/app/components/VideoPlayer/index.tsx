@@ -41,3 +41,4 @@ const DynamicVideoPlayer = ({ videoUrl, controls, loop }: DynamicVideoPlayerProp
 }
 
 export default DynamicVideoPlayer
+

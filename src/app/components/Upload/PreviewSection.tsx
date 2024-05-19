@@ -1,37 +1,45 @@
-import React from "react";
-import { CircularProgress } from "@mui/material";
+'use client'
+
+import React, { useEffect } from 'react'
+import { CircularProgress } from '@mui/material'
+
+import dynamic from 'next/dynamic'
+const DynamicVideoPlayer = dynamic(() => import('../VideoPlayer'), { ssr: false })
 
 interface PreviewSectionProps {
-	videoUrl?: string;
-	// imageUrls: string[]
-	isLoading: boolean;
+	videoUrl?: string
+	isLoading: boolean
 }
 
-const PreviewSection: React.FC<PreviewSectionProps> = ({
-	videoUrl,
-	isLoading,
-}) => {
+const PreviewSection: React.FC<PreviewSectionProps> = ({ videoUrl, isLoading }) => {
+	useEffect(() => {
+		console.log(videoUrl)
+	}, [videoUrl])
+
+	const isYouTubeUrl = (url: string) => {
+		const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/
+		return youtubeRegex.test(url)
+	}
+
 	return (
 		<div className="mt-8">
-			<h2 className="text-2xl font-semibold mb-4 text-center">
-				アップロードしたファイルのプレビュー
-			</h2>
+			<h2 className="text-2xl font-semibold mb-4 text-center">動画のプレビュー</h2>
 			{videoUrl && (
 				<>
-					<video controls src={videoUrl} className="max-w-full mx-auto mb-4" />
+					{isYouTubeUrl(videoUrl) ? (
+						<DynamicVideoPlayer videoUrl={videoUrl} controls={true} loop={true} />
+					) : (
+						<video controls src={videoUrl} className="max-w-full mx-auto mb-4" />
+					)}
 				</>
 			)}
-			{/* 2024/04/15 画像アップロードはしないように変更 {imageUrls.map((imageUrl, index) => (
-				<img key={index} src={imageUrl} alt={`Uploaded Image ${index + 1}`} className="max-w-full mx-auto mb-4" />
-			))} */}
-
 			{isLoading && (
 				<div className="flex justify-center items-center mt-4">
 					<CircularProgress />
 				</div>
 			)}
 		</div>
-	);
-};
+	)
+}
 
-export default PreviewSection;
+export default PreviewSection
