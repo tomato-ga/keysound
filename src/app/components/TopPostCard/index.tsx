@@ -1,4 +1,3 @@
-// src/app/components/TopPostsCard.tsx
 import Link from 'next/link'
 import { truncateDescription, formatDate } from '@/app/func/postFunc'
 import { TopPostsProps } from '../../../../types'
@@ -10,6 +9,8 @@ const DynamicVideoPlayer = dynamic(() => import('../VideoPlayer'), {
 })
 
 export default function TopPostsCard({ posts }: TopPostsProps) {
+	console.log('posts', posts)
+
 	return (
 		<>
 			{posts.map((post) => (
@@ -19,6 +20,7 @@ export default function TopPostsCard({ posts }: TopPostsProps) {
 							<div>
 								<div className="relative aspect-w-16 aspect-h-9">
 									{post.videoUrl && <DynamicVideoPlayer videoUrl={post.videoUrl} loop={true} />}
+									{!post.videoUrl && post.youtube && <DynamicVideoPlayer videoUrl={post.youtube} loop={true} />}
 								</div>
 								<div className="px-4 py-8">
 									<h3 className="text-black text-lg md:text-xl font-semibold mb-2">{post.title}</h3>

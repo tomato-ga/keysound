@@ -1,5 +1,3 @@
-// /Users/donbe/Codes/keysound/src/app/(pages)/post/[postId]/page.tsx
-
 import React, { useEffect } from 'react'
 import { prisma } from '@/app/lib/prisma'
 import { formatDate } from '@/app/func/postFunc'
@@ -49,13 +47,13 @@ const PostPage = async ({ params }: PostPageProps) => {
 		return <div>Post not found</div>
 	}
 
+	const videoUrl = post.videoUrl || post.youtube
+
 	return (
 		<div className="bg-white min-h-screen">
 			<div className="container mx-auto px-4 py-8">
 				<div className="bg-white">
-					<div className="relative">
-						{post.videoUrl ? <DynamicVideoPlayer videoUrl={post.videoUrl} controls={true} /> : ''}
-					</div>
+					<div className="relative">{videoUrl && <DynamicVideoPlayer videoUrl={videoUrl} controls={true} />}</div>
 					<div className="p-8">
 						<div className="flex items-center justify-between mb-4">
 							<div className="flex items-center">
@@ -114,5 +112,3 @@ const PostPage = async ({ params }: PostPageProps) => {
 }
 
 export default PostPage
-
-// Request details: redirect_uri=https://keysound-git-main-tomatodev.vercel.app/api/auth/callback/google

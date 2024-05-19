@@ -23,6 +23,7 @@ export const handleSavePost = async (formData: PostFormData, userEmail: string) 
 				title: formData.title,
 				description: formData.description,
 				videoUrl: formData.videourl || null,
+				youtube: formData.youtube || null, // ここでYouTube URLを追加
 				part: {
 					create: {
 						case: formData.parts[0]?.case || '',
@@ -32,7 +33,7 @@ export const handleSavePost = async (formData: PostFormData, userEmail: string) 
 					}
 				},
 				...(formData.category && { category: { connect: { id: formData.category } } }),
-				user: { connect: { id: user.id } } // ここでユーザー情報を設定
+				user: { connect: { id: user.id } }
 			},
 			include: { part: true, category: true }
 		})

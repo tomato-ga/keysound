@@ -1,48 +1,57 @@
 'use client'
 
-import { useState, useRef, ChangeEvent, useEffect } from 'react'
+import { useState, useRef, ChangeEvent } from 'react'
+import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import { SessionCheck } from '@/app/func/Sessioncheck'
 import { UserIdCheck } from '@/app/func/Useridcheck'
 import Link from 'next/link'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import TitleInput from '@/app/components/Upload/TitleInput'
 import DescriptionInput from '@/app/components/Upload/DescriptionInput'
-
 import FileUploadButton from '@/app/components/Upload/FileUploadButton'
 import SaveButton from '@/app/components/Upload/SaveButton'
 import PreviewSection from '@/app/components/Upload/PreviewSection'
-import { PostFormData, PostPart } from '../../../../../types'
-import { handleSavePost } from '@/app/actions/handleSavePost/handleSavePost'
 import PartsInput from '@/app/components/Upload/PartsInput'
 import CategoryInput from '@/app/components/Upload/CategoryInput'
-
-import { savePostAction } from '@/app/actions/savePost/savePost'
 import RemoveVideoButton from '@/app/components/Upload/RemoveVideoButton'
+import YouTubeEmbedForm from '@/app/components/YouTubeForm'
+
+import { PostFormData, PostPart } from '../../../../../types'
+import { savePostAction } from '@/app/actions/savePost/savePost'
 import { handleRemoveVideo } from '@/app/actions/handleRemoveVideo/handleRemoveVideo'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import '../../../../../customtoast.css'
 
-import YouTubeEmbedForm from '@/app/components/YouTubeForm'
-
 export default function UploadPage() {
+	const {
+		register,
+		handleSubmit,
+		control,
+		setValue,
+		watch,
+		formState: { errors }
+	} = useForm<PostFormData>({
+		defaultValues: {
+			title: '',
+			description: '',
+			parts: [{}],
+			videourl: '',
+			youtube: '',
+			category: '1'
+		}
+	})
+
 	const router = useRouter()
 	const status = SessionCheck()
 	const userEmail = UserIdCheck()
-	const [postData, setPostData] = useState<PostFormData>({
-		title: '',
-		description: '',
-		parts: [{}],
-		videourl: '',
-		youtube: '',
-		category: '1'
-		// tags: []
-	})
-
 	const [isLoading, setIsLoading] = useState(false)
-	const [hasUploadedVideo, setHasUploadedVideo] = useState<boolean>(false)
+	const [uploadOption, setUploadOption] = useState<'upload' | 'youtube' | null>(null)
+	const fileInputRef = useRef<HTMLInputElement>(null)
+
+	const postData = watch()
 
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
@@ -60,14 +69,11 @@ export default function UploadPage() {
 		setIsLoading(true)
 
 		try {
-			console.log('アップロードをスタート')
 			const presignResponse = await fetch(`/api/r2presigned?fileName=${encodeURIComponent(file.name)}`)
 			const presignData = await presignResponse.json()
 			if (!presignResponse.ok) {
 				throw new Error(presignData.error || 'Failed to get presigned URL')
 			}
-
-			console.log('署名付きURL発行', presignData)
 
 			const uploadResponse = await fetch(presignData.url, {
 				method: 'PUT',
@@ -76,8 +82,6 @@ export default function UploadPage() {
 				},
 				body: file
 			})
-
-			console.log('uploadResponse確認', uploadResponse)
 
 			if (!uploadResponse.ok) {
 				try {
@@ -91,69 +95,72 @@ export default function UploadPage() {
 			}
 			const uploadFileUrl = `https://data.keyboard-sound.net/` + presignData.objectKey
 
-			console.log('File uploaded successfully:', presignData.url)
-			setPostData((prev) => ({ ...prev, videourl: uploadFileUrl }))
-			setHasUploadedVideo(true)
+			console.log('File upload successful, setting videourl to', uploadFileUrl)
+			setValue('videourl', uploadFileUrl)
+			setIsLoading(false)
+			setUploadOption(null)
 		} catch (error: any) {
 			console.error('Error uploading file:', error)
-			console.error('Error uploading file:', error.name)
-			console.error('Error uploading file:', error.message)
 			toast.error('アップロードに失敗しました。')
-		} finally {
 			setIsLoading(false)
 		}
 	}
 
-	const fileInputRef = useRef<HTMLInputElement>(null)
-
 	const handleRemoveVideoClick = async () => {
 		const result = await handleRemoveVideo(postData)
 		if (result.success) {
-			setPostData({ ...postData, videourl: '' })
-			setHasUploadedVideo(false)
+			console.log('Video removed successfully')
+			setValue('videourl', '')
 			if (fileInputRef.current) {
 				fileInputRef.current.value = ''
 			}
+			setUploadOption(null)
 		}
 	}
 
-	const handleYouTubeEmbedSubmit = (url: string, startTime: number) => {
-		const formattedUrl = `${url}&start=${startTime}`
-		setPostData((prev) => ({ ...prev, youtube: formattedUrl }))
-		setHasUploadedVideo(true)
+	const handleYouTubeEmbedSubmit = (url: string) => {
+		console.log('YouTube URL submitted:', url)
+		setValue('youtube', url)
+		setUploadOption('youtube')
 	}
 
-	const handleFormSubmission = async (e: React.MouseEvent<HTMLButtonElement>) => {
-		e.preventDefault()
-		if (!postData.title || (!postData.videourl && !postData.youtube)) {
-			if (!postData.title && !postData.videourl && !postData.youtube) {
+	const handleRemoveYouTubeUrl = () => {
+		console.log('YouTube URL removed')
+		setValue('youtube', '')
+		setUploadOption(null)
+	}
+
+	const onSubmit: SubmitHandler<PostFormData> = async (data) => {
+		console.log('Form submitted with data:', data)
+		if (!data.title || (!data.videourl && !data.youtube)) {
+			if (!data.title && !data.videourl && !data.youtube) {
 				toast.error('タイトルと動画アップロードまたはYouTubeリンクは必須です')
-			} else if (!postData.title) {
+			} else if (!data.title) {
 				toast.error('タイトルは必須です')
-			} else if (!postData.videourl && !postData.youtube) {
+			} else if (!data.videourl && !data.youtube) {
 				toast.error('動画アップロードまたはYouTubeリンクは必須です')
 			}
-		} else {
-			const formData = new FormData()
-			formData.append('title', postData.title)
-			formData.append('description', postData.description)
-			if (postData.videourl) {
-				formData.append('videourl', postData.videourl)
-			}
-			if (postData.youtube) {
-				formData.append('youtube', postData.youtube)
-			}
-			formData.append('category', postData.category)
-			formData.append('partCase', postData.parts[0]?.case || '')
-			formData.append('partPlate', postData.parts[0]?.plate || '')
-			formData.append('partSwitches', postData.parts[0]?.switches || '')
-			formData.append('partKeyCaps', postData.parts[0]?.keyCaps || '')
-
-			console.log('Submitting with category:', postData.category)
-			const postId = await savePostAction(formData)
-
-			router.push(`/post/${postId}`)
+			return
 		}
+
+		const formData = new FormData()
+		formData.append('title', data.title)
+		formData.append('description', data.description)
+		if (data.videourl) {
+			formData.append('videourl', data.videourl)
+		}
+		if (data.youtube) {
+			formData.append('youtube', data.youtube)
+		}
+		formData.append('category', data.category)
+		formData.append('partCase', data.parts[0]?.case || '')
+		formData.append('partPlate', data.parts[0]?.plate || '')
+		formData.append('partSwitches', data.parts[0]?.switches || '')
+		formData.append('partKeyCaps', data.parts[0]?.keyCaps || '')
+
+		const postId = await savePostAction(formData)
+
+		router.push(`/post/${postId}`)
 	}
 
 	if (status === 'authenticated') {
@@ -163,44 +170,85 @@ export default function UploadPage() {
 					<div className="bg-white">
 						<h1 className="text-4xl font-bold mb-8">投稿を作成</h1>
 
-						<form>
-							<TitleInput
-								title={postData.title}
-								onTitleChange={(e) => setPostData({ ...postData, title: e.target.value })}
-							/>
+						<form onSubmit={handleSubmit(onSubmit)}>
+							<TitleInput title={postData.title} onTitleChange={(e) => setValue('title', e.target.value)} />
 
 							<DescriptionInput
 								description={postData.description}
-								onDescriptionChange={(e) => setPostData({ ...postData, description: e.target.value })}
+								onDescriptionChange={(e) => setValue('description', e.target.value)}
 							/>
 
 							<CategoryInput
 								currentCategory={postData.category}
-								onCategoryChange={(category) => {
-									console.log('Selected category ID:', category)
-									setPostData({ ...postData, category })
-								}}
+								onCategoryChange={(category) => setValue('category', category)}
 							/>
 
-							<PartsInput
-								parts={postData.parts}
-								onPartsChange={(part) => {
-									setPostData({ ...postData, parts: [part as PostPart] })
-								}}
-							/>
+							<PartsInput parts={postData.parts} onPartsChange={(part) => setValue('parts', [part as PostPart])} />
 
-							<FileUploadButton
-								ref={fileInputRef}
-								onFileChange={handleFileChange}
-								hasUploadedVideo={hasUploadedVideo}
-								videoUrl={postData.videourl}
-							/>
+							{/* アップロードオプションの選択 */}
+							<div className="mb-8 text-center">
+								<label className="block mb-2 text-sm font-medium text-gray-700">アップロードオプションを選択</label>
+								<div className="flex justify-center space-x-4">
+									<button
+										type="button"
+										className={`px-4 py-2 rounded-md ${
+											uploadOption === 'upload' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+										}`}
+										onClick={() => setUploadOption('upload')}
+										disabled={!!postData.youtube}
+									>
+										動画のアップロード
+									</button>
+									<button
+										type="button"
+										className={`px-4 py-2 rounded-md ${
+											uploadOption === 'youtube' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+										}`}
+										onClick={() => setUploadOption('youtube')}
+										disabled={!!postData.videourl}
+									>
+										YouTube動画の引用
+									</button>
+								</div>
+							</div>
 
-							<YouTubeEmbedForm onSubmit={handleYouTubeEmbedSubmit} />
+							{/* 動画のアップロードフォーム */}
+							{uploadOption === 'upload' && (
+								<Controller
+									name="videourl"
+									control={control}
+									render={({ field }) => (
+										<FileUploadButton
+											ref={fileInputRef}
+											onFileChange={handleFileChange}
+											hasUploadedVideo={!!field.value}
+											videoUrl={field.value}
+										/>
+									)}
+								/>
+							)}
 
-							<SaveButton type="button" onClick={handleFormSubmission} />
+							{/* YouTube動画の引用フォーム */}
+							{uploadOption === 'youtube' && (
+								<>
+									<YouTubeEmbedForm onUrlChange={handleYouTubeEmbedSubmit} />
+									{!!postData.youtube && (
+										<div className="text-center mt-4">
+											<button
+												type="button"
+												className="bg-red-500 text-white px-4 py-2 rounded-md mb-2"
+												onClick={handleRemoveYouTubeUrl}
+											>
+												YouTube URLを削除
+											</button>
+										</div>
+									)}
+								</>
+							)}
+
+							<SaveButton type="submit" />
 						</form>
-						<RemoveVideoButton onRemoveVideo={handleRemoveVideoClick} hasUploadedVideo={hasUploadedVideo} />
+						<RemoveVideoButton onRemoveVideo={handleRemoveVideoClick} hasUploadedVideo={!!postData.videourl} />
 
 						<PreviewSection videoUrl={postData.videourl || postData.youtube} isLoading={isLoading} />
 					</div>
