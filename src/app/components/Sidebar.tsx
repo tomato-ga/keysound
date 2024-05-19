@@ -18,28 +18,36 @@ const Sidebar: React.FC = async () => {
 
 	getParts.forEach((part) => {
 		// ケースのグループ化
-		if (!groupedByCase[part.case]) {
-			groupedByCase[part.case] = new Set()
+		if (part.case && part.case.trim() !== '') {
+			if (!groupedByCase[part.case]) {
+				groupedByCase[part.case] = new Set()
+			}
+			groupedByCase[part.case].add(part.postId)
 		}
-		groupedByCase[part.case].add(part.postId)
 
 		// スイッチのグループ化
-		if (!groupedBySwitches[part.switches]) {
-			groupedBySwitches[part.switches] = new Set()
+		if (part.switches && part.switches.trim() !== '') {
+			if (!groupedBySwitches[part.switches]) {
+				groupedBySwitches[part.switches] = new Set()
+			}
+			groupedBySwitches[part.switches].add(part.postId)
 		}
-		groupedBySwitches[part.switches].add(part.postId)
 
 		// プレートのグループ化
-		if (!groupedByPlate[part.plate]) {
-			groupedByPlate[part.plate] = new Set()
+		if (part.plate && part.plate.trim() !== '') {
+			if (!groupedByPlate[part.plate]) {
+				groupedByPlate[part.plate] = new Set()
+			}
+			groupedByPlate[part.plate].add(part.postId)
 		}
-		groupedByPlate[part.plate].add(part.postId)
 
 		// キーキャップのグループ化
-		if (!groupedByKeyCaps[part.keyCaps]) {
-			groupedByKeyCaps[part.keyCaps] = new Set()
+		if (part.keyCaps && part.keyCaps.trim() !== '') {
+			if (!groupedByKeyCaps[part.keyCaps]) {
+				groupedByKeyCaps[part.keyCaps] = new Set()
+			}
+			groupedByKeyCaps[part.keyCaps].add(part.postId)
 		}
-		groupedByKeyCaps[part.keyCaps].add(part.postId)
 	})
 
 	return (
