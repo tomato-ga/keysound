@@ -36,6 +36,7 @@ model Post {
   description String
   imageUrl    String?
   videoUrl    String?
+  youtube     String?
   createdat   DateTime  @default(now())
   updatedat   DateTime  @updatedAt
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -18,6 +18,7 @@ export interface PostFormData {
 	title: string
 	description: string
 	videourl?: string
+	youtube?: string
 	parts: PostPart[]
 	category: string
 	// tags?: string[]
@@ -87,6 +88,7 @@ export interface Post {
 	description: string
 	imageUrl?: string | null
 	videoUrl?: string | null
+	youtube?: string | null
 	createdat: Date
 	updatedat: Date
 	user: User
