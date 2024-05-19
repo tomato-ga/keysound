@@ -1,8 +1,5 @@
-'use client'
-
-import React, { useEffect } from 'react'
+import React from 'react'
 import { CircularProgress } from '@mui/material'
-
 import dynamic from 'next/dynamic'
 const DynamicVideoPlayer = dynamic(() => import('../VideoPlayer'), { ssr: false })
 
@@ -12,9 +9,7 @@ interface PreviewSectionProps {
 }
 
 const PreviewSection: React.FC<PreviewSectionProps> = ({ videoUrl, isLoading }) => {
-	useEffect(() => {
-		console.log(videoUrl)
-	}, [videoUrl])
+	console.log('PreviewSection videoUrl:', videoUrl)
 
 	const isYouTubeUrl = (url: string) => {
 		const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/
@@ -23,7 +18,7 @@ const PreviewSection: React.FC<PreviewSectionProps> = ({ videoUrl, isLoading }) 
 
 	return (
 		<div className="mt-8">
-			<h2 className="text-2xl font-semibold mb-4 text-center">動画のプレビュー</h2>
+			<h2 className="text-2xl font-semibold mb-4 text-center">アップロードしたファイルのプレビュー</h2>
 			{videoUrl && (
 				<>
 					{isYouTubeUrl(videoUrl) ? (

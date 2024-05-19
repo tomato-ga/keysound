@@ -3,9 +3,12 @@ import { truncateDescription, formatDate } from '@/app/func/postFunc'
 import { ProfilePostsProps } from '../../../../types'
 import dynamic from 'next/dynamic'
 import PostOptionsButton from '../PostOptionButton'
+
 const DynamicVideoPlayer = dynamic(() => import('../VideoPlayer'), { ssr: false })
 
 export default function ProfilePostsCard({ posts, isCurrentUser, screenName }: ProfilePostsProps) {
+	console.log('postsprofile', posts)
+
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 			{posts.map((post) => (
@@ -14,6 +17,8 @@ export default function ProfilePostsCard({ posts, isCurrentUser, screenName }: P
 						<div className="relative aspect-w-16 aspect-h-9">
 							{post.videoUrl ? (
 								<DynamicVideoPlayer videoUrl={post.videoUrl} loop={true} />
+							) : post.youtube ? (
+								<DynamicVideoPlayer videoUrl={post.youtube} loop={true} />
 							) : (
 								<img src={post.imageUrl || ''} alt={post.title} className="w-full h-full object-cover" />
 							)}

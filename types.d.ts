@@ -88,6 +88,7 @@ export interface Post {
 	description: string
 	imageUrl?: string | null
 	videoUrl?: string | null
+	youtube?: string | null
 	createdat: Date
 	updatedat: Date
 	user: User

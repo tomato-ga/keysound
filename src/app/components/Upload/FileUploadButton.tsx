@@ -37,7 +37,7 @@ const FileUploadButton = forwardRef<HTMLInputElement, FileUploadButtonProps>(
 				>
 					動画を選択
 					<br />
-					<small>※アップロードできるファイルは100MBまでとなっています</small>
+					<small>※アップロードできるファイルは500MBまでとなっています</small>
 				</button>
 			</div>
 		)
