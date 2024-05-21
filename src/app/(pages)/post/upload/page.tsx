@@ -50,6 +50,7 @@ export default function UploadPage() {
 	const [isLoading, setIsLoading] = useState(false)
 	const [uploadOption, setUploadOption] = useState<'upload' | 'youtube' | null>(null)
 	const fileInputRef = useRef<HTMLInputElement>(null)
+	const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null)
 
 	const postData = watch()
 
@@ -118,15 +119,45 @@ export default function UploadPage() {
 		}
 	}
 
-	const handleYouTubeEmbedSubmit = (url: string) => {
+	const handleYouTubeEmbedSubmit = async (url: string) => {
 		console.log('YouTube URL submitted:', url)
 		setValue('youtube', url)
 		setUploadOption('youtube')
+
+		// YouTube動画のIDを取得
+		const videoId = new URL(url).searchParams.get('v')
+		if (videoId) {
+			const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+
+			// サムネイルをCloudflare R2にアップロード
+			try {
+				const response = await fetch('/api/r2thumb', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ url: thumbnailUrl })
+				})
+
+				const data = await response.json()
+				if (!response.ok) {
+					console.error('サムネイルのアップロードに失敗しました', data.error || 'Unknown error')
+					throw new Error(data.error || 'Failed to upload thumbnail')
+				}
+
+				console.log('サムネイルのアップロードに成功しました', data.thumbnailUrl)
+				setThumbnailUrl(data.thumbnailUrl)
+			} catch (error) {
+				console.error('サムネイルのアップロード中にエラーが発生しました', error)
+				toast.error('サムネイルのアップロードに失敗しました。')
+			}
+		}
 	}
 
 	const handleRemoveYouTubeUrl = () => {
 		console.log('YouTube URL removed')
 		setValue('youtube', '')
+		setThumbnailUrl(null)
 		setUploadOption(null)
 	}
 
