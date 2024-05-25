@@ -28,7 +28,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 			<body className={noto.className}>
 				<Header session={session} />
 				<div className="mx-auto flex flex-col md:flex-row justify-between md:justify-start min-h-screen bg-white">
-					<main className="w-full md:w-full p-2 bg-white order-1 md:order-2">
+					<Sidebar />
+					<main className="w-full md:w-3/4 p-2 bg-white order-1 md:order-2">
 						<NextAuthProvider>{children}</NextAuthProvider>
 						<ToastContainer
 							position="top-right"
@@ -43,7 +44,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 							style={{ width: '500px' }}
 						/>
 					</main>
-					<Sidebar />
 				</div>
 				<Footer />
 			</body>
