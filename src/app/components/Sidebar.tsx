@@ -1,8 +1,7 @@
-// components/Sidebar.tsx
 import React from 'react'
 import Link from 'next/link'
 import { prisma } from '../lib/prisma'
-import { Button } from '@/components/ui/button'
+import { Button } from './ui/button'
 
 interface GroupedParts {
 	[key: string]: Set<string>
@@ -67,7 +66,7 @@ const Sidebar = async () => {
 	const { groupedByCase, groupedBySwitches, groupedByPlate, groupedByKeyCaps } = await fetchParts()
 
 	return (
-		<div className="bg-white p-6 order-2 md:order-1 transform w-full md:w-1/3 lg:w-1/4 rounded-lg shadow-lg">
+		<div className="bg-white p-6 order-2 md:order-1 transform w-full md:w-1/3 lg:w-1/4 rounded-lg border-r mt-2">
 			<div className="text-black space-y-6">
 				<div>
 					<h4 className="text-xl font-bold mb-3">ケース</h4>
@@ -78,7 +77,10 @@ const Sidebar = async () => {
 									caseName &&
 									Array.from(groupedByCase[caseName]).map((postId) => (
 										<Link key={postId} href={`/post/${postId}`}>
-											<Button className="m-2 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
+											<Button
+												className="m-2 overflow-hidden text-ellipsis whitespace-nowrap max-w-[calc(100%-1.2rem)]"
+												title={caseName}
+											>
 												{caseName}
 											</Button>
 										</Link>
@@ -98,7 +100,10 @@ const Sidebar = async () => {
 									switchName &&
 									Array.from(groupedBySwitches[switchName]).map((postId) => (
 										<Link key={postId} href={`/post/${postId}`}>
-											<Button className="m-2 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
+											<Button
+												className="m-2 overflow-hidden text-ellipsis whitespace-nowrap max-w-[calc(100%-1.2rem)]"
+												title={switchName}
+											>
 												{switchName}
 											</Button>
 										</Link>
@@ -118,7 +123,10 @@ const Sidebar = async () => {
 									plateName &&
 									Array.from(groupedByPlate[plateName]).map((postId) => (
 										<Link key={postId} href={`/post/${postId}`}>
-											<Button className="m-2 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
+											<Button
+												className="m-2 overflow-hidden text-ellipsis whitespace-nowrap max-w-[calc(100%-1.2rem)]"
+												title={plateName}
+											>
 												{plateName}
 											</Button>
 										</Link>
@@ -138,7 +146,10 @@ const Sidebar = async () => {
 									keyCapsName &&
 									Array.from(groupedByKeyCaps[keyCapsName]).map((postId) => (
 										<Link key={postId} href={`/post/${postId}`}>
-											<Button className="m-2 overflow-hidden text-ellipsis whitespace-nowrap max-w-full">
+											<Button
+												className="m-2 overflow-hidden text-ellipsis whitespace-nowrap max-w-[calc(100%-1.2rem)]"
+												title={keyCapsName}
+											>
 												{keyCapsName}
 											</Button>
 										</Link>
