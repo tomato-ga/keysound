@@ -57,10 +57,12 @@ export default function UploadPage() {
 	const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
 		if (!file) return
+
 		if (!file.type.startsWith('video/')) {
-			toast('動画ファイルのみアップロードできます')
+			toast.error('動画ファイルのみアップロードできます')
 			return
 		}
+
 		const fileSizeInMB = file.size / (1024 * 1024)
 		if (fileSizeInMB > 500) {
 			toast.error('ファイルサイズが500MBを超えています。動画のファイルサイズが500MB以下の場合にアップロードできます')
@@ -70,41 +72,93 @@ export default function UploadPage() {
 		setIsLoading(true)
 
 		try {
-			const presignResponse = await fetch(`/api/r2presigned?fileName=${encodeURIComponent(file.name)}`)
-			const presignData = await presignResponse.json()
-			if (!presignResponse.ok) {
-				throw new Error(presignData.error || 'Failed to get presigned URL')
-			}
+			const presignedUrlResponse = await getPresignedUrl(file.name)
+			await uploadFile(presignedUrlResponse, file)
 
-			const uploadResponse = await fetch(presignData.url, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': file.type
-				},
-				body: file
-			})
-
-			if (!uploadResponse.ok) {
-				try {
-					const errorData = await uploadResponse.json()
-					console.error('Upload failed with error data:', errorData)
-					throw new Error(`Upload failed: ${errorData.message}`)
-				} catch (parseError) {
-					console.error('Failed to parse error response:', parseError)
-					throw new Error('Upload failed')
-				}
-			}
-			const uploadFileUrl = `https://data.keyboard-sound.net/` + presignData.objectKey
-
-			console.log('File upload successful, setting videourl to', uploadFileUrl)
-			setValue('videourl', uploadFileUrl)
-			setIsLoading(false)
-			setUploadOption(null)
+			const uploadedFileUrl = `https://data.keyboard-sound.net/${presignedUrlResponse.objectKey}`
+			setValue('videourl', uploadedFileUrl)
+			toast.success('動画のアップロードが完了しました')
 		} catch (error: any) {
 			console.error('Error uploading file:', error)
-			toast.error('アップロードに失敗しました。')
+			toast.error(`アップロードに失敗しました: ${extractErrorMessage(error)}`)
+		} finally {
 			setIsLoading(false)
+			setUploadOption(null)
 		}
+	}
+
+	const getPresignedUrl = async (fileName: string) => {
+		const response = await fetch(`/api/r2presigned?fileName=${encodeURIComponent(fileName)}`)
+		if (!response.ok) {
+			const errorData = await response.json()
+			console.error('Failed to get presigned URL:', errorData)
+			throw new Error(errorData.error || 'Failed to get presigned URL')
+		}
+		return response.json()
+	}
+
+	const uploadFile = async (presignedUrl: { url: string; objectKey: string }, file: File) => {
+		const response = await fetch(presignedUrl.url, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': file.type
+			},
+			body: file
+		})
+
+		if (!response.ok) {
+			const errorData = await response.json()
+			console.error('Upload failed:', errorData)
+			throw new Error(`Upload failed: ${errorData.message}`)
+		}
+	}
+
+	const handleYouTubeEmbedSubmit = async (url: string) => {
+		const youtubeRegex =
+			/^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(?:embed\/)?(?:v\/)?(?:shorts\/)?(?:\S+)$/
+		if (!youtubeRegex.test(url)) {
+			toast.error('無効なYouTube URLです。動画ページのURLを入力してください')
+			return
+		}
+
+		try {
+			const videoId = extractVideoId(url)
+			const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+			const uploadedThumbnailUrl = await uploadThumbnail(thumbnailUrl)
+
+			setThumbnailUrl(uploadedThumbnailUrl)
+			toast.success('サムネイルのアップロードが完了しました')
+		} catch (error: any) {
+			console.error('Error uploading thumbnail:', error)
+			toast.error(`サムネイルのアップロードに失敗しました: ${extractErrorMessage(error)}`)
+		}
+	}
+
+	const extractVideoId = (url: string) => {
+		const videoId = new URL(url).searchParams.get('v')
+		if (!videoId) {
+			throw new Error('動画IDが取得できません')
+		}
+		return videoId
+	}
+
+	const uploadThumbnail = async (thumbnailUrl: string) => {
+		const response = await fetch('/api/r2thumb', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ url: thumbnailUrl })
+		})
+
+		if (!response.ok) {
+			const errorData = await response.json()
+			console.error('Failed to upload thumbnail:', errorData)
+			throw new Error(errorData.error || 'Failed to upload thumbnail')
+		}
+
+		const data = await response.json()
+		return data.thumbnailUrl
 	}
 
 	const handleRemoveVideoClick = async () => {
@@ -116,41 +170,6 @@ export default function UploadPage() {
 				fileInputRef.current.value = ''
 			}
 			setUploadOption(null)
-		}
-	}
-
-	const handleYouTubeEmbedSubmit = async (url: string) => {
-		console.log('YouTube URL submitted:', url)
-		setValue('youtube', url)
-		setUploadOption('youtube')
-
-		// YouTube動画のIDを取得
-		const videoId = new URL(url).searchParams.get('v')
-		if (videoId) {
-			const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-
-			// サムネイルをCloudflare R2にアップロード
-			try {
-				const response = await fetch('/api/r2thumb', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({ url: thumbnailUrl })
-				})
-
-				const data = await response.json()
-				if (!response.ok) {
-					console.error('サムネイルのアップロードに失敗しました', data.error || 'Unknown error')
-					throw new Error(data.error || 'Failed to upload thumbnail')
-				}
-
-				console.log('サムネイルのアップロードに成功しました', data.thumbnailUrl)
-				setThumbnailUrl(data.thumbnailUrl)
-			} catch (error) {
-				console.error('サムネイルのアップロード中にエラーが発生しました', error)
-				toast.error('サムネイルのアップロードに失敗しました。')
-			}
 		}
 	}
 
@@ -194,6 +213,10 @@ export default function UploadPage() {
 		router.push(`/post/${postId}`)
 	}
 
+	const extractErrorMessage = (error: Error) => {
+		return error.message.replace(/.*:/, '').trim()
+	}
+
 	if (status === 'authenticated') {
 		return (
 			<div className="bg-white text-black min-h-screen">
@@ -216,7 +239,6 @@ export default function UploadPage() {
 
 							<PartsInput parts={postData.parts} onPartsChange={(part) => setValue('parts', [part as PostPart])} />
 
-							{/* アップロードオプションの選択 */}
 							<div className="mb-8 text-center">
 								<label className="block mb-2 text-sm font-medium text-gray-700">アップロードオプションを選択</label>
 								<div className="flex justify-center space-x-4">
@@ -243,7 +265,6 @@ export default function UploadPage() {
 								</div>
 							</div>
 
-							{/* 動画のアップロードフォーム */}
 							{uploadOption === 'upload' && (
 								<Controller
 									name="videourl"
@@ -259,7 +280,6 @@ export default function UploadPage() {
 								/>
 							)}
 
-							{/* YouTube動画の引用フォーム */}
 							{uploadOption === 'youtube' && (
 								<>
 									<YouTubeEmbedForm onUrlChange={handleYouTubeEmbedSubmit} />
