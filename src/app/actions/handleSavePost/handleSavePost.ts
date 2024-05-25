@@ -24,6 +24,7 @@ export const handleSavePost = async (formData: PostFormData, userEmail: string) 
 				description: formData.description,
 				videoUrl: formData.videourl || null,
 				youtube: formData.youtube || null, // ここでYouTube URLを追加
+				thumbnail: formData.thumbnail || null,
 				part: {
 					create: {
 						case: formData.parts[0]?.case || '',
