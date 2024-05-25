@@ -13,6 +13,7 @@ export const savePostAction = async (formData: FormData) => {
 	const description = formData.get('description') as string
 	const videourl = formData.get('videourl') as string
 	const youtube = formData.get('youtube') as string
+	const thumbnail = formData.get('thumbnail') as string
 	const category = formData.get('category') as string
 	const partCase = formData.get('partCase') as string
 	const partPlate = formData.get('partPlate') as string
@@ -24,6 +25,7 @@ export const savePostAction = async (formData: FormData) => {
 		description,
 		videourl,
 		youtube,
+		thumbnail,
 		category,
 		parts: [{ case: partCase, plate: partPlate, switches: partSwitches, keyCaps: partKeyCaps }]
 	}

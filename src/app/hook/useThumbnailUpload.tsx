@@ -10,7 +10,7 @@ const useThumbnailUpload = async (url: string): Promise<string> => {
 	})
 	const data = await response.json()
 	if (!response.ok) {
-		throw new Error(data.error || 'Failed to upload thumbnail')
+		// throw new Error(data.error || 'Failed to upload thumbnail')
 	}
 	return data.thumbnailUrl
 }

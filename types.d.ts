@@ -90,6 +90,7 @@ export interface Post {
 	imageUrl?: string | null
 	videoUrl?: string | null
 	youtube?: string | null
+	thumbnail?: string | null
 	createdat: Date
 	updatedat: Date
 	user: User
