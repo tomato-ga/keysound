@@ -10,47 +10,72 @@ const s3Client = new S3Client({
 	}
 })
 
+const CUSTOM_DOMAIN = 'https://img.keyboard-sound.net'
+
 function sanitizeFileName(fileName: string): string {
 	return fileName.replace(/[<>:"/\\|?*\x00-\x1F]/g, '_')
 }
 
+function getFileExtension(contentType: string): string {
+	const extensionMap: { [key: string]: string } = {
+		'image/jpeg': 'jpg',
+		'image/png': 'png',
+		'image/gif': 'gif'
+	}
+	return extensionMap[contentType] || 'jpg'
+}
+
+async function fetchContentType(url: string): Promise<string> {
+	const response = await fetch(url, { method: 'HEAD' })
+	if (!response.ok) {
+		throw new Error(`画像メタデータのフェッチに失敗しました: ${response.status}`)
+	}
+	const contentType = response.headers.get('content-type') ?? 'image/jpeg'
+	console.log(`取得したContent-Type: ${contentType}`)
+	return contentType
+}
+
+async function uploadThumbnail(url: string, fileName: string, contentType: string): Promise<string> {
+	const response = await fetch(url)
+	if (!response.ok) {
+		throw new Error(`画像のフェッチに失敗しました: ${response.status}`)
+	}
+
+	const arrayBuffer = await response.arrayBuffer()
+	const buffer = Buffer.from(arrayBuffer)
+	console.log(`アップロード中のファイル: ${fileName}, Content-Type: ${contentType}`)
+
+	const command = new PutObjectCommand({
+		Bucket: process.env.R2_THUMB_BUCKET_NAME!,
+		Key: fileName,
+		Body: buffer,
+		ContentType: contentType
+	})
+
+	await s3Client.send(command)
+	return `${CUSTOM_DOMAIN}/${fileName}`
+}
+
 export async function POST(req: NextRequest) {
 	try {
-		console.log('Received request to upload thumbnail')
-
 		const { url } = await req.json()
 		if (!url) {
-			console.error('URL is missing from request body')
-			return NextResponse.json({ error: 'URL is required' }, { status: 400 })
+			const errorMessage = 'URLは必須です'
+			console.error(errorMessage)
+			return NextResponse.json({ error: errorMessage }, { status: 400 })
 		}
 
-		console.log(`Fetching thumbnail from URL: ${url}`)
-		const response = await fetch(url)
-		if (!response.ok) {
-			console.warn(`Failed to fetch thumbnail: ${response.status} ${response.statusText}`)
-			return NextResponse.json({ error: 'Failed to fetch thumbnail' }, { status: response.status })
-		}
+		const contentType = await fetchContentType(url)
+		const extension = getFileExtension(contentType)
+		const fileName = `${sanitizeFileName(url.split('/').pop()!)}.${extension}`
 
-		console.log('Thumbnail fetched successfully')
-		const arrayBuffer = await response.arrayBuffer()
-		const buffer = Buffer.from(arrayBuffer)
-		const fileName = `thumbnails/${sanitizeFileName(url.split('/').pop()!)}.jpg`
-		console.log(`Uploading thumbnail to R2 with filename: ${fileName}`)
+		const thumbnailUrl = await uploadThumbnail(url, fileName, contentType)
+		console.log('サムネイルのアップロードに成功しました:', thumbnailUrl)
 
-		const command = new PutObjectCommand({
-			Bucket: process.env.R2_THUMB_BUCKET_NAME!,
-			Key: fileName,
-			Body: buffer,
-			ContentType: 'image/jpeg'
-		})
-
-		await s3Client.send(command)
-
-		const thumbnailUrl = `https://img.keyboard-sound.net/${fileName}`
-		console.log(`Thumbnail uploaded successfully: ${thumbnailUrl}`)
 		return NextResponse.json({ thumbnailUrl }, { status: 200 })
 	} catch (error: any) {
-		console.error('Failed to upload thumbnail:', error)
-		return NextResponse.json({ error: 'Failed to upload thumbnail', details: error.message }, { status: 500 })
+		const errorMessage = `サムネイルのアップロードに失敗しました: ${error.message}`
+		console.error(errorMessage)
+		return NextResponse.json({ error: errorMessage }, { status: 500 })
 	}
 }

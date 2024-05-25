@@ -21,6 +21,7 @@ export interface PostFormData {
 	youtube?: string
 	parts: PostPart[]
 	category: string
+	thumbnail?: string
 	// tags?: string[]
 }
 
