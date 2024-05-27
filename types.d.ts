@@ -73,7 +73,11 @@ export type PostWithUserProfile = Post & {
 export interface User {
 	id: string
 	name: string
+	email?: string
 	image?: string
+	createdat: Date
+	updatedat: Date
+	profile?: Profile | null
 }
 
 export interface Profile {
@@ -105,4 +109,35 @@ export interface ProfilePostsProps {
 	posts: Post[]
 	isCurrentUser: boolean
 	screenName: string
+}
+
+// PostWithDetailsと関連する型定義
+export interface PostWithDetails extends Omit<Post, 'user'> {
+	user: {
+		profile: {
+			screenName: string | null
+		} | null
+		image: string | null
+	}
+	part: {
+		case: string | null
+		plate: string | null
+		switches: string | null
+		keyCaps: string | null
+	} | null
+}
+
+export interface PostContentProps {
+	post: PostWithDetails
+	isCurrentUser: boolean
+	videoUrl: string | null
+}
+
+export interface PostHeaderProps {
+	post: PostWithDetails
+	isCurrentUser: boolean
+}
+
+export interface PostPartsProps {
+	part: PostWithDetails['part']
 }
