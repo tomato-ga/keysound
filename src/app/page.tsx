@@ -5,6 +5,12 @@ import { Post } from '../../types'
 
 import TopPostsCard from './components/TopPostCard'
 import { getScreenName } from './actions/getScreenName/getScreenName'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+	title: 'キーボードサウンド',
+	description: 'キーボードサウンドは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。'
+}
 
 export default async function Home() {
 	const posts = await prisma.post.findMany({

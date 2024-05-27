@@ -15,7 +15,8 @@ interface PostPageProps {
 	readonly params: { postId: string }
 }
 
-const PostPage = async ({ params }: PostPageProps) => {
+// generateMetadata関数を定義
+export async function generateMetadata({ params }: PostPageProps) {
 	const post = await prisma.post.findUnique({
 		where: { id: params.postId },
 		include: {
@@ -24,7 +25,43 @@ const PostPage = async ({ params }: PostPageProps) => {
 		}
 	})
 
-	console.log('post prisma', post)
+	if (!post) {
+		return {
+			title: 'Post not found',
+			description: 'The requested post does not exist.'
+		}
+	}
+
+	return {
+		title: post.title,
+		description: post.description.substring(0, 150), // descriptionの最初の150文字を使用
+		openGraph: {
+			title: post.title,
+			description: post.description,
+			images: [
+				{
+					url: post.user.image || '/default-avatar.jpg',
+					alt: post.user.profile?.screenName ?? 'User profile image'
+				}
+			]
+		},
+		twitter: {
+			card: 'summary_large_image',
+			title: post.title,
+			description: post.description,
+			image: post.user.image || '/default-avatar.jpg'
+		}
+	}
+}
+
+const PostPage = async ({ params }: PostPageProps) => {
+	const post = await prisma.post.findUnique({
+		where: { id: params.postId },
+		include: {
+			user: { include: { profile: true } },
+			part: true
+		}
+	})
 
 	const name = await getScreenName()
 	const isCurrentUser = post?.user.profile?.screenName === name
