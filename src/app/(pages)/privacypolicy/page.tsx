@@ -5,7 +5,8 @@ const PrivacyPolicy = () => {
 		<div className="container mx-auto px-4 py-8">
 			<h1 className="text-4xl mb-4 font-bold">プライバシーポリシー</h1>
 			<p className="text-lg mb-8">
-				キーボードサウンドは、本ウェブサイト上で提供するサービス（以下,「当サービス」といいます。）における、ユーザーの個人情報の取扱いについて、以下のとおりプライバシーポリシー（以下、「本ポリシー」といいます。）を定めます。
+				keyboard
+				soundは、本ウェブサイト上で提供するサービス（以下,「当サービス」といいます。）における、ユーザーの個人情報の取扱いについて、以下のとおりプライバシーポリシー（以下、「本ポリシー」といいます。）を定めます。
 			</p>
 			<h2 className="text-2xl font-bold mt-10 mb-4">第1条（個人情報）</h2>
 			<p className="text-lg mb-8">

@@ -2,7 +2,7 @@
 import { PostWithDetails } from '../../../../types'
 
 export const generatePostMetadata = (post: PostWithDetails | null) => {
-	const siteName = 'キーボードサウンド'
+	const siteName = 'keyboard sound'
 	const defaultImage = 'https://keyboard-sound.net/opengraph-image.jpg' // デフォルトのOGP画像
 	const defaultTwitterImage = 'https://keyboard-sound.net/twitter-image.jpg' // デフォルトのTwitterカード画像
 
