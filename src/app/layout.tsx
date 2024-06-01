@@ -55,10 +55,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 		<html lang="ja">
 			<body className={noto.className}>
 				<Header session={session} />
-				{/* TopCopy を上部に配置 */}
 				<TopCopy />
 				<div className="mx-auto flex flex-col md:flex-row min-h-screen bg-white">
-					<Sidebar />
+					<Sidebar /> {/* Ensure Sidebar is placed before main */}
 					<main className="flex-1 p-2 bg-white">
 						<NextAuthProvider>{children}</NextAuthProvider>
 						<ToastContainer
