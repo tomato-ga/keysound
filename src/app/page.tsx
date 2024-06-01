@@ -6,6 +6,7 @@ import { Post } from '../../types'
 import TopPostsCard from './components/TopPostCard'
 import { getScreenName } from './actions/getScreenName/getScreenName'
 import { Metadata } from 'next'
+import TopCopy from './components/Copy/index'
 
 export const metadata: Metadata = {
 	title: 'keyboard sound',
@@ -54,8 +55,14 @@ export default async function Home() {
 
 	return (
 		<div className="home">
-			<div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4">
-				<TopPostsCard posts={posts} />
+			{/* <TopCopy /> */}
+			<div className="flex flex-col md:flex-row min-h-screen bg-white">
+				{/* メインコンテンツ */}
+				<div className="flex-1 p-2 bg-white">
+					<div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4">
+						<TopPostsCard posts={posts} />
+					</div>
+				</div>
 			</div>
 		</div>
 	)
