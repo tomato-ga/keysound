@@ -12,6 +12,7 @@ import Sidebar from './components/Sidebar'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import TopCopy from './components/Copy/index'
 
 const noto = Noto_Sans_JP({ subsets: ['latin'], weight: ['500'] })
 
@@ -55,6 +56,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 		<html lang="ja">
 			<body className={noto.className}>
 				<Header session={session} />
+
+				<TopCopy />
+
 				<div className="mx-auto flex flex-col md:flex-row min-h-screen bg-white">
 					<Sidebar />
 					<main className="flex-1 p-2 bg-white order-1 md:order-2">

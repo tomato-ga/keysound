@@ -4,7 +4,7 @@ const AboutPage = () => {
 			<div className="flex justify-center">
 				<img src="/site.webp" className="h-50 w-auto" alt="みんなのkeyboard sound" />
 			</div>
-			<div className="text-[50px] text-gray-700">
+			<div className="text-2xl text-gray-700 m-6 p-4">
 				keyboard soundは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。
 				<br />
 				<br />
