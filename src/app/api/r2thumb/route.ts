@@ -12,6 +12,8 @@ const s3Client = new S3Client({
 	}
 })
 
+console.log('R2_THUMB_BUCKET_NAME:', process.env.R2_THUMB_BUCKET_NAME)
+
 const CUSTOM_DOMAIN = 'https://img.keyboard-sound.net'
 
 async function fetchImage(url: string): Promise<Buffer> {
