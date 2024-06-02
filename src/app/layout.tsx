@@ -12,20 +12,21 @@ import Sidebar from './components/Sidebar'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import TopCopy from './components/Copy'
+import { aboutstring, openGraphImage, twitterImage } from './func/aboutdescription'
 
 const noto = Noto_Sans_JP({ subsets: ['latin'], weight: ['500'] })
 
 export const metadata: Metadata = {
 	title: 'keyboard sound',
 	description:
-		'keyboard soundは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。',
+		aboutstring,
 	openGraph: {
 		title: 'keyboard sound',
 		description:
-			'keyboard soundは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。',
+			aboutstring,
 		images: [
 			{
-				url: 'https://keyboard-sound.net/opengraph-image.jpg', // ここで画像のパスを指定
+				url: openGraphImage,
 				width: 1280,
 				height: 720,
 				alt: 'Open Graph Image'
@@ -36,10 +37,10 @@ export const metadata: Metadata = {
 		card: 'summary_large_image',
 		title: 'keyboard sound',
 		description:
-			'keyboard soundは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。',
+			aboutstring,
 		images: [
 			{
-				url: 'https://keyboard-sound.net/twitter-image.jpg', // ここで画像のパスを指定
+				url: twitterImage, // ここで画像のパスを指定
 				width: 1280,
 				height: 720,
 				alt: 'Twitter Image'
