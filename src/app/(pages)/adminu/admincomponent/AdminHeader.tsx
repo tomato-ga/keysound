@@ -1,7 +1,9 @@
-// components/Header.js
+// /Users/ore/Documents/GitHub/keysound/src/app/(pages)/adminu/admincomponent/AdminHeader.tsx
 
-import { useRouter } from 'next/router'
-import useAuthStore from '@/jotai/authStore'
+'use client'
+
+import { useRouter } from 'next/navigation'
+import useAuthStore from './authStore'
 import React from 'react'
 import Link from 'next/link'
 
