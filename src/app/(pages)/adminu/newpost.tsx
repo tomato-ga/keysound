@@ -2,9 +2,9 @@ import { useEffect, useState, ChangeEvent } from 'react' // ChangeEvent をイ�
 import useAuthStore from '../../jotai/authStore'
 import { useRouter } from 'next/navigation'
 
-import AdminLayout from '@/app/func/markdown/AdminLayout'
-import FileUploadArea from '@/app/func/markdown/drag'
-import ThumbnailUploader from '@/app/func/markdown/ThumbnailUploader'
+import AdminLayout from './layout'
+import FileUploadArea from './admincomponent/drag'
+import ThumbnailUploader from './admincomponent/ThumbnailUploader'
 
 // import FileUploadArea from '@/components/drag'
 // import ThumbnailUploader from '@/components/ThumbnailUploader'
