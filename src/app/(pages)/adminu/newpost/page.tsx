@@ -84,6 +84,7 @@ const Editor: React.FC<EditorProps> = ({
 		}
 	}
 
+	// TODO R2にバケット作って保存する
 	// const uploadImages = async (files: File[]) => {
 	// 	const formData = new FormData()
 	// 	files.forEach((file) => formData.append('files', file))
