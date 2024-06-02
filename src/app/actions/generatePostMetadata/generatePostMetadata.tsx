@@ -1,12 +1,31 @@
 // generatePostMetadata.ts
-import { PostWithDetails } from "../../../../types"
+import { PostWithDetails } from '../../../../types'
 
 export const generatePostMetadata = (post: PostWithDetails | null) => {
-	const siteName = 'キーボードサウンド'
+	const siteName = 'keyboard sound'
+	const defaultImage = 'https://keyboard-sound.net/opengraph-image.jpg' // デフォルトのOGP画像
+	const defaultTwitterImage = 'https://keyboard-sound.net/twitter-image.jpg' // デフォルトのTwitterカード画像
+
 	if (!post) {
 		return {
 			title: `Post not found | ${siteName}`,
-			description: 'The requested post does not exist.'
+			description: 'The requested post does not exist.',
+			openGraph: {
+				title: `Post not found | ${siteName}`,
+				description: 'The requested post does not exist.',
+				images: [
+					{
+						url: defaultImage,
+						alt: 'Default image'
+					}
+				]
+			},
+			twitter: {
+				card: 'summary_large_image',
+				title: `Post not found | ${siteName}`,
+				description: 'The requested post does not exist.',
+				image: defaultTwitterImage
+			}
 		}
 	}
 
@@ -18,7 +37,7 @@ export const generatePostMetadata = (post: PostWithDetails | null) => {
 			description: post.description,
 			images: [
 				{
-					url: post.user.image || '/default-avatar.jpg',
+					url: defaultImage,
 					alt: post.user.profile?.screenName ?? 'User profile image'
 				}
 			]
@@ -27,7 +46,7 @@ export const generatePostMetadata = (post: PostWithDetails | null) => {
 			card: 'summary_large_image',
 			title: `${post.title} | ${siteName}`,
 			description: post.description,
-			image: post.user.image || '/default-avatar.jpg'
+			image: defaultTwitterImage
 		}
 	}
 }

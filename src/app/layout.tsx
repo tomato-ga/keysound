@@ -12,12 +12,41 @@ import Sidebar from './components/Sidebar'
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import TopCopy from './components/Copy/index'
 
 const noto = Noto_Sans_JP({ subsets: ['latin'], weight: ['500'] })
 
 export const metadata: Metadata = {
 	title: 'keyboard sound',
-	description: 'キーボードの「音」に特化したサイト'
+	description:
+		'keyboard soundは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。',
+	openGraph: {
+		title: 'keyboard sound',
+		description:
+			'keyboard soundは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。',
+		images: [
+			{
+				url: 'https://keyboard-sound.net/opengraph-image.jpg', // ここで画像のパスを指定
+				width: 1280,
+				height: 720,
+				alt: 'Open Graph Image'
+			}
+		]
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: 'keyboard sound',
+		description:
+			'keyboard soundは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。',
+		images: [
+			{
+				url: 'https://keyboard-sound.net/twitter-image.jpg', // ここで画像のパスを指定
+				width: 1280,
+				height: 720,
+				alt: 'Twitter Image'
+			}
+		]
+	}
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -27,6 +56,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
 		<html lang="ja">
 			<body className={noto.className}>
 				<Header session={session} />
+
+				<TopCopy />
+
 				<div className="mx-auto flex flex-col md:flex-row min-h-screen bg-white">
 					<Sidebar />
 					<main className="flex-1 p-2 bg-white order-1 md:order-2">

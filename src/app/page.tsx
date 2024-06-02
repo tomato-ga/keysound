@@ -8,8 +8,36 @@ import { getScreenName } from './actions/getScreenName/getScreenName'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-	title: 'キーボードサウンド',
-	description: 'キーボードサウンドは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。'
+	title: 'keyboard sound',
+	description:
+		'keyboard soundは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。',
+	openGraph: {
+		title: 'keyboard sound',
+		description:
+			'keyboard soundは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。',
+		images: [
+			{
+				url: 'https://keyboard-sound.net/opengraph-image.jpg', // ここで画像のパスを指定
+				width: 1280,
+				height: 720,
+				alt: 'Open Graph Image'
+			}
+		]
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: 'keyboard sound',
+		description:
+			'keyboard soundは、キーボードの「打鍵音」に特化した、ニッチな場所を目指しています。 自分のお気に入りキーボードの打鍵音を投稿したり、他の人の投稿を探索したりできるようになる予定です。 ぜひみなさんのキーボードの音を聞かせてください。',
+		images: [
+			{
+				url: 'https://keyboard-sound.net/twitter-image.jpg', // ここで画像のパスを指定
+				width: 1280,
+				height: 720,
+				alt: 'Twitter Image'
+			}
+		]
+	}
 }
 
 export default async function Home() {
