@@ -25,7 +25,7 @@ const AdminPostLists = async () => {
 				<div className="flex items-center justify-center" key={post.id}>
 					<ul>
 						<li className="m-3 text-4xl text-slate-700">
-							<Link href={`/adminu/post/${post.id}`}>
+							<Link href={`/adminu/${post.id}`}>
 								{post.title}
 								<div className="text-2xl">更新日時：{formatDate(post.updatedAt)}</div>
 								<div className="text-2xl">公開日時：{formatDate(post.createdAt)}</div>

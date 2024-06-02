@@ -14,16 +14,16 @@ interface EditorProps {
 	initialTitle?: string
 	initialContent?: string
 	initialTags?: string
-	postId?: string | null
-	onSave: (data: { title: string; content: string; tags: string[]; postId?: string | null }) => void
+	postId?: number | null
+	// onSave: (data: { title: string; content: string; tags: string[]; postId?: number | null }) => void
 }
 
 const Editor: React.FC<EditorProps> = ({
 	initialTitle = '',
 	initialContent = '',
 	initialTags = '',
-	postId,
-	onSave
+	postId
+	// onSave
 }) => {
 	console.log('postId: ', postId)
 
@@ -63,26 +63,26 @@ const Editor: React.FC<EditorProps> = ({
 		}
 	}
 
-	const handleButtonClick = async () => {
-		console.log('handleButtonClick called')
-		const tagsArray = tags
-			.split(',')
-			.map((tag) => tag.trim())
-			.filter((tag) => tag !== '')
-		console.log('tagsArray on button click:', tagsArray)
-		if (onSave) {
-			try {
-				onSave({ title, content, tags: tagsArray, postId })
-				console.log('Article saved via onSave callback')
-				showToast('記事が正常に保存されました。')
-			} catch (error) {
-				console.error('Error in handleButtonClick with onSave:', error)
-				showToast('記事の保存中にエラーが発生しました。')
-			}
-		} else {
-			await handleNewSave()
-		}
-	}
+	// const handleButtonClick = async () => {
+	// 	console.log('handleButtonClick called')
+	// 	const tagsArray = tags
+	// 		.split(',')
+	// 		.map((tag) => tag.trim())
+	// 		.filter((tag) => tag !== '')
+	// 	console.log('tagsArray on button click:', tagsArray)
+	// 	if (onSave) {
+	// 		try {
+	// 			onSave({ title, content, tags: tagsArray, postId })
+	// 			console.log('Article saved via onSave callback')
+	// 			showToast('記事が正常に保存されました。')
+	// 		} catch (error) {
+	// 			console.error('Error in handleButtonClick with onSave:', error)
+	// 			showToast('記事の保存中にエラーが発生しました。')
+	// 		}
+	// 	} else {
+	// 		await handleNewSave()
+	// 	}
+	// }
 
 	// TODO R2にバケット作って保存する
 	// const uploadImages = async (files: File[]) => {
@@ -171,9 +171,9 @@ const Editor: React.FC<EditorProps> = ({
 					/>
 				)}
 
-				<button onClick={handleButtonClick} className="bg-blue-500 text-white p-2 rounded mt-4">
+				{/* <button onClick={handleButtonClick} className="bg-blue-500 text-white p-2 rounded mt-4">
 					保存
-				</button>
+				</button> */}
 				{toast.show && <span className="ml-4 text-green-600">{toast.message}</span>}
 
 				{toast.show && (
