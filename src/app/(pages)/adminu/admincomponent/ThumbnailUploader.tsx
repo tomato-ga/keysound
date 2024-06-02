@@ -1,7 +1,7 @@
 import React, { useState, DragEvent } from 'react'
 
 interface ThumbnailUploaderProps {
-	postId: string
+	postId: number
 	onUploadSuccess: () => void
 	onUploadFailure: (error: string) => void
 }
