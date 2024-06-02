@@ -1,7 +1,7 @@
 import React, { useEffect, useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
 import AdminLayout from '@/components/AdminLayout'
-import Editor from '../newpost'
+import Editor from '../postlists/newpost/newpost'
 import useAuthStore from '@/jotai/authStore'
 
 interface PostData {
