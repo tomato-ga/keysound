@@ -1,8 +1,8 @@
+'use client'
+
 import React, { useEffect, useState, ChangeEvent } from 'react'
 import { useRouter } from 'next/router'
-import AdminLayout from '@/components/AdminLayout'
-import Editor from '../postlists/newpost/newpost'
-import useAuthStore from '@/jotai/authStore'
+import Editor from '../newpost/page'
 
 interface PostData {
 	data: {
@@ -16,18 +16,7 @@ const PostEditor: React.FC = () => {
 	const router = useRouter()
 	const { id } = router.query
 
-	const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
-	const login = useAuthStore((state) => state.login)
-
 	const [post, setPost] = useState<PostData | null>(null)
-
-	useEffect(() => {
-		if (!isLoggedIn) {
-			router.push('/a-login')
-		} else {
-			login() // Zustandストアのログイン状態を更新
-		}
-	}, [isLoggedIn, login, router])
 
 	useEffect(() => {
 		const fetchPost = async () => {
