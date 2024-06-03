@@ -5,6 +5,7 @@ import AdminLayout from '../postlists/layout'
 import FileUploadArea from '../admincomponent/drag'
 import ThumbnailUploader from '../admincomponent/ThumbnailUploader'
 import { saveArticle } from '@/app/actions/saveBlogPost/saveBlogPost'
+import useThumbnailUpload from '@/app/hook/useThumbnailUpload'
 
 interface UploadResponse {
 	urls: string[]
@@ -61,6 +62,13 @@ const Editor: React.FC<EditorProps> = ({
 			console.error('Error in handleNewSave:', error)
 			showToast('記事の保存に失敗しました')
 		}
+	}
+
+
+	const handleYouTubeEmbedSubmit = async (url: string) => {
+		console.log('YouTube URL submitted:', url)
+		const thumbnailUrl = await useThumbnailUpload(url)
+
 	}
 
 	// const handleButtonClick = async () => {

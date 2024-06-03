@@ -14,40 +14,53 @@ const s3Client = new S3Client({
 
 const CUSTOM_DOMAIN = 'https://blogimg.keyboard-sound.net'
 
+
+
+async function uploadImageToR2(url: string): Promise<string> {
+	const buffer = await fetchImage(url)
+
+	const jpegBuffer = await sharp(buffer).jpeg().toBuffer()
+
+	const fileName = `${uuidv4()}.jpg`
+	const contentType = 'image/jpeg'
+
+	console.log(`Uploading file: ${fileName}, Content-Type: ${contentType}`)
+
+	const command = new PutObjectCommand({
+		Bucket: process.env.R2_BLOGTHUMB_BUCKET_NAME!,
+		Key: fileName,
+		Body: jpegBuffer,
+		ContentType: contentType
+	})
+
+	await s3Client.send(command)
+	return `${CUSTOM_DOMAIN}/${fileName}`
+}
+
+
+
 function createErrorResponse(message: string, status: number): NextResponse {
 	console.error(message)
 	return NextResponse.json({ error: message }, { status })
 }
 
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {
-		const formData = await req.formData()
-		const file = formData.get('file') as Blob
+		const { url } = await req.json()
 
-		if (!file) {
-			return createErrorResponse('ファイルが必要です', 400)
+		if (!url) {
+			return createErrorResponse('URL is required', 400)
 		}
 
-		const buffer = Buffer.from(await file.arrayBuffer())
-		const jpegBuffer = await sharp(buffer).jpeg().toBuffer()
-		const fileName = `${uuidv4()}.jpg`
 
-		console.log(`Uploading file: ${fileName}, Content-Type: image/jpeg`)
 
-		const command = new PutObjectCommand({
-			Bucket: process.env.R2_BLOGTHUMB_BUCKET_NAME!,
-			Key: fileName,
-			Body: jpegBuffer,
-			ContentType: 'image/jpeg'
-		})
 
-		await s3Client.send(command)
-
-		const uploadedThumbnailUrl = `${CUSTOM_DOMAIN}/${fileName}`
+		const uploadedThumbnailUrl = await uploadImageToR2(thumbnailUrl)
 		console.log('Successfully uploaded thumbnail:', uploadedThumbnailUrl)
 
 		return NextResponse.json({ thumbnailUrl: uploadedThumbnailUrl }, { status: 200 })
 	} catch (error: any) {
-		return createErrorResponse(`サムネイルのアップロードに失敗しました: ${error.message}`, 500)
+		return createErrorResponse(`Failed to upload thumbnail: ${error.message}`, 500)
 	}
 }
