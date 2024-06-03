@@ -74,3 +74,76 @@
       @apply bg-background text-foreground;
     }
   }
+
+
+  /* styles/global.css に追加 */
+.drop-area {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.drag-over {
+  background-color: #f0f0f0;
+}
+
+.markdown ol {
+  @apply list-decimal pl-10;
+}
+.markdown ul {
+  @apply list-disc pl-10;
+}
+
+.markdown  {
+  @apply text-gray-800;
+}
+
+.markdown h3 {
+  @apply text-lg border-b border-black my-5;
+}
+
+.markdown h2 {
+  @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-4 mb-4;
+}
+
+
+.markdown a {
+  @apply text-blue-600 dark:text-blue-500 hover:underline;
+}
+
+.markdown p {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: .8px;
+  font-feature-settings: "palt";
+  line-height: 1.6;
+  margin: 2px 0 ;
+  margin-inline: auto;
+}
+
+.markdown-amazon-button-wrapper {
+  display: block;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.markdown-amazon-button {
+  display: inline-block;
+  background-color: #f0c14b;
+  color: #615353 !important;
+  padding: 8px 12px;
+  font-size: 20px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.markdown-amazon-button a {
+  color: #615353; /* 明示的に<a>タグに色を適用 */
+  text-decoration: none; /* リンクの下線を削除（必要に応じて） */
+}
