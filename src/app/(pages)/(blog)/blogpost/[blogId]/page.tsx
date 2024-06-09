@@ -70,30 +70,9 @@ const BlogPost: React.FC<BlogPostProps> = async ({ params }) => {
 					<MarkdownContent markdownString={post.content} />
 				</div>
 
-				{/* インデックスの最新情報 */}
 				{/* <h2 className="text-gray-500 mt-3 mb-3 text-center text-2xl font-bold">最新セール情報</h2> */}
 				<div className="h-0.5 bg-gradient-to-r from-[#d299c2] to-[#fef9d7] ml-10 mr-10"></div>
-				<div className="flex flex-col md:flex-row bg-white p-4">
-					{/* <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
-						{latestsale.slice(0, 8).map((item, index) => (
-							<div className="text text-black" key={index}>
-								<Link href={`/items/${item.date}/${extractAsin(item.asin)}`} prefetch={false}>
-									<div className="h-[270px] w-full md:h-[270px] md:w-full mb-4">
-										<img
-											src={item.imageUrl}
-											alt={item.productName}
-											className="w-full h-full"
-											style={{ objectFit: 'contain' }}
-										/>
-									</div>
-									<div className="mr-2 ml-2">
-										<p>{item.productName.length > 80 ? `${item.productName.substring(0, 80)}...` : item.productName}</p>
-									</div>
-								</Link>
-							</div>
-						))}
-					</div> */}
-				</div>
+				<div className="flex flex-col md:flex-row bg-white p-4"></div>
 			</div>
 		</>
 	)

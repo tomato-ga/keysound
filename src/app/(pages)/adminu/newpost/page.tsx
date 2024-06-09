@@ -27,13 +27,13 @@ interface ArticleData {
 	postId?: number | null
 }
 
-const Editor: React.FC<EditorProps> = ({
+export default function Editor({
 	initialTitle = '',
 	initialContent = '',
 	initialTags = '',
 	postId,
 	onSave
-}) => {
+}: EditorProps) {
 	const [title, setTitle] = useState<string>(initialTitle)
 	const [content, setContent] = useState<string>(initialContent)
 	const [tags, setTags] = useState<string>(initialTags)
@@ -230,5 +230,3 @@ const Editor: React.FC<EditorProps> = ({
 		</AdminLayout>
 	)
 }
-
-export default Editor
