@@ -1,22 +1,21 @@
 // page.tsx
+'use client'
+
 import React from 'react'
 import Editor from '@/app/components/Editor'
-import { EditorProps } from '../../../../../types'
 
 const NewPostPage: React.FC = () => {
-	const handleSave: EditorProps['onSave'] = (data) => {
+	const handleSave = (data: {
+		title: string
+		content: string
+		tags: string[]
+		postId?: number | null
+		thumb_url: string
+	}) => {
 		console.log('Saved data:', data)
 	}
 
-	const editorProps: EditorProps = {
-		initialTitle: '',
-		initialContent: '',
-		initialTags: '',
-		postId: null,
-		onSave: handleSave
-	}
-
-	return <Editor {...editorProps} />
+	return <Editor initialTitle="" initialContent="" initialTags="" postId={null} onSave={handleSave} />
 }
 
 export default NewPostPage
