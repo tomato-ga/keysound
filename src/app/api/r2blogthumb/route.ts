@@ -14,22 +14,24 @@ const s3Client = new S3Client({
 
 const CUSTOM_DOMAIN = 'https://blogimg.keyboard-sound.net'
 
+async function uploadImageToR2(buffer: Buffer, isWebp: boolean): Promise<string> {
+	let webpBuffer: Buffer
 
+	if (isWebp) {
+		webpBuffer = buffer
+	} else {
+		webpBuffer = await sharp(buffer).webp().toBuffer()
+	}
 
-async function uploadImageToR2(url: string): Promise<string> {
-	const buffer = await fetchImage(url)
-
-	const jpegBuffer = await sharp(buffer).jpeg().toBuffer()
-
-	const fileName = `${uuidv4()}.jpg`
-	const contentType = 'image/jpeg'
+	const fileName = `${uuidv4()}.webp`
+	const contentType = 'image/webp'
 
 	console.log(`Uploading file: ${fileName}, Content-Type: ${contentType}`)
 
 	const command = new PutObjectCommand({
 		Bucket: process.env.R2_BLOGTHUMB_BUCKET_NAME!,
 		Key: fileName,
-		Body: jpegBuffer,
+		Body: webpBuffer,
 		ContentType: contentType
 	})
 
@@ -37,26 +39,25 @@ async function uploadImageToR2(url: string): Promise<string> {
 	return `${CUSTOM_DOMAIN}/${fileName}`
 }
 
-
-
 function createErrorResponse(message: string, status: number): NextResponse {
 	console.error(message)
 	return NextResponse.json({ error: message }, { status })
 }
 
-
 export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {
-		const { url } = await req.json()
+		const formData = await req.formData()
+		const file = formData.get('files') as Blob
 
-		if (!url) {
-			return createErrorResponse('URL is required', 400)
+		if (!file) {
+			return createErrorResponse('File is required', 400)
 		}
 
+		const buffer = Buffer.from(await file.arrayBuffer())
+		const fileType = file.type
 
-
-
-		const uploadedThumbnailUrl = await uploadImageToR2(thumbnailUrl)
+		const isWebp = fileType === 'image/webp'
+		const uploadedThumbnailUrl = await uploadImageToR2(buffer, isWebp)
 		console.log('Successfully uploaded thumbnail:', uploadedThumbnailUrl)
 
 		return NextResponse.json({ thumbnailUrl: uploadedThumbnailUrl }, { status: 200 })
