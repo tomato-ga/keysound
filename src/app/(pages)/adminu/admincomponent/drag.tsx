@@ -2,7 +2,7 @@ import React, { useState, DragEvent } from 'react'
 
 interface FileUploadAreaProps {
 	onFileSelected: (files: File[]) => void
-	onUpload: (files: File[]) => Promise<void> // 画像アップロードのための関数をPropsとして受け取る
+	onUpload: (files: File[]) => Promise<void>
 	onUploadSuccess: () => void
 	onUploadFailure: (error: string) => void
 }
@@ -29,16 +29,16 @@ const FileUploadArea: React.FC<FileUploadAreaProps> = ({
 	const handleDrop = (e: DragEvent<HTMLDivElement>) => {
 		e.preventDefault()
 		setDragOver(false)
-		const files = Array.from(e.dataTransfer.files) // ドロップされたファイルの配列
-		setSelectedFiles((prevFiles) => [...prevFiles, ...files]) // 既存のファイルリストに新しいファイルを追加
-		onFileSelected([...selectedFiles, ...files]) // 親コンポーネントへの通知も、全ファイルを含むように更新
+		const files = Array.from(e.dataTransfer.files)
+		setSelectedFiles((prevFiles) => [...prevFiles, ...files])
+		onFileSelected([...selectedFiles, ...files])
 	}
 
 	const handleUpload = async () => {
 		try {
 			await onUpload(selectedFiles)
 			onUploadSuccess()
-			setSelectedFiles([]) // アップロード後、選択されたファイルリストをクリア
+			setSelectedFiles([])
 		} catch (error) {
 			onUploadFailure(error instanceof Error ? error.message : String(error))
 		}
@@ -46,7 +46,7 @@ const FileUploadArea: React.FC<FileUploadAreaProps> = ({
 
 	return (
 		<div
-			className={`drop-area ${dragOver ? 'drag-over' : ''}`}
+			className={`m-4 drop-area ${dragOver ? 'drag-over' : ''}`}
 			onDragOver={handleDragOver}
 			onDragLeave={handleDragLeave}
 			onDrop={handleDrop}

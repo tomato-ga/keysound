@@ -4,8 +4,7 @@ import { useState, ChangeEvent } from 'react'
 import AdminLayout from '../postlists/layout'
 import FileUploadArea from '../admincomponent/drag'
 import ThumbnailUploader from '../admincomponent/ThumbnailUploader'
-import { saveArticle } from '@/app/actions/saveBlogPost/saveBlogPost'
-import useThumbnailUpload from '@/app/hook/useThumbnailUpload'
+import { saveArticle, saveUpdateArticle } from '@/app/actions/saveBlogPost/saveBlogPost'
 
 interface UploadResponse {
 	urls: string[]
@@ -16,7 +15,15 @@ interface EditorProps {
 	initialContent?: string
 	initialTags?: string
 	postId?: number | null
-	onSave: (data: { title: string; content: string; tags: string[]; postId?: number | null }) => void
+	onSave?: (data: { title: string; content: string; tags: string[]; postId?: number | null; thumb_url: string }) => void
+}
+
+interface ArticleData {
+	title: string
+	content: string
+	tags: string[]
+	thumb_url: string
+	postId?: number | null
 }
 
 const Editor: React.FC<EditorProps> = ({
@@ -26,11 +33,10 @@ const Editor: React.FC<EditorProps> = ({
 	postId,
 	onSave
 }) => {
-	console.log('postId: ', postId)
-
 	const [title, setTitle] = useState<string>(initialTitle)
 	const [content, setContent] = useState<string>(initialContent)
 	const [tags, setTags] = useState<string>(initialTags)
+	const [thumbUrl, setThumbUrl] = useState<string>('')
 
 	const author = 'dondonbe'
 	const [showPreview, setShowPreview] = useState(false)
@@ -50,35 +56,42 @@ const Editor: React.FC<EditorProps> = ({
 		setSelectedFiles(files)
 	}
 
-	const handleNewSave = async () => {
-		console.log('handleNewSave called')
-		const tagsArray = tags.split(',').map((tag) => tag.trim())
-		console.log('tagsArray:', tagsArray)
+	const handleNewSave = async (articleData: ArticleData) => {
+		const { title, content, tags, thumb_url } = articleData
 		try {
-			const newArticle = await saveArticle(title, content, tagsArray, author)
-			console.log('Article saved:', newArticle)
+			const newArticle = await saveArticle(title, content, tags, author, thumb_url)
+			console.log('記事が保存されました:', newArticle)
 			showToast('記事がデータベースに保存されました')
 		} catch (error) {
-			console.error('Error in handleNewSave:', error)
+			console.error('handleNewSave中にエラーが発生しました:', error)
 			showToast('記事の保存に失敗しました')
 		}
 	}
 
-	const handleYouTubeEmbedSubmit = async (url: string) => {
-		console.log('YouTube URL submitted:', url)
-		const thumbnailUrl = await useThumbnailUpload(url)
+	const handleUpdateSave = async (articleData: ArticleData) => {
+		const { title, content, tags, thumb_url, postId } = articleData
+		if (postId === null || postId === undefined) return
+		try {
+			const updatedArticle = await saveUpdateArticle(title, content, tags, author, thumb_url, postId)
+			console.log('記事が更新されました:', updatedArticle)
+			showToast('記事がデータベースに更新されました')
+		} catch (error) {
+			console.error('handleUpdateSave中にエラーが発生しました:', error)
+			showToast('記事の更新に失敗しました')
+		}
 	}
 
 	const handleButtonClick = async () => {
-		console.log('handleButtonClick called')
 		const tagsArray = tags
 			.split(',')
 			.map((tag) => tag.trim())
 			.filter((tag) => tag !== '')
-		console.log('tagsArray on button click:', tagsArray)
-		if (onSave) {
+
+		const articleData: ArticleData = { title, content, tags: tagsArray, thumb_url: thumbUrl, postId }
+
+		if (postId && onSave) {
 			try {
-				onSave({ title, content, tags: tagsArray, postId })
+				onSave(articleData)
 				console.log('Article saved via onSave callback')
 				showToast('記事が正常に保存されました。')
 			} catch (error) {
@@ -86,7 +99,7 @@ const Editor: React.FC<EditorProps> = ({
 				showToast('記事の保存中にエラーが発生しました。')
 			}
 		} else {
-			await handleNewSave()
+			await handleNewSave(articleData)
 		}
 	}
 
@@ -113,9 +126,15 @@ const Editor: React.FC<EditorProps> = ({
 			}
 
 			const data = await response.json()
-			const uploadedThumbnailUrl = data.thumbnailUrl
+			console.log('APIレスポンス:', data) // レスポンスをログに出力
 
-			console.log('アップロードしたURL:', uploadedThumbnailUrl)
+			if (!data.urls || !data.urls[0]) {
+				showToast('No URL returned from the server.')
+				return
+			}
+
+			const uploadedThumbnailUrl = data.urls[0]
+			console.log('アップロードされたURL:', uploadedThumbnailUrl)
 
 			setContent((prev) => `${prev}\n![${uploadedThumbnailUrl}](${uploadedThumbnailUrl})`)
 			showToast('画像アップロード成功')
@@ -169,13 +188,13 @@ const Editor: React.FC<EditorProps> = ({
 					onUploadFailure={(error) => showToast(`ファイルアップロード失敗: ${error}`)}
 				/>
 
-				{postId && (
-					<ThumbnailUploader
-						postId={postId}
-						onUploadSuccess={() => showToast('サムネイルSQLが正常にアップデートされました')}
-						onUploadFailure={(error) => showToast(`サムネイルSQLアップデート失敗: ${error}`)}
-					/>
-				)}
+				<ThumbnailUploader
+					onUploadSuccess={(url) => {
+						setThumbUrl(url)
+						showToast('サムネイルが正常にアップロードされました')
+					}}
+					onUploadFailure={(error) => showToast(`サムネイルアップロード失敗: ${error}`)}
+				/>
 
 				<button onClick={handleButtonClick} className="bg-blue-500 text-white p-2 rounded mt-4">
 					保存
