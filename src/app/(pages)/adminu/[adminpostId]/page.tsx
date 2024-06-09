@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import Editor from '../newpost/page'
+import Editor from '@/app/components/Editor'
 import { NextPage } from 'next'
 import { postFromPrisma } from '@/app/actions/EditorFromPrismaPost/EditorFromPrismaPost'
 import { saveUpdateArticle } from '@/app/actions/saveBlogPost/saveBlogPost'
