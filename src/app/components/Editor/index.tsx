@@ -1,4 +1,3 @@
-// Editor.tsx
 'use client'
 
 import { useState, ChangeEvent } from 'react'
