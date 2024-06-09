@@ -37,7 +37,7 @@ const PostsGrid: React.FC<PostsGridProps> = async ({ displayMode }) => {
 		<div className={`grid ${gridClass} gap-8 p-8`}>
 			{postLists.map((post) => (
 				<div key={post.id} className="bg-gray-800 rounded-lg shadow-md overflow-hidden transition">
-					<Link href={`/post/${post.id}`}>
+					<Link href={`/blogpost/${post.id}`}>
 						<div className="relative">
 							<img src={post.thumb_url} alt={post.title} className="w-full object-cover" />
 							<div className="absolute inset-0"></div>

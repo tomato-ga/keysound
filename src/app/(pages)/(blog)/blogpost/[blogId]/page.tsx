@@ -1,23 +1,45 @@
-import { GetServerSideProps } from 'next'
+// /Users/ore/Documents/GitHub/keysound/src/app/(pages)/(blog)/blogpost/[blogId]/page.tsx
+
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 import MarkdownContent from '@/app/components/Markdowncontent'
+import { prisma } from '@/app/lib/prisma'
 
-interface PostContent {
-	id: string
-	title: string
-	content: string
-	created_at: string
-	tags: string[]
+interface BlogPostProps {
+	params: { blogId: string }
 }
 
-interface PostPageProps {
-	post: PostContent
+const fetchPost = async (blogId: string) => {
+	const postId = Number(blogId) // stringからnumberに変換
+
+	if (isNaN(postId)) {
+		throw new Error('Invalid post ID')
+	}
+
+	const post = await prisma.blog.findUnique({
+		where: { id: postId }
+	})
+
+	if (!post) {
+		throw new Error('Post not found')
+	}
+
+	return {
+		id: post.id,
+		title: post.title,
+		content: post.content,
+		created_at: post.createdAt.toISOString(),
+		tags: post.tags
+	}
 }
 
-const Post: React.FC<PostPageProps> = ({ post }) => {
+const BlogPost: React.FC<BlogPostProps> = async ({ params }) => {
+	console.log('post:', params.blogId)
+
+	const post = await fetchPost(params.blogId)
+
 	const formatDate = (dateString: string) => {
 		const date = new Date(dateString)
 		const year = date.getFullYear()
@@ -49,7 +71,7 @@ const Post: React.FC<PostPageProps> = ({ post }) => {
 				</div>
 
 				{/* インデックスの最新情報 */}
-				<h2 className="text-gray-500 mt-3 mb-3 text-center text-2xl font-bold">最新セール情報</h2>
+				{/* <h2 className="text-gray-500 mt-3 mb-3 text-center text-2xl font-bold">最新セール情報</h2> */}
 				<div className="h-0.5 bg-gradient-to-r from-[#d299c2] to-[#fef9d7] ml-10 mr-10"></div>
 				<div className="flex flex-col md:flex-row bg-white p-4">
 					{/* <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8">
@@ -77,6 +99,4 @@ const Post: React.FC<PostPageProps> = ({ post }) => {
 	)
 }
 
-
-
-export default Post
+export default BlogPost
