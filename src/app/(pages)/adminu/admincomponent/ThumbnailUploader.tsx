@@ -39,8 +39,7 @@ const ThumbnailUploader: React.FC<ThumbnailUploaderProps> = ({ onUploadSuccess, 
 		formData.append('files', selectedFile)
 
 		try {
-			// 画像のアップロード
-			const response = await fetch('/api/r2blogimages', {
+			const response = await fetch('/api/r2blogimage', {
 				method: 'POST',
 				body: formData
 			})
@@ -53,7 +52,7 @@ const ThumbnailUploader: React.FC<ThumbnailUploaderProps> = ({ onUploadSuccess, 
 			}
 
 			const data = await response.json()
-			console.log('Server response:', data) // レスポンスのデバッグログを追加
+			console.log('Server response:', data)
 
 			if (!data.urls || !data.urls[0]) {
 				onUploadFailure('No URL returned from the server.')

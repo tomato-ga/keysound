@@ -58,8 +58,10 @@ export default async function Home() {
 
 	return (
 		<div className="home">
+				<PostsGrid displayMode="grid" />
+
 			<div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4">
-				{/* <PostsGrid postLists={blogPosts} displayMode='grid' /> */}
+				{/* <PostsGrid displayMode='grid' /> */}
 				<TopPostsCard posts={posts} />
 			</div>
 		</div>
