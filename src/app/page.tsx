@@ -4,8 +4,10 @@ import { prisma } from './lib/prisma'
 import { Post } from '../../types'
 
 import TopPostsCard from './components/TopPostCard'
+import PostsGrid from './components/BlogPostGrid'
 import { getScreenName } from './actions/getScreenName/getScreenName'
 import { Metadata } from 'next'
+import getBlogPosts from './actions/getBlogPost/getBlogPost'
 
 export const metadata: Metadata = {
 	title: 'keyboard sound',
@@ -52,9 +54,12 @@ export default async function Home() {
 		}
 	})
 
+	const blogPosts = await getBlogPosts()
+
 	return (
 		<div className="home">
 			<div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-4">
+				{/* <PostsGrid postLists={blogPosts} displayMode='grid' /> */}
 				<TopPostsCard posts={posts} />
 			</div>
 		</div>

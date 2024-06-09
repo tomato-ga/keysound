@@ -1,12 +1,11 @@
 import React, { useState, DragEvent } from 'react'
 
 interface ThumbnailUploaderProps {
-	postId: number
-	onUploadSuccess: () => void
+	onUploadSuccess: (url: string) => void
 	onUploadFailure: (error: string) => void
 }
 
-const ThumbnailUploader: React.FC<ThumbnailUploaderProps> = ({ postId, onUploadSuccess, onUploadFailure }) => {
+const ThumbnailUploader: React.FC<ThumbnailUploaderProps> = ({ onUploadSuccess, onUploadFailure }) => {
 	const [dragOver, setDragOver] = useState<boolean>(false)
 	const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
@@ -40,45 +39,40 @@ const ThumbnailUploader: React.FC<ThumbnailUploaderProps> = ({ postId, onUploadS
 		formData.append('files', selectedFile)
 
 		try {
-			const response = await fetch('/api/admin_s3upload', {
+			// 画像のアップロード
+			const response = await fetch('/api/r2blogimages', {
 				method: 'POST',
-				body: formData // 更新部分
+				body: formData
 			})
+
+			if (!response.ok) {
+				const errorData = await response.json()
+				console.error('Image upload failed:', errorData.error)
+				onUploadFailure(`Image upload failed: ${errorData.error}`)
+				return
+			}
+
 			const data = await response.json()
+			console.log('Server response:', data) // レスポンスのデバッグログを追加
 
-			const handleThumbnailSQLUpdate = async (thumbUrl: string) => {
-				try {
-					const response = await fetch('/api/admin_savethumburl', {
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ thumbUrl, postId })
-					})
-
-					await response.json()
-					onUploadSuccess()
-				} catch (err) {
-					console.log(err)
-					onUploadFailure(err instanceof Error ? err.message : String(err))
-				}
+			if (!data.urls || !data.urls[0]) {
+				onUploadFailure('No URL returned from the server.')
+				return
 			}
 
-			if (response.ok) {
-				const thumbUrl = data.urls[0]
-				console.log(thumbUrl) // returnでAWS S3のアップロードURLが返ってきている
-				handleThumbnailSQLUpdate(thumbUrl)
-			} else {
-				console.error('Image upload failed:', data.error)
-				alert(`Image upload failed: ${data.error}`) // ユーザーにエラーメッセージを表示
-			}
+			const thumbUrl = data.urls[0]
+			console.log('アップロードされたサムネイルURL:', thumbUrl)
+
+			onUploadSuccess(thumbUrl)
 		} catch (error) {
 			console.error('Error uploading image:', error)
-			alert('An error occurred while uploading the image.') // ユーザーにエラーメッセージを表示
+			onUploadFailure('An error occurred while uploading the image.')
 		}
 	}
 
 	return (
 		<div
-			className={`drop-area ${dragOver ? 'drag-over' : ''}`}
+			className={`drop-area ${dragOver ? 'drag-over' : ''} m-4`}
 			onDragOver={handleDragOver}
 			onDragLeave={handleDragLeave}
 			onDrop={handleDrop}

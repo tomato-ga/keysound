@@ -141,3 +141,4 @@ export interface PostHeaderProps {
 export interface PostPartsProps {
 	part: PostWithDetails['part']
 }
+

@@ -1,3 +1,5 @@
+// /Users/ore/Documents/GitHub/keysound/src/app/api/r2blogthumb/route.ts
+
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { NextRequest, NextResponse } from 'next/server'
 import sharp from 'sharp'
@@ -58,10 +60,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 		const isWebp = fileType === 'image/webp'
 		const uploadedThumbnailUrl = await uploadImageToR2(buffer, isWebp)
-		console.log('Successfully uploaded thumbnail:', uploadedThumbnailUrl)
+		console.log('Successfully uploaded:', uploadedThumbnailUrl)
 
-		return NextResponse.json({ thumbnailUrl: uploadedThumbnailUrl }, { status: 200 })
+		return NextResponse.json({ urls: [uploadedThumbnailUrl] }, { status: 200 })
 	} catch (error: any) {
-		return createErrorResponse(`Failed to upload thumbnail: ${error.message}`, 500)
+		return createErrorResponse(`Failed to upload: ${error.message}`, 500)
 	}
 }

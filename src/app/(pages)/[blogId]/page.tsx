@@ -77,58 +77,6 @@ const Post: React.FC<PostPageProps> = ({ post }) => {
 	)
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-	// context.paramsがundefinedでないことを確認し、idをstring型で取得します。
-	const id = context.params?.id
 
-	// idが存在しない、または配列の場合はエラーを返します。
-	if (!id || Array.isArray(id)) {
-		return {
-			props: {
-				error: 'Invalid id'
-			}
-		}
-	}
-
-	const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-	// 実際の環境では、外部APIを呼び出すURLや環境変数を適切に設定してください。
-	const res = await fetch(`${baseUrl}/api/admin_getpostcontent?id=${id}`)
-	const data = await res.json()
-
-	// 最新のセール情報
-	const result = await dynamoQueryIndex()
-	// resultがQueryCommandOutput型であることを確認し、さらにItemsプロパティを持っているかチェック
-	if ('Items' in result && Array.isArray(result.Items)) {
-		const items: SaleItem[] = result.Items.map((item) => ({
-			categoryName: item.categoryName?.S ?? '',
-			asin: item.asin?.S ?? '',
-			llmflag: item.llmflag?.S ?? '',
-			time: item.time?.S ?? '',
-			descripText: item.descripText?.S ?? '',
-			dealUrlExists: item.dealUrlExists?.S ?? '',
-			datePriceOff: item['date#priceOff']?.S ?? '',
-			dealUrl: item.dealUrl?.S ?? '',
-			date: item.date?.S ?? '',
-			imageUrl: item.imageUrl?.S ?? '',
-			llmtitle: item.llmtitle?.S ?? '',
-			dealName: item.dealName?.S ?? '',
-			dateAsin: item['date#asin']?.S ?? '',
-			affUrl: item.affUrl?.S ?? '',
-			priceOff: item.priceOff?.S ?? '',
-			llmcontent: item.llmcontent?.S ?? '',
-			price: item.price?.S ?? '',
-			dateDealUrl: item['date#dealUrl']?.S ?? '',
-			productName: item.productName?.S ?? '',
-			type: item.type?.S ?? ''
-		}))
-
-		// APIから取得したデータをpropsとしてページに渡す
-		return { props: { post: data.data, latestsale: items } }
-	} else {
-		// Itemsプロパティがない場合のエラーハンドリング
-		console.error("The result doesn't have an Items property.")
-		return { props: { error: 'Failed to fetch latest sales information.' } }
-	}
-}
 
 export default Post

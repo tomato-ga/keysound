@@ -94,6 +94,7 @@ model Blog {
   title     String
   content   String
   tags      String // カンマ区切りのタグを保存
+  thumb_url String
   author    String
   postId    String? // オプションのフィールド
   createdAt DateTime @default(now())
