@@ -63,6 +63,7 @@ const PostEditor: NextPage<{ params: { adminpostId: string } }> = ({ params }) =
 		return <div>Loading...</div>
 	}
 
+	// TODO 再編集するときに、サムネイル画像URLが読み込まれていないのを修正する
 	return (
 		<>
 			{postDBdata ? (
