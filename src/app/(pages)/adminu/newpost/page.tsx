@@ -9,9 +9,9 @@ const NewPostPage: React.FC = () => {
 	}
 
 	const editorProps: EditorProps = {
-		initialTitle: 'Sample Title',
-		initialContent: 'Sample Content',
-		initialTags: 'tag1,tag2',
+		initialTitle: '',
+		initialContent: '',
+		initialTags: '',
 		postId: null,
 		onSave: handleSave
 	}
