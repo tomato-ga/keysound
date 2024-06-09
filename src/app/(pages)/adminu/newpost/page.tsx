@@ -4,6 +4,7 @@ import { useState, ChangeEvent } from 'react'
 import AdminLayout from '../postlists/layout'
 import FileUploadArea from '../admincomponent/drag'
 import ThumbnailUploader from '../admincomponent/ThumbnailUploader'
+import ImagePreview from '../admincomponent/ImagePreview'
 import { saveArticle, saveUpdateArticle } from '@/app/actions/saveBlogPost/saveBlogPost'
 
 interface UploadResponse {
@@ -37,6 +38,7 @@ const Editor: React.FC<EditorProps> = ({
 	const [content, setContent] = useState<string>(initialContent)
 	const [tags, setTags] = useState<string>(initialTags)
 	const [thumbUrl, setThumbUrl] = useState<string>('')
+	const [imageUrls, setImageUrls] = useState<string[]>([])
 
 	const author = 'dondonbe'
 	const [showPreview, setShowPreview] = useState(false)
@@ -113,7 +115,7 @@ const Editor: React.FC<EditorProps> = ({
 		files.forEach((file) => formData.append('files', file))
 
 		try {
-			const response = await fetch('/api/r2blogthumb', {
+			const response = await fetch('/api/r2blogimage', {
 				method: 'POST',
 				body: formData
 			})
@@ -133,15 +135,31 @@ const Editor: React.FC<EditorProps> = ({
 				return
 			}
 
-			const uploadedThumbnailUrl = data.urls[0]
-			console.log('アップロードされたURL:', uploadedThumbnailUrl)
+			const uploadedImageUrl = data.urls[0]
+			console.log('アップロードされたURL:', uploadedImageUrl)
 
-			setContent((prev) => `${prev}\n![${uploadedThumbnailUrl}](${uploadedThumbnailUrl})`)
+			setImageUrls((prev) => [...prev, uploadedImageUrl])
+			setContent((prev) => `${prev}\n![${uploadedImageUrl}](${uploadedImageUrl})`)
 			showToast('画像アップロード成功')
 		} catch (error) {
 			console.error('アップロード中にエラーが発生しました:', error)
 			showToast('画像アップロード中にエラーが発生しました')
 		}
+	}
+
+	const deleteImage = (url: string) => {
+		if (url === thumbUrl) {
+			setThumbUrl('')
+		} else {
+			setImageUrls((prev) => prev.filter((imageUrl) => imageUrl !== url))
+			setContent((prev) =>
+				prev
+					.split('\n')
+					.filter((line) => !line.includes(url))
+					.join('\n')
+			)
+		}
+		showToast('画像が削除されました')
 	}
 
 	const togglePreview = () => {
@@ -195,6 +213,8 @@ const Editor: React.FC<EditorProps> = ({
 					}}
 					onUploadFailure={(error) => showToast(`サムネイルアップロード失敗: ${error}`)}
 				/>
+
+				<ImagePreview imageUrls={imageUrls} thumbUrl={thumbUrl} onDelete={deleteImage} />
 
 				<button onClick={handleButtonClick} className="bg-blue-500 text-white p-2 rounded mt-4">
 					保存

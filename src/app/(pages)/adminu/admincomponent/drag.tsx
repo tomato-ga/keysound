@@ -46,7 +46,7 @@ const FileUploadArea: React.FC<FileUploadAreaProps> = ({
 
 	return (
 		<div
-			className={`m-4 drop-area ${dragOver ? 'drag-over' : ''}`}
+			className={`drop-area ${dragOver ? 'drag-over' : ''}`}
 			onDragOver={handleDragOver}
 			onDragLeave={handleDragLeave}
 			onDrop={handleDrop}

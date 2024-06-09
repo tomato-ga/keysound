@@ -1,5 +1,3 @@
-// /Users/ore/Documents/GitHub/keysound/src/app/api/r2blogthumb/route.ts
-
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { NextRequest, NextResponse } from 'next/server'
 import sharp from 'sharp'
