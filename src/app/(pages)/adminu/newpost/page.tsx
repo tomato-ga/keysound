@@ -16,15 +16,15 @@ interface EditorProps {
 	initialContent?: string
 	initialTags?: string
 	postId?: number | null
-	// onSave: (data: { title: string; content: string; tags: string[]; postId?: number | null }) => void
+	onSave: (data: { title: string; content: string; tags: string[]; postId?: number | null }) => void
 }
 
 const Editor: React.FC<EditorProps> = ({
 	initialTitle = '',
 	initialContent = '',
 	initialTags = '',
-	postId
-	// onSave
+	postId,
+	onSave
 }) => {
 	console.log('postId: ', postId)
 
@@ -64,68 +64,66 @@ const Editor: React.FC<EditorProps> = ({
 		}
 	}
 
-
 	const handleYouTubeEmbedSubmit = async (url: string) => {
 		console.log('YouTube URL submitted:', url)
 		const thumbnailUrl = await useThumbnailUpload(url)
-
 	}
 
-	// const handleButtonClick = async () => {
-	// 	console.log('handleButtonClick called')
-	// 	const tagsArray = tags
-	// 		.split(',')
-	// 		.map((tag) => tag.trim())
-	// 		.filter((tag) => tag !== '')
-	// 	console.log('tagsArray on button click:', tagsArray)
-	// 	if (onSave) {
-	// 		try {
-	// 			onSave({ title, content, tags: tagsArray, postId })
-	// 			console.log('Article saved via onSave callback')
-	// 			showToast('記事が正常に保存されました。')
-	// 		} catch (error) {
-	// 			console.error('Error in handleButtonClick with onSave:', error)
-	// 			showToast('記事の保存中にエラーが発生しました。')
-	// 		}
-	// 	} else {
-	// 		await handleNewSave()
-	// 	}
-	// }
+	const handleButtonClick = async () => {
+		console.log('handleButtonClick called')
+		const tagsArray = tags
+			.split(',')
+			.map((tag) => tag.trim())
+			.filter((tag) => tag !== '')
+		console.log('tagsArray on button click:', tagsArray)
+		if (onSave) {
+			try {
+				onSave({ title, content, tags: tagsArray, postId })
+				console.log('Article saved via onSave callback')
+				showToast('記事が正常に保存されました。')
+			} catch (error) {
+				console.error('Error in handleButtonClick with onSave:', error)
+				showToast('記事の保存中にエラーが発生しました。')
+			}
+		} else {
+			await handleNewSave()
+		}
+	}
 
-	// TODO R2にバケット作って保存する
-	// const uploadImages = async (files: File[]) => {
-	// 	const formData = new FormData()
-	// 	files.forEach((file) => formData.append('files', file))
+	const uploadImages = async (files: File[]) => {
+		if (files.length === 0) {
+			showToast('アップロードするファイルが選択されていません')
+			return
+		}
 
-	// 	try {
-	// 		const response = await fetch('/api/admin_s3upload', {
-	// 			method: 'POST',
-	// 			body: formData
-	// 		})
+		const formData = new FormData()
+		files.forEach((file) => formData.append('files', file))
 
-	// 		const data = await response.json()
-	// 		console.log('アップロードしたdata構造確認', data.urls)
+		try {
+			const response = await fetch('/api/r2blogthumb', {
+				method: 'POST',
+				body: formData
+			})
 
-	// 		if (!response.ok) {
-	// 			const errorMessage = data.error || 'アップロード失敗'
-	// 			console.error('アップロードエラー:', errorMessage)
-	// 			showToast(`画像アップロードエラー: ${errorMessage}`)
-	// 			return
-	// 		}
+			if (!response.ok) {
+				const errorMessage = `アップロード失敗: ${response.statusText}`
+				console.error('アップロードエラー:', errorMessage)
+				showToast(`画像アップロードエラー: ${errorMessage}`)
+				return
+			}
 
-	// 		let markdownImages = data.urls
-	// 			.map((url: string) => {
-	// 				const fileName = url.split('/').pop()
-	// 				return `![${fileName}](${url})`
-	// 			})
-	// 			.join('\n')
-	// 		setContent((prev) => `${prev}\n${markdownImages}`)
-	// 		showToast('画像アップロード成功')
-	// 	} catch (error) {
-	// 		console.error('アップロード中にエラーが発生しました:', error)
-	// 		showToast('画像アップロード中にエラーが発生しました')
-	// 	}
-	// }
+			const data = await response.json()
+			const uploadedThumbnailUrl = data.thumbnailUrl
+
+			console.log('アップロードしたURL:', uploadedThumbnailUrl)
+
+			setContent((prev) => `${prev}\n![${uploadedThumbnailUrl}](${uploadedThumbnailUrl})`)
+			showToast('画像アップロード成功')
+		} catch (error) {
+			console.error('アップロード中にエラーが発生しました:', error)
+			showToast('画像アップロード中にエラーが発生しました')
+		}
+	}
 
 	const togglePreview = () => {
 		setShowPreview(!showPreview)
@@ -166,7 +164,7 @@ const Editor: React.FC<EditorProps> = ({
 
 				<FileUploadArea
 					onFileSelected={setSelectedFiles}
-					// onUpload={uploadImages}
+					onUpload={uploadImages}
 					onUploadSuccess={() => showToast('ファイルが正常にアップロードされました')}
 					onUploadFailure={(error) => showToast(`ファイルアップロード失敗: ${error}`)}
 				/>
@@ -179,9 +177,9 @@ const Editor: React.FC<EditorProps> = ({
 					/>
 				)}
 
-				{/* <button onClick={handleButtonClick} className="bg-blue-500 text-white p-2 rounded mt-4">
+				<button onClick={handleButtonClick} className="bg-blue-500 text-white p-2 rounded mt-4">
 					保存
-				</button> */}
+				</button>
 				{toast.show && <span className="ml-4 text-green-600">{toast.message}</span>}
 
 				{toast.show && (
