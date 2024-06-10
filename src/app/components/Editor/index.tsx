@@ -20,13 +20,14 @@ const Editor: React.FC<EditorProps> = ({
 	initialTitle = '',
 	initialContent = '',
 	initialTags = '',
+	initialThumbUrl = '',
 	postId,
 	onSave
 }: EditorProps) => {
 	const [title, setTitle] = useState<string>(initialTitle)
 	const [content, setContent] = useState<string>(initialContent)
 	const [tags, setTags] = useState<string>(initialTags)
-	const [thumbUrl, setThumbUrl] = useState<string>('')
+	const [thumbUrl, setThumbUrl] = useState<string>(initialThumbUrl || '')
 	const [imageUrls, setImageUrls] = useState<string[]>([])
 
 	const author = 'dondonbe'
