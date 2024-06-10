@@ -88,62 +88,76 @@
   background-color: #f0f0f0;
 }
 
-.markdown ol {
-  @apply list-decimal pl-10;
-}
-.markdown ul {
-  @apply list-disc pl-10;
+/* Markdown 全体のスタイル */
+.markdown {
+  color: #666; /* text-gray-800 ではなく具体的な色値で表現 */
 }
 
-.markdown  {
-  @apply text-gray-800;
+/* リスト */
+.markdown ol {
+  list-style-type: decimal; /* @apply list-decimal ではなく具体的な値を使用 */
+  padding-left: 10px; /* @apply pl-10 ではなく具体的な値を使用 */
+}
+
+.markdown ul {
+  list-style-type: disc; /* @apply list-disc ではなく具体的な値を使用 */
+  padding-left: 10px; /* @apply pl-10 ではなく具体的な値を使用 */
+}
+
+/* 見出し */
+.markdown h2 {
+  font-size: 2rem; /* sm, md, lg のような breakpoints を使用 */
+  font-weight: bold;
+  margin: 2rem 0; /* 統一感のあるマージン */
 }
 
 .markdown h3 {
-  @apply text-lg border-b border-black my-5;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-bottom: 1px solid #000;
+  margin: 1.5rem 0;
 }
 
-.markdown h2 {
-  @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-4 mb-4;
-}
-
-
+/* リンク */
 .markdown a {
-  @apply text-blue-600 dark:text-blue-500 hover:underline;
+  color: #2980b9; /* text-blue-600 ではなく具体的な色値で表現 */
+  text-decoration: none;
+  transition: color 0.2s ease; /* ホバー効果をスムーズに */
 }
 
+.markdown a:hover {
+  text-decoration: underline;
+  color: #196095; /* ホバー時の色 */
+}
+
+/* 段落 */
 .markdown p {
   font-size: 16px;
-  font-weight: 400;
-  letter-spacing: .8px;
+  font-weight: normal;
+  letter-spacing: 0.8px;
   font-feature-settings: "palt";
   line-height: 1.6;
-  margin: 2px 0 ;
-  margin-inline: auto;
+  margin-bottom: 2px; /* 統一感のあるマージン */
 }
 
+/* Amazon ボタン */
 .markdown-amazon-button-wrapper {
   display: block;
   text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 10px;
-  margin-bottom: 0;
+  margin: 10px auto 0;
 }
 
 .markdown-amazon-button {
-  display: inline-block;
   background-color: #f0c14b;
-  color: #615353 !important;
+  color: #615353;
   padding: 8px 12px;
   font-size: 20px;
-  text-align: center;
+  font-weight: bold;
   text-decoration: none;
   border-radius: 4px;
-  font-weight: bold;
+  cursor: pointer; /* ボタンの視覚的なヒント */
 }
 
-.markdown-amazon-button a {
-  color: #615353; /* 明示的に<a>タグに色を適用 */
-  text-decoration: none; /* リンクの下線を削除（必要に応じて） */
+.markdown-amazon-button:hover {
+  background-color: #e9b950; /* ホバー時の色 */
 }

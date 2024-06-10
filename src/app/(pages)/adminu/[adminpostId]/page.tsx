@@ -15,6 +15,7 @@ interface PostData {
 	postId: string | null
 	createdAt: Date
 	updatedAt: Date
+	thumb_url: string | null
 }
 
 async function fetchPostData(postId: number): Promise<PostData | null> {
@@ -65,7 +66,6 @@ const PostEditor: NextPage<{ params: { adminpostId: string } }> = ({ params }) =
 		return <div>Loading...</div>
 	}
 
-	// TODO 再編集するときに、サムネイル画像URLが読み込まれていないのを修正する
 	return (
 		<>
 			{postDBdata ? (
@@ -73,6 +73,7 @@ const PostEditor: NextPage<{ params: { adminpostId: string } }> = ({ params }) =
 					initialTitle={postDBdata.title}
 					initialContent={postDBdata.content}
 					initialTags={postDBdata.tags}
+					initialThumbUrl={postDBdata.thumb_url}
 					postId={postDBdata.id}
 					onSave={handleSave}
 				/>
