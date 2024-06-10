@@ -88,3 +88,15 @@ model Comment {
   children  Comment[] @relation("CommentToComment")
   parentId  String?
 }
+
+model Blog {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  tags      String // カンマ区切りのタグを保存
+  thumb_url String?
+  author    String
+  postId    String? // オプションのフィールド
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
