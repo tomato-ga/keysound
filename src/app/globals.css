@@ -104,11 +104,22 @@
   padding-left: 10px; /* @apply pl-10 ではなく具体的な値を使用 */
 }
 
+.markdown li {
+  margin-left: 14px;
+}
+
 /* 見出し */
+
 .markdown h2 {
-  font-size: 2rem; /* sm, md, lg のような breakpoints を使用 */
+  font-size: 2rem;
   font-weight: bold;
-  margin: 2rem 0; /* 統一感のあるマージン */
+  margin: 2rem 0;
+  background: linear-gradient(to right, #2c2c2c, #6e6e6e); /* 黒からグレーへ */
+  -webkit-background-clip: text; /* Chrome, Safari 3 */
+  -moz-background-clip: text; /* Firefox */
+  background-clip: text; /* 標準プロパティ */
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
 }
 
 .markdown h3 {
@@ -116,7 +127,27 @@
   font-weight: bold;
   border-bottom: 1px solid #000;
   margin: 1.5rem 0;
+  background: linear-gradient(to right, #3b3b3b, #8c8c8c); /* ダークグレーからライトグレーへ */
+  -webkit-background-clip: text; /* Chrome, Safari 3 */
+  -moz-background-clip: text; /* Firefox */
+  background-clip: text; /* 標準プロパティ */
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
 }
+
+
+/* .markdown h2 { */
+  /* font-size: 2rem; sm, md, lg のような breakpoints を使用 */
+  /* font-weight: bold; */
+  /* margin: 2rem 0; 統一感のあるマージン */
+/* } */
+
+/* .markdown h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-bottom: 1px solid #000;
+  margin: 1.5rem 0;
+} */
 
 /* リンク */
 .markdown a {
