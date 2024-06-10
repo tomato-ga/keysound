@@ -42,6 +42,8 @@ const PostEditor: NextPage<{ params: { adminpostId: string } }> = ({ params }) =
 		getPostData()
 	}, [postId])
 
+	console.log(postDBdata)
+
 	const handleSave = async (data: {
 		title: string
 		content: string
