@@ -59,20 +59,20 @@ const BlogPost: React.FC<BlogPostProps> = async ({ params }) => {
 
 	return (
 		<>
-			<div className="max-w-screen-md mx-auto">
+			<div className="mx-auto max-w-screen-lg">
 				<div className="flex justify-center items-center m-6 text-center">
-					<h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 inline-block text-transparent bg-clip-text border-solid border-b border-gray-200 pb-4">
+					<h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-700 to-slate-500  inline-block text-transparent bg-clip-text border-solid border-b border-gray-200 pb-4">
 						{post.title}
 					</h1>
 				</div>
 
-				<div className="m-6">
+				<div className="mx-auto max-w-screen-lg">
 					<MarkdownContent markdownString={post.content} />
 				</div>
 
 				{/* <h2 className="text-gray-500 mt-3 mb-3 text-center text-2xl font-bold">最新セール情報</h2> */}
-				<div className="h-0.5 bg-gradient-to-r from-[#d299c2] to-[#fef9d7] ml-10 mr-10"></div>
-				<div className="flex flex-col md:flex-row bg-white p-4"></div>
+				{/* <div className="h-0.5 bg-gradient-to-r from-[#d299c2] to-[#fef9d7] ml-10 mr-10"></div> */}
+				{/* <div className="flex flex-col md:flex-row bg-white p-4"></div> */}
 			</div>
 		</>
 	)
