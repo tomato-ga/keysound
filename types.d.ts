@@ -141,3 +141,13 @@ export interface PostHeaderProps {
 export interface PostPartsProps {
 	part: PostWithDetails['part']
 }
+
+// types.ts
+export interface EditorProps {
+	initialTitle?: string
+	initialContent?: string
+	initialTags?: string
+	initialThumbUrl?: string | null | undefined
+	postId?: number | null
+	onSave?: (data: { title: string; content: string; tags: string[]; postId?: number | null; thumb_url: string }) => void
+}

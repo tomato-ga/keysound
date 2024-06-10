@@ -74,3 +74,121 @@
       @apply bg-background text-foreground;
     }
   }
+
+
+  /* styles/global.css に追加 */
+.drop-area {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.drag-over {
+  background-color: #f0f0f0;
+}
+
+/* Markdown 全体のスタイル */
+.markdown {
+  color: #666; /* text-gray-800 ではなく具体的な色値で表現 */
+}
+
+/* リスト */
+.markdown ol {
+  list-style-type: decimal; /* @apply list-decimal ではなく具体的な値を使用 */
+  padding-left: 10px; /* @apply pl-10 ではなく具体的な値を使用 */
+}
+
+.markdown ul {
+  list-style-type: disc; /* @apply list-disc ではなく具体的な値を使用 */
+  padding-left: 10px; /* @apply pl-10 ではなく具体的な値を使用 */
+}
+
+.markdown li {
+  margin-left: 14px;
+}
+
+/* 見出し */
+
+.markdown h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 2rem 0;
+  background: linear-gradient(to right, #2c2c2c, #6e6e6e); /* 黒からグレーへ */
+  -webkit-background-clip: text; /* Chrome, Safari 3 */
+  -moz-background-clip: text; /* Firefox */
+  background-clip: text; /* 標準プロパティ */
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+
+.markdown h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-bottom: 1px solid #000;
+  margin: 1.5rem 0;
+  background: linear-gradient(to right, #3b3b3b, #8c8c8c); /* ダークグレーからライトグレーへ */
+  -webkit-background-clip: text; /* Chrome, Safari 3 */
+  -moz-background-clip: text; /* Firefox */
+  background-clip: text; /* 標準プロパティ */
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+}
+
+
+/* .markdown h2 { */
+  /* font-size: 2rem; sm, md, lg のような breakpoints を使用 */
+  /* font-weight: bold; */
+  /* margin: 2rem 0; 統一感のあるマージン */
+/* } */
+
+/* .markdown h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-bottom: 1px solid #000;
+  margin: 1.5rem 0;
+} */
+
+/* リンク */
+.markdown a {
+  color: #2980b9; /* text-blue-600 ではなく具体的な色値で表現 */
+  text-decoration: none;
+  transition: color 0.2s ease; /* ホバー効果をスムーズに */
+}
+
+.markdown a:hover {
+  text-decoration: underline;
+  color: #196095; /* ホバー時の色 */
+}
+
+/* 段落 */
+.markdown p {
+  font-size: 16px;
+  font-weight: normal;
+  letter-spacing: 0.8px;
+  font-feature-settings: "palt";
+  line-height: 1.6;
+  margin-bottom: 2px; /* 統一感のあるマージン */
+}
+
+/* Amazon ボタン */
+.markdown-amazon-button-wrapper {
+  display: block;
+  text-align: center;
+  margin: 10px auto 0;
+}
+
+.markdown-amazon-button {
+  background-color: #f0c14b;
+  color: #615353;
+  padding: 8px 12px;
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 4px;
+  cursor: pointer; /* ボタンの視覚的なヒント */
+}
+
+.markdown-amazon-button:hover {
+  background-color: #e9b950; /* ホバー時の色 */
+}

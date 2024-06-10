@@ -14,53 +14,7 @@ const s3Client = new S3Client({
 
 console.log('R2_THUMB_BUCKET_NAME:', process.env.R2_THUMB_BUCKET_NAME)
 
-const CUSTOM_DOMAIN = 'https://img.keyboard-sound.net'
-
-async function fetchImage(url: string): Promise<Buffer> {
-	const response = await fetch(url)
-	if (!response.ok) {
-		throw new Error(`Failed to fetch the image: ${response.status} ${response.statusText}`)
-	}
-
-	const contentType = response.headers.get('content-type')
-	if (!contentType || !contentType.startsWith('image/')) {
-		throw new Error('Fetched content is not an image')
-	}
-
-	const arrayBuffer = await response.arrayBuffer()
-	return Buffer.from(arrayBuffer)
-}
-
-async function uploadImageToR2(url: string): Promise<string> {
-	const buffer = await fetchImage(url)
-
-	const jpegBuffer = await sharp(buffer).jpeg().toBuffer()
-
-	const fileName = `${uuidv4()}.jpg`
-	const contentType = 'image/jpeg'
-
-	console.log(`Uploading file: ${fileName}, Content-Type: ${contentType}`)
-
-	const command = new PutObjectCommand({
-		Bucket: process.env.R2_THUMB_BUCKET_NAME!,
-		Key: fileName,
-		Body: jpegBuffer,
-		ContentType: contentType
-	})
-
-	await s3Client.send(command)
-	return `${CUSTOM_DOMAIN}/${fileName}`
-}
-
-function extractYouTubeVideoId(url: string): string | null {
-	const regExp = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-	const match = url.match(regExp)
-	return match ? match[1] : null
-}
-
-function getYouTubeThumbnailUrl(videoId: string): string {
-	return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
-}
+const CUSTOM_DOMAIN = 'https://blogimg.keyboard-sound.net'
 
 function createErrorResponse(message: string, status: number): NextResponse {
 	console.error(message)
@@ -69,25 +23,33 @@ function createErrorResponse(message: string, status: number): NextResponse {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {
-		const { url } = await req.json()
+		const formData = await req.formData()
+		const file = formData.get('file') as Blob
 
-		if (!url) {
-			return createErrorResponse('URL is required', 400)
+		if (!file) {
+			return createErrorResponse('ファイルが必要です', 400)
 		}
 
-		const videoId = extractYouTubeVideoId(url)
-		if (!videoId) {
-			return createErrorResponse('Invalid YouTube URL', 400)
-		}
+		const buffer = Buffer.from(await file.arrayBuffer())
+		const jpegBuffer = await sharp(buffer).jpeg().toBuffer()
+		const fileName = `${uuidv4()}.jpg`
 
-		const thumbnailUrl = getYouTubeThumbnailUrl(videoId)
-		console.log(`Fetching thumbnail from YouTube: ${thumbnailUrl}`)
+		console.log(`Uploading file: ${fileName}, Content-Type: image/jpeg`)
 
-		const uploadedThumbnailUrl = await uploadImageToR2(thumbnailUrl)
+		const command = new PutObjectCommand({
+			Bucket: process.env.R2_BLOGTHUMB_BUCKET_NAME!,
+			Key: fileName,
+			Body: jpegBuffer,
+			ContentType: 'image/jpeg'
+		})
+
+		await s3Client.send(command)
+
+		const uploadedThumbnailUrl = `${CUSTOM_DOMAIN}/${fileName}`
 		console.log('Successfully uploaded thumbnail:', uploadedThumbnailUrl)
 
 		return NextResponse.json({ thumbnailUrl: uploadedThumbnailUrl }, { status: 200 })
 	} catch (error: any) {
-		return createErrorResponse(`Failed to upload thumbnail: ${error.message}`, 500)
+		return createErrorResponse(`サムネイルのアップロードに失敗しました: ${error.message}`, 500)
 	}
 }

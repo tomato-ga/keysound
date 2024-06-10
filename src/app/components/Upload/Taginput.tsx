@@ -3,7 +3,7 @@
 // import { getSuggestedTags } from '@/app/actions/getSuggestedTags/getSuggestedTags'
 // import { PostFormData, UpdateTags } from '../../../../types'
 
-// // MEMO ReactHookForm使えばよかった　https://react-hook-form.com/
+
 
 // interface TagInputProps<T> {
 // 	postData: T
