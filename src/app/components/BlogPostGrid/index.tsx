@@ -6,7 +6,7 @@ type Post = {
 	title: string
 	content: string
 	tags: string
-	thumb_url: string
+	thumb_url: string | null | undefined
 	author: string
 	postId: string | null
 	createdAt: Date
@@ -39,7 +39,13 @@ const PostsGrid: React.FC<PostsGridProps> = async ({ displayMode }) => {
 				<div key={post.id} className="bg-gray-800 rounded-lg shadow-md overflow-hidden transition">
 					<Link href={`/blogpost/${post.id}`}>
 						<div className="relative">
-							<img src={post.thumb_url} alt={post.title} className="w-full object-cover" />
+							{post.thumb_url ? (
+								<img src={post.thumb_url} alt={post.title} className="w-full object-cover" />
+							) : (
+								<div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+									<span>No Image</span>
+								</div>
+							)}
 							<div className="absolute inset-0"></div>
 						</div>
 						<div className="p-4">
