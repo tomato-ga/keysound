@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import getBlogPosts from '@/app/actions/getBlogPost/getBlogPost'
 
-type Post = {
+type getBlogPostsType = {
 	id: number
 	title: string
 	content: string
@@ -28,7 +28,7 @@ const formatDate = (dateString: Date): string => {
 }
 
 const PostsGrid: React.FC<PostsGridProps> = async ({ displayMode }) => {
-	const postLists = await getBlogPosts()
+	const postLists: getBlogPostsType[] = await getBlogPosts()
 
 	const gridClass =
 		displayMode === 'sidebar' ? 'grid-cols-1' : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 p-8'
