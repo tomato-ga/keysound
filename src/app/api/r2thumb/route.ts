@@ -13,6 +13,8 @@ const s3Client = new S3Client({
 })
 
 console.log('R2_THUMB_BUCKET_NAME:', process.env.R2_THUMB_BUCKET_NAME)
+console.log('R2_BLOGTHUMB_BUCKET_NAME:', process.env.R2_BLOGTHUMB_BUCKET_NAME)
+console.log('R2_ACCOUNT_ID:', process.env.R2_ACCOUNT_ID)
 
 const CUSTOM_DOMAIN = 'https://blogimg.keyboard-sound.net'
 
@@ -23,13 +25,16 @@ function createErrorResponse(message: string, status: number): NextResponse {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {
+		console.log('Received request to upload image')
 		const formData = await req.formData()
 		const file = formData.get('file') as Blob
 
 		if (!file) {
+			console.log('No file found in the request')
 			return createErrorResponse('ファイルが必要です', 400)
 		}
 
+		console.log('File found, processing...')
 		const buffer = Buffer.from(await file.arrayBuffer())
 		const jpegBuffer = await sharp(buffer).jpeg().toBuffer()
 		const fileName = `${uuidv4()}.jpg`
@@ -50,6 +55,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 		return NextResponse.json({ thumbnailUrl: uploadedThumbnailUrl }, { status: 200 })
 	} catch (error: any) {
+		console.error('Error during thumbnail upload:', error)
 		return createErrorResponse(`サムネイルのアップロードに失敗しました: ${error.message}`, 500)
 	}
 }
