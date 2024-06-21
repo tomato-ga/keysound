@@ -59,6 +59,8 @@ export async function GET(req: NextRequest) {
 		// すべてのURLを結合
 		const urls = [...blogUrls, ...postUrls]
 
+		console.log('urls', urls)
+
 		// Indexing APIに通知
 		await notifyIndexing(urls)
 
