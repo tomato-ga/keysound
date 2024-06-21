@@ -1,14 +1,8 @@
 {
-  "regions": ["hnd1"],
-  "git": {
-      "deploymentEnabled": {
+    "regions": ["hnd1"],
+      "git": {
+        "deploymentEnabled": {
           "main": true
-      }
-  },
-  "builds": [
-      {
-          "src": "src/app/api/**/*.ts",
-          "use": "@vercel/node"
-      }
-  ]
+        }
+    }
 }
