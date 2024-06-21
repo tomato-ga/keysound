@@ -1,9 +1,8 @@
-// /Users/ore/Documents/GitHub/keysound/src/app/api/IndexingAPI/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import axios from 'axios'
 import { prisma } from '@/app/lib/prisma'
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
 	try {
 		// Blog テーブルからデータを取得
 		const blogs = await prisma.blog.findMany({
@@ -22,6 +21,10 @@ export async function POST(req: NextRequest) {
 		// すべてのURLを結合
 		const urls = [...blogUrls, ...postUrls]
 
+		// 成功と失敗のリストを作成
+		const successfulUrls: string[] = []
+		const failedUrls: { url: string; error: string }[] = []
+
 		// Google Indexing APIに登録
 		const indexingResponses = await Promise.all(
 			urls.map(async (url) => {
@@ -39,18 +42,25 @@ export async function POST(req: NextRequest) {
 							}
 						}
 					)
-					return response.status === 200
+					if (response.status === 200) {
+						successfulUrls.push(url)
+						return true
+					} else {
+						failedUrls.push({ url, error: `Status code: ${response.status}` })
+						return false
+					}
 				} catch (error) {
-					console.error(`Failed to index URL: ${url}`, error)
+					console.error(`Failed to index URL: ${url}`, error.message)
+					failedUrls.push({ url, error: error.message })
 					return false
 				}
 			})
 		)
 
 		if (indexingResponses.every((response) => response)) {
-			return NextResponse.json({ message: 'All URLs successfully indexed' })
+			return NextResponse.json({ message: 'All URLs successfully indexed', successfulUrls })
 		} else {
-			return NextResponse.json({ message: 'Some URLs failed to index' }, { status: 500 })
+			return NextResponse.json({ message: 'Some URLs failed to index', successfulUrls, failedUrls }, { status: 500 })
 		}
 	} catch (error) {
 		console.error('Error occurred:', error)
